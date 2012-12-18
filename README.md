@@ -15,7 +15,7 @@ This assumes that your project is a tweak using the [Theos](https://github.com/D
         		return [NSURL URLWithString:/* new url */];
         	}
 
-        	return (objc_object *)nil;
+        	return (objc_object *)nil; // use (id) instead of (objc_object *) if you use clang
         }];
 
     The handler name must be changed, otherwise your handler may not be registered if another tweak has the same name. (This depends on the order that the tweaks were loaded - MobileSubstrate loads tweaks in alphabetical order.)
