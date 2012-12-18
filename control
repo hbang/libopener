@@ -1,0 +1,10 @@
+Package: ws.hbang.libopener
+Name: libopener
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Developer library for overriding link destinations
+Maintainer: HASHBANG Productions <libopener@hbang.ws>
+Author: HASHBANG Productions <libopener@hbang.ws>
+Section: Development
+Tag: role::developer
