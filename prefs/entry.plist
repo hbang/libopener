@@ -1,0 +1,10 @@
+{
+	entry = {
+		bundle = libopener;
+		cell = PSLinkCell;
+		detail = HBLOListController;
+		icon = icon.png;
+		isController = 1;
+		label = Opener;
+	};
+}
