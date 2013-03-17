@@ -13,9 +13,9 @@
 -(void)_preferencesUpdated;
 @end
 
-static BOOL isHookedValue = NO;
+BOOL isHookedValue = NO;
 
-static BOOL HBLOShouldOverrideOpenURL(NSURL *url) {
+BOOL HBLOShouldOverrideOpenURL(NSURL *url) {
 	if (isHookedValue) {
 		isHookedValue = NO;
 		return NO;
@@ -34,7 +34,7 @@ static BOOL HBLOShouldOverrideOpenURL(NSURL *url) {
 	return NO;
 }
 
-static void HBLOLoadPrefs() {
+void HBLOLoadPrefs() {
 	[[HBLibOpener sharedInstance] _preferencesUpdated];
 }
 
