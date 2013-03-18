@@ -79,7 +79,7 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
-			return @"Handlers";
+			return _handlers.count == 0 ? nil : @"Handlers";
 			break;
 
 		default:
@@ -91,11 +91,8 @@
 -(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
-			return @"Turn off handlers below to prevent them from overriding URLs.";
+			return _handlers.count == 0 ? @"Opener is a developer library for overriding link destinations - for example, to redirect opening a YouTube link in Safari to a 3rd-party YouTube app.\n\nYou currently don’t have any handler packages installed. This can happen after uninstalling all packages that depend on Opener, such as MapsOpener and YTOpener. To remove this Settings page, search for “Opener” in Cydia, then tap Modify and Remove.\n" : @"Turn off handlers below to prevent them from overriding URLs.";
 			break;
-
-		case 1:
-			return _handlers.count == 0 ? @"(No handlers are installed.)" : nil;
 
 		case 2:
 			return @"Opener Version 1.1\nBy HASHBANG Productions";

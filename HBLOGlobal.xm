@@ -41,7 +41,5 @@ void HBLOLoadPrefs() {
 %ctor {
 	[HBLibOpener sharedInstance];
 
-	if (IN_SPRINGBOARD) {
-		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)HBLOLoadPrefs, CFSTR("ws.hbang.libopener/ReloadPrefs"), NULL, 0);
-	}
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)HBLOLoadPrefs, IN_SPRINGBOARD ? CFSTR("ws.hbang.libopener/ReloadPrefs") : CFSTR("ws.hbang.libopener/ReloadPrefsApps"), NULL, 0);
 }

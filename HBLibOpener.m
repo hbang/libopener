@@ -31,7 +31,10 @@ static HBLibOpener *sharedInstance;
 		if (IN_SPRINGBOARD) {
 			CPDistributedMessagingCenter *messagingServer = [CPDistributedMessagingCenter centerNamed:@"ws.hbang.libopener.server"];
 			[messagingServer runServerOnCurrentThread];
-			[messagingServer registerForMessageName:@"GetHandlers" target:self selector:@selector(_receivedMessage:)];
+			[messagingServer registerForMessageName:@"GetHandlers" target:self selector:@selector(_receivedMessage:withData:)];
+			[messagingServer registerForMessageName:@"GetEnabledHandlers" target:self selector:@selector(_receivedMessage:withData:)];
+		} else {
+			[self _preferencesUpdated];
 		}
 	}
 
@@ -72,22 +75,44 @@ static HBLibOpener *sharedInstance;
 #pragma mark Private API
 
 -(void)_preferencesUpdated {
-	NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:PREFS_PATH];
-	NSMutableArray *newHandlers = [NSMutableArray array];
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		if (IN_SPRINGBOARD) {
+			NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:PREFS_PATH];
+			NSMutableArray *newHandlers = [NSMutableArray array];
 
-	for (NSString *handler in _handlers.allKeys) {
-		if (![prefs objectForKey:handler] || [[prefs objectForKey:handler] boolValue]) {
-			[newHandlers addObject:handler];
+			for (NSString *handler in _handlers.allKeys) {
+				if (![prefs objectForKey:handler] || [[prefs objectForKey:handler] boolValue]) {
+					[newHandlers addObject:handler];
+				}
+			}
+
+			_enabledHandlers = [newHandlers copy];
+
+			notify_post("ws.hbang.libopener/ReloadPrefsApps");
+		} else {
+			NSDictionary *callback = [[CPDistributedMessagingCenter centerNamed:@"ws.hbang.libopener.server"] sendMessageAndReceiveReplyName:@"GetEnabledHandlers" userInfo:nil];
+
+			if (callback) {
+				_enabledHandlers = [[callback objectForKey:@"Handlers"] retain];
+			}
 		}
-	}
-
-	_enabledHandlers = [newHandlers copy];
-
-	//notify_post("ws.hbang.libopener/ReloadPrefsApp"); // to be continued some other day...
+	});
 }
 
--(id)_receivedMessage:(NSString *)message {
-	return [NSDictionary dictionaryWithObject:_handlers.allKeys forKey:@"Handlers"];
+-(id)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
+	if (!IN_SPRINGBOARD) {
+		return nil;
+	}
+
+	if ([message isEqualToString:@"GetHandlers"]) {
+		return [NSDictionary dictionaryWithObject:_handlers.allKeys forKey:@"Handlers"];
+	} else if ([message isEqualToString:@"GetEnabledHandlers"]) {
+		return [NSDictionary dictionaryWithObject:_enabledHandlers forKey:@"Handlers"];
+	} else if ([message isEqualToString:@"OpenURL"]) {
+		//return [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:HBLOShouldOverrideOpenURL([data objectForKey:@"URL"])] forKey:@"Result"];
+	}
+
+	return nil;
 }
 
 @end

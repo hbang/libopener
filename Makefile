@@ -5,7 +5,7 @@ include theos/makefiles/common.mk
 THEOS_BUILD_DIR = debs
 
 LIBRARY_NAME = libopener
-libopener_FILES = HBLibOpener.m $(wildcard *.xm)
+libopener_FILES = $(wildcard *.xm) $(wildcard *.m)
 libopener_PRIVATE_FRAMEWORKS = AppSupport
 libopener_LDFLAGS = -lsubstrate
 
