@@ -2,8 +2,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @implementation HBLOFooterCell
-
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 
 	if (self) {
@@ -36,7 +35,7 @@
 	return self;
 }
 
--(void)layoutSubviews {
+- (void)layoutSubviews {
 	[super layoutSubviews];
 
 	CGRect buttonFrame = _twitterButton.frame;
@@ -56,7 +55,7 @@
 	_underlineView.center = CGPointMake(_twitterButton.center.x, _underlineView.center.y);
 }
 
--(void)buttonTapped {
+- (void)buttonTapped {
 	if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tweetbot:"]]) {
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tweetbot:///user_profile/hbangws"]];
 	} else if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitterrific:"]]) {
@@ -69,5 +68,4 @@
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://mobile.twitter.com/hbangws"]];
 	}
 }
-
 @end
