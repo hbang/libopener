@@ -11,12 +11,11 @@
 #include <notify.h>
 
 @implementation HBLibOpener
-
 @synthesize handlers = _handlers, enabledHandlers = _enabledHandlers;
 
-static HBLibOpener *sharedInstance;
+HBLibOpener *sharedInstance;
 
--(id)init {
+- (id)init {
 	if (sharedInstance) {
 		return nil;
 	}
@@ -41,15 +40,16 @@ static HBLibOpener *sharedInstance;
 	return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
 	[_handlers release];
 	[_enabledHandlers release];
+	
 	[super dealloc];
 }
 
-#pragma mark Public API
+#pragma mark - Public API
 
-+(HBLibOpener *)sharedInstance {
++ (HBLibOpener *)sharedInstance {
 	if (!sharedInstance) {
 		[[self alloc] init];
 	}
@@ -57,7 +57,7 @@ static HBLibOpener *sharedInstance;
 	return sharedInstance;
 }
 
--(BOOL)registerHandlerWithName:(NSString *)name block:(NSURL *(^)(NSURL *url))block {
+- (BOOL)registerHandlerWithName:(NSString *)name block:(NSURL *(^)(NSURL *url))block {
 	if (!IN_SPRINGBOARD || [_handlers objectForKey:name]) {
 		return NO;
 	}
@@ -68,13 +68,13 @@ static HBLibOpener *sharedInstance;
 	return YES;
 }
 
--(BOOL)handlerIsEnabled:(NSString *)handler {
+- (BOOL)handlerIsEnabled:(NSString *)handler {
 	return !![_enabledHandlers containsObject:handler];
 }
 
-#pragma mark Private API
+#pragma mark - Private API
 
--(void)_preferencesUpdated {
+- (void)_preferencesUpdated {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		if (IN_SPRINGBOARD) {
 			NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:PREFS_PATH];
@@ -99,7 +99,7 @@ static HBLibOpener *sharedInstance;
 	});
 }
 
--(id)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
+- (id)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
 	if (!IN_SPRINGBOARD) {
 		return nil;
 	}
@@ -109,7 +109,7 @@ static HBLibOpener *sharedInstance;
 	} else if ([message isEqualToString:@"GetEnabledHandlers"]) {
 		return [NSDictionary dictionaryWithObject:_enabledHandlers forKey:@"Handlers"];
 	} else if ([message isEqualToString:@"OpenURL"]) {
-		//return [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:HBLOShouldOverrideOpenURL([data objectForKey:@"URL"])] forKey:@"Result"];
+		// return [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:HBLOShouldOverrideOpenURL([data objectForKey:@"URL"])] forKey:@"Result"];
 	}
 
 	return nil;
