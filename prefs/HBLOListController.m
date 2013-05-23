@@ -15,7 +15,7 @@
 
 @synthesize view = _view;
 
--(id)initForContentSize:(CGSize)size {
+- (id)initForContentSize:(CGSize)size {
 	self = [super init];
 
 	if (self) {
@@ -37,30 +37,31 @@
 	return self;
 }
 
--(void)dealloc {
+- (void)dealloc {
 	[_view release];
 	[_prefs release];
 	[_handlers release];
+	
 	[super dealloc];
 }
 
-#pragma mark Preferences
+#pragma mark - Preferences.framework stuff
 
--(CGSize)contentSize {
+- (CGSize)contentSize {
 	return _view.frame.size;
 }
 
--(UITableView *)table {
+- (UITableView *)table {
 	return _view;
 }
 
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 4;
 }
 
-#pragma mark Table View Data Source
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch (section) {
 		case 1:
 			return _handlers.count;
@@ -76,7 +77,7 @@
 	}
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
 			return _handlers.count == 0 ? nil : @"Handlers";
@@ -88,7 +89,7 @@
 	}
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
 	switch (section) {
 		case 0:
 			return _handlers.count == 0 ? @"Opener is a developer library for overriding link destinations - for example, to redirect opening a YouTube link in Safari to a 3rd-party YouTube app.\n\nYou currently don’t have any handler packages installed. This can happen after uninstalling all packages that depend on Opener, such as MapsOpener and YTOpener. To remove this Settings page, search for “Opener” in Cydia, then tap Modify and Remove.\n" : @"Turn off handlers below to prevent them from overriding URLs.";
@@ -104,7 +105,7 @@
 	}
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch (indexPath.section) {
 		case 1:
 		{
@@ -125,6 +126,7 @@
 			((UISwitch *)cell.accessoryView).on = [_prefs objectForKey:[_handlers objectAtIndex:indexPath.row]] ? [[_prefs objectForKey:[_handlers objectAtIndex:indexPath.row]] boolValue] : YES;
 
 			return cell;
+			break;
 		}
 
 		case 3:
@@ -138,16 +140,18 @@
 			}
 
 			return cell;
+			break;
 		}
 
 		default:
 		{
 			return nil;
+			break;
 		}
 	}
 }
 
-#pragma mark Switch Delegate
+#pragma mark - UISwitch Delegate
 
 -(void)didToggleSwitch:(UISwitch *)sender {
 	[_prefs setObject:[NSNumber numberWithBool:sender.on] forKey:[_handlers objectAtIndex:sender.tag]];
