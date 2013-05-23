@@ -10,7 +10,7 @@
 
 %group HBLOSpringBoard5
 %hook SpringBoard
--(void)_openURLCore:(NSURL *)url display:(id)display publicURLsOnly:(BOOL)publicOnly animating:(BOOL)animating additionalActivationFlag:(unsigned int)flags {
+- (void)_openURLCore:(NSURL *)url display:(id)display publicURLsOnly:(BOOL)publicOnly animating:(BOOL)animating additionalActivationFlag:(unsigned int)flags {
 	if (!HBLOShouldOverrideOpenURL(url)) {
 		%orig;
 	}
@@ -20,7 +20,7 @@
 
 %group HBLOSpringBoard6
 %hook SpringBoard
--(void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(id)sender additionalActivationFlags:(id)flags {
+- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(id)sender additionalActivationFlags:(id)flags {
 	if (!HBLOShouldOverrideOpenURL(url)) {
 		%orig;
 	}
