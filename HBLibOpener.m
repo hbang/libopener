@@ -9,29 +9,26 @@
 #import "HBLOGlobal.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #include <notify.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 
-@implementation HBLibOpener
-@synthesize handlers = _handlers, enabledHandlers = _enabledHandlers;
+@implementation HBLibOpener {
+    NSMutableDictionary *_handlers;
+    NSArray *_enabledHandlers;
+}
 
-HBLibOpener *sharedInstance;
-
-- (id)init {
-	if (sharedInstance) {
-		return nil;
-	}
-
+- (instancetype)init {
 	self = [super init];
 
 	if (self) {
-		sharedInstance = self;
 		_handlers = [[NSMutableDictionary alloc] init];
 		_enabledHandlers = [[NSArray alloc] init];
 
 		if (IN_SPRINGBOARD) {
-			CPDistributedMessagingCenter *messagingServer = [CPDistributedMessagingCenter centerNamed:@"ws.hbang.libopener.server"];
+			CPDistributedMessagingCenter *messagingServer = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
+            rocketbootstrap_distributedmessagingcenter_apply(messagingServer);
 			[messagingServer runServerOnCurrentThread];
-			[messagingServer registerForMessageName:@"GetHandlers" target:self selector:@selector(_receivedMessage:withData:)];
-			[messagingServer registerForMessageName:@"GetEnabledHandlers" target:self selector:@selector(_receivedMessage:withData:)];
+			[messagingServer registerForMessageName:kHBLOGetHandlersKey target:self selector:@selector(_receivedMessage:withData:)];
+			[messagingServer registerForMessageName:kHBLOGetEnabledHandlersKey target:self selector:@selector(_receivedMessage:withData:)];
 		} else {
 			[self _preferencesUpdated];
 		}
@@ -40,30 +37,25 @@ HBLibOpener *sharedInstance;
 	return self;
 }
 
-- (void)dealloc {
-	[_handlers release];
-	[_enabledHandlers release];
-	
-	[super dealloc];
-}
-
 #pragma mark - Public API
 
-+ (HBLibOpener *)sharedInstance {
-	if (!sharedInstance) {
-		[[self alloc] init];
-	}
++ (instancetype)sharedInstance {
+    static HBLibOpener *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
+    });
 
-	return sharedInstance;
+    return sharedInstance;
 }
 
 - (BOOL)registerHandlerWithName:(NSString *)name block:(NSURL *(^)(NSURL *url))block {
-	if (!IN_SPRINGBOARD || [_handlers objectForKey:name]) {
+	if (!IN_SPRINGBOARD || _handlers[name]) {
 		return NO;
 	}
 
-	[_handlers setObject:[block copy] forKey:name];
-	[self _preferencesUpdated];
+    _handlers[name] = [block copy];
+    [self _preferencesUpdated];
 
 	return YES;
 }
@@ -77,11 +69,11 @@ HBLibOpener *sharedInstance;
 - (void)_preferencesUpdated {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 		if (IN_SPRINGBOARD) {
-			NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:PREFS_PATH];
+			NSMutableDictionary *prefs = [NSMutableDictionary dictionaryWithContentsOfFile:kHBLOPreferencesPath];
 			NSMutableArray *newHandlers = [NSMutableArray array];
 
 			for (NSString *handler in _handlers.allKeys) {
-				if (![prefs objectForKey:handler] || [[prefs objectForKey:handler] boolValue]) {
+				if (!prefs[handler] || ((NSNumber *)prefs[handler]).boolValue) {
 					[newHandlers addObject:handler];
 				}
 			}
@@ -90,29 +82,38 @@ HBLibOpener *sharedInstance;
 
 			notify_post("ws.hbang.libopener/ReloadPrefsApps");
 		} else {
-			NSDictionary *callback = [[CPDistributedMessagingCenter centerNamed:@"ws.hbang.libopener.server"] sendMessageAndReceiveReplyName:@"GetEnabledHandlers" userInfo:nil];
+            CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
+            rocketbootstrap_distributedmessagingcenter_apply(center);
+			NSDictionary *callback = [center sendMessageAndReceiveReplyName:kHBLOGetEnabledHandlersKey userInfo:nil];
 
 			if (callback) {
-				_enabledHandlers = [[callback objectForKey:@"Handlers"] retain];
+				_enabledHandlers = [callback[kHBLOHandlersKey] copy];
 			}
 		}
 	});
 }
 
-- (id)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
+- (NSDictionary *)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
 	if (!IN_SPRINGBOARD) {
 		return nil;
 	}
 
-	if ([message isEqualToString:@"GetHandlers"]) {
-		return [NSDictionary dictionaryWithObject:_handlers.allKeys forKey:@"Handlers"];
-	} else if ([message isEqualToString:@"GetEnabledHandlers"]) {
-		return [NSDictionary dictionaryWithObject:_enabledHandlers forKey:@"Handlers"];
-	} else if ([message isEqualToString:@"OpenURL"]) {
-		// return [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:HBLOShouldOverrideOpenURL([data objectForKey:@"URL"])] forKey:@"Result"];
+	if ([message isEqualToString:kHBLOGetHandlersKey]) {
+		return @{ kHBLOHandlersKey: _handlers.allKeys };
+	} else if ([message isEqualToString:kHBLOGetEnabledHandlersKey]) {
+        return @{ kHBLOHandlersKey: _enabledHandlers };
 	}
 
 	return nil;
+}
+
+#pragma mark - Memory management
+
+- (void)dealloc {
+    [_handlers release];
+    [_enabledHandlers release];
+
+    [super dealloc];
 }
 
 @end

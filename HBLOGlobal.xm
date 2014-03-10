@@ -10,7 +10,9 @@
 #import <SpringBoard/SpringBoard.h>
 
 @interface HBLibOpener (Private)
--(void)_preferencesUpdated;
+
+- (void)_preferencesUpdated;
+
 @end
 
 BOOL isHookedValue = NO;

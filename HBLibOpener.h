@@ -5,12 +5,9 @@
  * GPL licensed <http://hbang.ws/s/gpl>
  */
 
-@interface HBLibOpener : NSObject {
-	NSMutableDictionary *_handlers;
-	NSArray *_enabledHandlers;
-}
+@interface HBLibOpener : NSObject
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 // Allows you to register a new handler. Supported in SpringBoard only.
 - (BOOL)registerHandlerWithName:(NSString *)name block:(NSURL *(^)(NSURL *url))block;
@@ -23,4 +20,5 @@
 
 // Array of handlers that haven't been disabled by the user.
 @property (nonatomic, retain, readonly) NSArray *enabledHandlers;
+
 @end
