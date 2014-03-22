@@ -1,3 +1,6 @@
+TARGET = :clang::5.0
+ARCHS = armv7 arm64
+
 include theos/makefiles/common.mk
 
 BUNDLE_NAME = libopener
@@ -5,6 +8,7 @@ libopener_FILES = $(wildcard *.m)
 libopener_INSTALL_PATH = /Library/PreferenceBundles
 libopener_FRAMEWORKS = UIKit
 libopener_PRIVATE_FRAMEWORKS = Preferences AppSupport
+libopener_LIBRARIES = hbangprefs
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

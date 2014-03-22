@@ -5,54 +5,50 @@
  * GPL licensed <http://hbang.ws/s/gpl>
  */
 
+#import "HBLOGlobal.h"
+
 #import "HBLOListController.h"
 #import "HBLOFooterCell.h"
-#import "../HBLOGlobal.h"
-#include <notify.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <Preferences/PSSpecifier.h>
+#import <libhbangcommon/HBTwitterCell.h>
+#include <notify.h>
 
 @implementation HBLOListController
 
-@synthesize view = _view;
+#pragma mark - PSViewController
 
-- (id)initForContentSize:(CGSize)size {
+- (instancetype)initForContentSize:(CGSize)size {
 	self = [super init];
 
 	if (self) {
-		self.navigationItem.title = @"Opener";
+		self.view = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) style:UITableViewStyleGrouped];
+		self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	    self.view.delegate = self;
+		self.view.dataSource = self;
 
-		_view = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height) style:UITableViewStyleGrouped];
-		_view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_view.delegate = self;
-		_view.dataSource = self;
+		_prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kHBLOPreferencesPath] ?: [[NSMutableDictionary alloc] init];
 
-		_prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:PREFS_PATH] ?: [[NSMutableDictionary alloc] init];
-
-		NSDictionary *callback = [[CPDistributedMessagingCenter centerNamed:@"ws.hbang.libopener.server"] sendMessageAndReceiveReplyName:@"GetHandlers" userInfo:nil];
+		NSDictionary *callback = [[CPDistributedMessagingCenter centerNamed:@"ws.hbang.libopener.server"] sendMessageAndReceiveReplyName:kHBLOGetHandlersKey userInfo:nil];
 
 		if (callback) {
-			_handlers = [[[callback objectForKey:@"Handlers"] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] retain];
+			_handlers = [[callback[kHBLOHandlersKey] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] retain];
 		}
 	}
 	return self;
 }
 
-- (void)dealloc {
-	[_view release];
-	[_prefs release];
-	[_handlers release];
-	
-	[super dealloc];
+- (void)setSpecifier:(PSSpecifier *)specifier {
+    [super setSpecifier:specifier];
+    self.title = specifier.name;
 }
 
-#pragma mark - Preferences.framework stuff
-
 - (CGSize)contentSize {
-	return _view.frame.size;
+	return self.view.frame.size;
 }
 
 - (UITableView *)table {
-	return _view;
+	return self.view;
 }
 
 #pragma mark - UITableViewDataSource
@@ -77,55 +73,27 @@
 	}
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	switch (section) {
-		case 0:
-			return _handlers.count == 0 ? nil : @"Handlers";
-			break;
-
-		default:
-			return nil;
-			break;
-	}
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-	switch (section) {
-		case 0:
-			return _handlers.count == 0 ? @"Opener is a developer library for overriding link destinations - for example, to redirect opening a YouTube link in Safari to a 3rd-party YouTube app.\n\nYou currently don’t have any handler packages installed. This can happen after uninstalling all packages that depend on Opener, such as MapsOpener and YTOpener. To remove this Settings page, search for “Opener” in Cydia, then tap Modify and Remove.\n" : @"Turn off handlers below to prevent them from overriding URLs.";
-			break;
-
-		case 2:
-			return @"Opener Version 1.1\nBy HASHBANG Productions";
-			break;
-
-		default:
-			return nil;
-			break;
-	}
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch (indexPath.section) {
 		case 1:
 		{
-			static NSString *ReuseIdentifier = @"LibOpenerHandlerCell";
+            static NSString *ReuseIdentifier = @"LibOpenerSwitchCell";
 
-			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
 
-			if (!cell) {
-				cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier];
-				cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            if (!cell) {
+                cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier] autorelease];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-				cell.accessoryView = [[UISwitch alloc] init];
-				cell.accessoryView.tag = indexPath.row;
-				[(UISwitch *)cell.accessoryView addTarget:self action:@selector(didToggleSwitch:) forControlEvents:UIControlEventValueChanged];
-			}
+                cell.accessoryView = [[UISwitch alloc] init];
+                cell.accessoryView.tag = indexPath.row;
+                [(UISwitch *)cell.accessoryView addTarget:self action:@selector(didToggleSwitch:) forControlEvents:UIControlEventValueChanged];
+            }
 
-			cell.textLabel.text = [_handlers objectAtIndex:indexPath.row];
-			((UISwitch *)cell.accessoryView).on = [_prefs objectForKey:[_handlers objectAtIndex:indexPath.row]] ? [[_prefs objectForKey:[_handlers objectAtIndex:indexPath.row]] boolValue] : YES;
+            cell.textLabel.text = _handlers[indexPath.row];
+            ((UISwitch *)cell.accessoryView).on = _prefs[_handlers[indexPath.row]] ? ((NSNumber *)_prefs[_handlers[indexPath.row]]).boolValue : YES;
 
-			return cell;
+            return cell;
 			break;
 		}
 
@@ -136,7 +104,13 @@
 			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
 
 			if (!cell) {
-				cell = [[HBLOFooterCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier];
+                PSSpecifier *specifier = [[[PSSpecifier alloc] init] autorelease];
+                specifier.name = @"HASHBANG Productions";
+                specifier.properties = @{
+                    @"user": @"hbangws"
+                };
+
+				cell = [[[HBTwitterCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier specifier:specifier] autorelease];
 			}
 
 			return cell;
@@ -151,13 +125,54 @@
 	}
 }
 
-#pragma mark - UISwitch Delegate
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    switch (section) {
+        case 0:
+            return _handlers.count == 0 ? nil : @"Handlers";
+            break;
 
--(void)didToggleSwitch:(UISwitch *)sender {
-	[_prefs setObject:[NSNumber numberWithBool:sender.on] forKey:[_handlers objectAtIndex:sender.tag]];
-	[_prefs writeToFile:PREFS_PATH atomically:YES];
+        case 2:
+            return @"About";
+            break;
+
+        default:
+            return nil;
+            break;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+    switch (section) {
+        case 0:
+            return _handlers.count == 0 ? @"Opener is a developer library for overriding link destinations - for example, to redirect opening a YouTube link in Safari to a 3rd-party YouTube app.\n\nYou currently don’t have any handler packages installed. This can happen after uninstalling all packages that depend on Opener, such as MapsOpener and YTOpener. To remove this Settings page, search for “Opener” in Cydia, then tap Modify and Remove.\n" : @"Turn off handlers below to prevent them from overriding URLs.";
+            break;
+
+        case 2:
+            return @"Opener Version 1.1.2\nBy HASHBANG Productions";
+            break;
+
+        default:
+            return nil;
+            break;
+    }
+}
+
+#pragma mark - Callback methods
+
+- (void)didToggleSwitch:(UISwitch *)sender {
+    _prefs[_handlers[sender.tag]] = @(sender.on);
+	[_prefs writeToFile:kHBLOPreferencesPath atomically:YES];
 
 	notify_post("ws.hbang.libopener/ReloadPrefs");
+}
+
+#pragma mark - Memory management
+
+- (void)dealloc {
+    [_prefs release];
+    [_handlers release];
+
+    [super dealloc];
 }
 
 @end
