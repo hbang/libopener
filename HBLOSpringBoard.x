@@ -4,6 +4,19 @@
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 
+BOOL isHookedValue = NO;
+
+BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
+    if (isHookedValue) {
+        isHookedValue = NO;
+    } else if ([[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
+        isHookedValue = YES;
+        return NO;
+    }
+
+    return YES;
+}
+
 %hook SpringBoard
 
 %group SteveJobs
@@ -11,9 +24,9 @@
 - (void)_openURLCore:(NSURL *)url display:(id)display publicURLsOnly:(BOOL)publicOnly animating:(BOOL)animating additionalActivationFlag:(NSUInteger)flags {
     NSString *sender = ((SpringBoard *)[UIApplication sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
 
-	if (![[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
-		%orig;
-	}
+    if (HBLOOpenURLCoreHook(url, sender)) {
+        %orig;
+    }
 }
 
 %end
@@ -21,9 +34,9 @@
 %group ScottForstall
 
 - (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender additionalActivationFlags:(id)flags {
-	if (![[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
-		%orig;
-	}
+    if (HBLOOpenURLCoreHook(url, sender)) {
+        %orig;
+    }
 }
 
 %end
@@ -31,7 +44,7 @@
 %group JonyIve
 
 - (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender additionalActivationFlags:(id)flags activationHandler:(id)handler {
-    if (![[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
+    if (HBLOOpenURLCoreHook(url, sender)) {
         %orig;
     }
 }

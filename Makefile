@@ -23,6 +23,7 @@ after-stage::
 	cp libopener.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.plist
 	cp HBLibOpener.h HBLOHandler.h $(THEOS_STAGING_DIR)/usr/include/libopener
 	cp $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib $(THEOS)/lib/libopener.dylib
+	cp -r $(THEOS_STAGING_DIR)/usr/include/libopener $(THEOS)/include/libopener
 
 after-install::
 ifeq ($(RESPRING),0)

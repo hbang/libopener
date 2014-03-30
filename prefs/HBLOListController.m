@@ -1,6 +1,6 @@
 #import "HBLOGlobal.h"
 #import "HBLOListController.h"
-#import "HBLOFooterCell.h"
+#import "HBLOAboutListController.h"
 #import "../HBLOHandler.h"
 #import "../HBLOHandlerController.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
@@ -13,7 +13,7 @@
     NSMutableDictionary *_prefs;
 }
 
-#pragma mark - PSViewController
+#pragma mark - UIViewController
 
 - (void)loadView {
 	[super loadView];
@@ -24,8 +24,13 @@
 	self.view.dataSource = self;
 
 	_prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:kHBLOPreferencesPath] ?: [[NSMutableDictionary alloc] init];
-    _handlers = [[HBLOHandlerController sharedInstance].handlers sortedArrayUsingDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES] ]];
+
+    // we can't get these within the app since it won't include legacy handlers.
+    NSDictionary *callback = [[CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName] sendMessageAndReceiveReplyName:kHBLOGetHandlersMessage userInfo:nil];
+    _handlers = [callback[kHBLOHandlersKey] copy];
 }
+
+#pragma mark - PSViewController
 
 - (void)setSpecifier:(PSSpecifier *)specifier {
 	[super setSpecifier:specifier];
@@ -43,7 +48,7 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 4;
+	return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -52,7 +57,7 @@
 			return _handlers.count;
 			break;
 
-		case 3:
+		case 2:
 			return 1;
 			break;
 
@@ -67,12 +72,12 @@
 		case 1:
 		{
 			UITableViewCell *cell = nil;
-            HBLOHandler *handler = _handlers[indexPath.row];
+            NSDictionary *handler = _handlers[indexPath.row];
 
-			if (handler.preferencesClass) {
+			if (handler[kHBLOHandlerPreferencesClassKey] && ![handler[kHBLOHandlerPreferencesClassKey] isEqualToString:@""]) {
 				static NSString *ReuseIdentifier = @"LibOpenerControllerCell";
 
-				UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
+				cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
 
 				if (!cell) {
 					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier] autorelease];
@@ -82,42 +87,37 @@
 			} else {
 				static NSString *ReuseIdentifier = @"LibOpenerSwitchCell";
 
-				UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
+				cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
 
 				if (!cell) {
 					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier] autorelease];
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
 					cell.accessoryView = [[UISwitch alloc] init];
-					cell.accessoryView.tag = indexPath.row;
 					[(UISwitch *)cell.accessoryView addTarget:self action:@selector(didToggleSwitch:) forControlEvents:UIControlEventValueChanged];
 				}
 
-				((UISwitch *)cell.accessoryView).on = _prefs[handler.identifier] ? ((NSNumber *)_prefs[handler.identifier]).boolValue : YES;
-
-				return cell;
+                cell.accessoryView.tag = indexPath.row;
+				((UISwitch *)cell.accessoryView).on = _prefs[handler[kHBLOHandlerIdentifierKey]] ? ((NSNumber *)_prefs[handler[kHBLOHandlerIdentifierKey]]).boolValue : YES;
 			}
 
-			cell.textLabel.text = handler.name;
+			cell.textLabel.text = handler[kHBLOHandlerNameKey];
 
 			return cell;
 			break;
 		}
 
-		case 3:
+		case 2:
 		{
-			static NSString *ReuseIdentifier = @"LibOpenerFooterCell";
+			static NSString *ReuseIdentifier = @"LibOpenerAboutCell";
 
 			UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
 
 			if (!cell) {
-				PSSpecifier *specifier = [[[PSSpecifier alloc] init] autorelease];
-				specifier.name = @"HASHBANG Productions";
-				specifier.properties = @{
-					@"user": @"hbangws"
-				};
-
-				cell = [[[HBTwitterCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier specifier:specifier] autorelease];
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ReuseIdentifier] autorelease];
+                cell.textLabel.text = @"About";
+                cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			}
 
 			return cell;
@@ -138,10 +138,6 @@
 			return _handlers.count == 0 ? nil : @"Handlers";
 			break;
 
-		case 2:
-			return @"About";
-			break;
-
 		default:
 			return nil;
 			break;
@@ -154,20 +150,47 @@
 			return _handlers.count == 0 ? @"Opener is a developer library for overriding link destinations - for example, to redirect opening a YouTube link in Safari to a 3rd-party YouTube app.\n\nYou currently don’t have any handler packages installed. This can happen after uninstalling all packages that depend on Opener, such as MapsOpener and YTOpener. To remove this Settings page, search for “Opener” in Cydia, then tap Modify and Remove.\n" : @"Turn off handlers below to prevent them from overriding URLs.";
 			break;
 
-		case 2:
-			return @"Opener Version 1.1.2\nBy HASHBANG Productions";
-			break;
-
 		default:
 			return nil;
 			break;
 	}
 }
 
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    PSViewController *controller = nil;
+
+    switch (indexPath.section) {
+        case 1:
+        {
+            NSString *class = _handlers[indexPath.row][kHBLOHandlerPreferencesClassKey];
+
+            if (class && ![class isEqualToString:@""]) {
+                controller = [[[NSClassFromString(class) alloc] init] autorelease];
+            }
+
+            break;
+        }
+
+        case 2:
+        {
+            controller = [[[HBLOAboutListController alloc] init] autorelease];
+            break;
+        }
+    }
+
+    if (controller) {
+        [self pushController:controller];
+    }
+}
+
 #pragma mark - Callback methods
 
 - (void)didToggleSwitch:(UISwitch *)sender {
-	_prefs[_handlers[sender.tag]] = @(sender.on);
+	_prefs[_handlers[sender.tag][kHBLOHandlerIdentifierKey]] = @(sender.on);
 	[_prefs writeToFile:kHBLOPreferencesPath atomically:YES];
 
 	notify_post("ws.hbang.libopener/ReloadPrefs");

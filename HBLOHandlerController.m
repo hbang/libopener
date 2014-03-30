@@ -3,6 +3,8 @@
 #import "HBLOHandler.h"
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoardServices/SpringBoardServices.h>
+#import <AppSupport/CPDistributedMessagingCenter.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 
 @implementation HBLOHandlerController {
 	NSDictionary *_preferences;
@@ -24,6 +26,14 @@
 
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
+
+		if (IN_SPRINGBOARD) {
+			CPDistributedMessagingCenter *messagingServer = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
+			rocketbootstrap_distributedmessagingcenter_apply(messagingServer);
+			[messagingServer runServerOnCurrentThread];
+			[messagingServer registerForMessageName:kHBLOGetHandlersMessage target:self selector:@selector(_receivedMessage:withData:)];
+			[messagingServer registerForMessageName:kHBLOOpenURLMessage target:self selector:@selector(_receivedMessage:withData:)];
+		}
 
 		[self preferencesUpdated];
 	}
@@ -58,54 +68,50 @@
 
 	_hasLoadedHandlers = YES;
 
-	NSURL *handlersURL = [NSURL URLWithString:kHBLOHandlersURL];
-
 	NSError *error = nil;
-	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:handlersURL includingPropertiesForKeys:nil options:kNilOptions error:&error];
+	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL URLWithString:kHBLOHandlersURL] includingPropertiesForKeys:nil options:kNilOptions error:&error];
 
 	if (error) {
 		NSLog(@"libopener: failed to access handler directory %@: %@", kHBLOHandlersURL, error.localizedDescription);
 		return;
 	}
+	for (NSURL *directory in contents) {
+		// NSLog is #defined as doing nothing when !DEBUG with my setup
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+		NSString *baseName = directory.pathComponents.lastObject;
+#pragma clang diagnostic pop
 
-	NSMutableArray *handlers = [NSMutableArray array];
+		NSLog(@"libopener: loading %@", baseName);
 
-	for (NSString *directory in contents) {
-		NSLog(@"libopener: loading %@", directory);
-
-		NSBundle *bundle = [NSBundle bundleWithURL:[handlersURL URLByAppendingPathComponent:directory]];
+		NSBundle *bundle = [NSBundle bundleWithURL:directory];
 
 		if (!bundle) {
-			NSLog(@"libopener: failed to load bundle for handler %@", directory);
+			NSLog(@"libopener: failed to load bundle for handler %@", baseName);
 			return;
 		}
 
 		[bundle load];
 
 		if (!bundle.principalClass) {
-			NSLog(@"libopener: no principal class for handler %@", directory);
+			NSLog(@"libopener: no principal class for handler %@", baseName);
 			return;
 		}
 
 		HBLOHandler *handler = [[[bundle.principalClass alloc] init] autorelease];
 
 		if (!handler) {
-			NSLog(@"libopener: failed to initialise principal class for %@", directory);
+			NSLog(@"libopener: failed to initialise principal class for %@", baseName);
 			return;
 		}
 
 		NSError *error = nil;
 
 		if (![self registerHandler:handler error:&error]) {
-			NSLog(@"libopener: error registering handler %@: %@", directory, error.localizedDescription);
+			NSLog(@"libopener: error registering handler %@: %@", baseName, error.localizedDescription);
+			return;
 		}
 	}
-
-	if (_handlers) {
-		[_handlers release];
-	}
-
-	_handlers = [handlers copy];
 }
 
 #pragma mark - Open URL
@@ -122,11 +128,17 @@
 
 		NSURL *newUrl = [handler openURL:url sender:sender];
 
+		NSLog(@"got %@ from %@", newUrl, handler);
+
 		if (newUrl) {
 			if (IN_SPRINGBOARD) {
 				[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:newUrl publicURLsOnly:NO];
 			} else {
-				SBSOpenSensitiveURLAndUnlock((CFURLRef)newUrl, 1);
+				CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
+				rocketbootstrap_distributedmessagingcenter_apply(center);
+				[center sendMessageAndReceiveReplyName:kHBLOOpenURLMessage userInfo:@{
+					kHBLOOpenURLKey: newUrl.absoluteString
+				}];
 			}
 
 			return YES;
@@ -149,6 +161,38 @@
 
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler {
 	return [self handlerIdentifierIsEnabled:handler.identifier];
+}
+
+#pragma mark - Messaging server
+
+- (NSDictionary *)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
+	if (!IN_SPRINGBOARD) {
+		return nil;
+	}
+
+	if ([message isEqualToString:kHBLOGetHandlersMessage]) {
+		[self loadHandlers];
+
+		NSMutableArray *handlers = [NSMutableArray array];
+
+		for (HBLOHandler *handler in _handlers) {
+			[handlers addObject:@{
+				kHBLOHandlerNameKey: handler.name,
+				kHBLOHandlerIdentifierKey: handler.identifier,
+				kHBLOHandlerPreferencesClassKey: handler.preferencesClass ?: @""
+			}];
+		}
+
+		[handlers sortUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
+			return [obj1[kHBLOHandlerNameKey] compare:obj2[kHBLOHandlerNameKey]];
+		}];
+
+		return @{ kHBLOHandlersKey: handlers };
+	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
+		[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] publicURLsOnly:NO];
+	}
+
+	return nil;
 }
 
 @end
