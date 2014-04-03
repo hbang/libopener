@@ -6,4 +6,5 @@ Architecture: iphoneos-arm
 Description: Developer library for overriding link destinations
 Maintainer: HASHBANG Productions <libopener@hbang.ws>
 Author: HASHBANG Productions <libopener@hbang.ws>
+Support: http://cydia.hbang.ws/status#libopener
 Section: Development
