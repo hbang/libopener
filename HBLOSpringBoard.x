@@ -60,6 +60,8 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 
     %init;
 
+    [HBLOHandlerController sharedInstance];
+
     if (IS_IOS_OR_NEWER(iOS_7_0)) {
         %init(JonyIve);
     } else if (IS_IOS_OR_NEWER(iOS_6_0)) {

@@ -75,6 +75,7 @@
 		NSLog(@"libopener: failed to access handler directory %@: %@", kHBLOHandlersURL, error.localizedDescription);
 		return;
 	}
+
 	for (NSURL *directory in contents) {
 		// NSLog is #defined as doing nothing when !DEBUG with my setup
 #pragma clang diagnostic push
