@@ -2,9 +2,11 @@
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
 #import <SpringBoard/SpringBoard.h>
-#import <SpringBoardServices/SpringBoardServices.h>
+#import <SpringBoard/SBUserAgent.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <rocketbootstrap/rocketbootstrap.h>
+
+extern BOOL isHookedValue;
 
 @implementation HBLOHandlerController {
 	NSDictionary *_preferences;
@@ -133,7 +135,7 @@
 
 		if (newUrl) {
 			if (IN_SPRINGBOARD) {
-				[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:newUrl publicURLsOnly:NO];
+				[(SBUserAgent *)[%c(SBUserAgent) sharedUserAgent] openURL:url allowUnlock:YES animated:YES];
 			} else {
 				CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
 				rocketbootstrap_distributedmessagingcenter_apply(center);
@@ -190,7 +192,8 @@
 
 		return @{ kHBLOHandlersKey: handlers };
 	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
-		[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] publicURLsOnly:NO];
+		isHookedValue = YES;
+		[(SBUserAgent *)[%c(SBUserAgent) sharedInstance] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] allowUnlock:YES animated:YES];
 	}
 
 	return nil;
