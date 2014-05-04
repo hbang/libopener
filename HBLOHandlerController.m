@@ -129,7 +129,7 @@
 
 		NSURL *newUrl = [handler openURL:url sender:sender];
 
-		NSLog(@"got %@ from %@", newUrl, handler);
+		NSLog(@"libopener: got %@ from %@", newUrl, handler);
 
 		if (newUrl) {
 			if (IN_SPRINGBOARD) {
