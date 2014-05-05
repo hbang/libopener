@@ -8,7 +8,7 @@ THEOS_BUILD_DIR = debs
 LIBRARY_NAME = libopener
 libopener_FILES = $(wildcard *.x) $(wildcard *.m)
 libopener_FRAMEWORKS = UIKit
-libopener_PRIVATE_FRAMEWORKS = AppSupport SpringBoardServices
+libopener_PRIVATE_FRAMEWORKS = AppSupport MobileCoreServices
 libopener_LIBRARIES = substrate rocketbootstrap
 
 SUBPROJECTS = prefs

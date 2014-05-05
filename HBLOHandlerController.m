@@ -1,9 +1,12 @@
 #import "HBLOGlobal.h"
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
-#import <SpringBoard/SpringBoard.h>
-#import <SpringBoardServices/SpringBoardServices.h>
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <MobileCoreServices/LSApplicationWorkspace.h>
+#import <MobileCoreServices/LSApplicationProxy.h>
+#import <SpringBoard/SpringBoard.h>
+#import <SpringBoard/SBApplication.h>
+#import <SpringBoardServices/SpringBoardServices.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 
 @implementation HBLOHandlerController {
@@ -118,6 +121,42 @@
 #pragma mark - Open URL
 
 - (BOOL)openURL:(NSURL *)url sender:(NSString *)sender {
+	NSURL *newUrl = [self getReplacementForURL:url sender:sender];
+
+	if (!newUrl) {
+		return NO;
+	}
+
+	if (IN_SPRINGBOARD) {
+		[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:newUrl publicURLsOnly:NO];
+	} else {
+		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:newUrl.scheme];
+
+		for (LSApplicationProxy *app in apps) {
+			if ([app.applicationIdentifier isEqualToString:[NSBundle mainBundle].bundleIdentifier]) {
+				return NO;
+			}
+		}
+
+		CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
+		rocketbootstrap_distributedmessagingcenter_apply(center);
+		[center sendMessageAndReceiveReplyName:kHBLOOpenURLMessage userInfo:@{
+			kHBLOOpenURLKey: newUrl.absoluteString
+		}];
+	}
+
+	return YES;
+}
+
+- (NSURL *)getReplacementForURL:(NSURL *)url sender:(NSString *)sender {
+	if (!sender) {
+		if (IN_SPRINGBOARD) {
+			sender = ((SpringBoard *)[UIApplication sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
+		} else {
+			sender = [NSBundle mainBundle].bundleIdentifier;
+		}
+	}
+
 	if (!_hasLoadedHandlers) {
 		[self loadHandlers];
 	}
@@ -132,21 +171,11 @@
 		NSLog(@"libopener: got %@ from %@", newUrl, handler);
 
 		if (newUrl) {
-			if (IN_SPRINGBOARD) {
-				[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:newUrl publicURLsOnly:NO];
-			} else {
-				CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
-				rocketbootstrap_distributedmessagingcenter_apply(center);
-				[center sendMessageAndReceiveReplyName:kHBLOOpenURLMessage userInfo:@{
-					kHBLOOpenURLKey: newUrl.absoluteString
-				}];
-			}
-
-			return YES;
+			return newUrl;
 		}
 	}
 
-	return NO;
+	return nil;
 }
 
 #pragma mark - Preferences
