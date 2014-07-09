@@ -7,14 +7,14 @@
 BOOL isHookedValue = NO;
 
 BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
-    if (isHookedValue) {
-        isHookedValue = NO;
-    } else if ([[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
-        isHookedValue = YES;
-        return NO;
-    }
+	if (isHookedValue) {
+		isHookedValue = NO;
+	} else if ([[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
+		isHookedValue = YES;
+		return NO;
+	}
 
-    return YES;
+	return YES;
 }
 
 %hook SpringBoard
@@ -22,11 +22,11 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 %group SteveJobs
 
 - (void)_openURLCore:(NSURL *)url display:(id)display publicURLsOnly:(BOOL)publicOnly animating:(BOOL)animating additionalActivationFlag:(NSUInteger)flags {
-    NSString *sender = ((SpringBoard *)[UIApplication sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
+	NSString *sender = ((SpringBoard *)[UIApplication sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
 
-    if (HBLOOpenURLCoreHook(url, sender)) {
-        %orig;
-    }
+	if (HBLOOpenURLCoreHook(url, sender)) {
+		%orig;
+	}
 }
 
 %end
@@ -34,9 +34,9 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 %group ScottForstall
 
 - (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender additionalActivationFlags:(id)flags {
-    if (HBLOOpenURLCoreHook(url, sender)) {
-        %orig;
-    }
+	if (HBLOOpenURLCoreHook(url, sender)) {
+		%orig;
+	}
 }
 
 %end
@@ -44,9 +44,9 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 %group JonyIve
 
 - (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender additionalActivationFlags:(id)flags activationHandler:(id)handler {
-    if (HBLOOpenURLCoreHook(url, sender)) {
-        %orig;
-    }
+	if (HBLOOpenURLCoreHook(url, sender)) {
+		%orig;
+	}
 }
 
 %end
@@ -55,16 +55,16 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 
 %ctor {
 	if (!IN_SPRINGBOARD) {
-        return;
-    }
+		return;
+	}
 
-    %init;
+	%init;
 
-    [HBLOHandlerController sharedInstance];
+	[HBLOHandlerController sharedInstance];
 
-    if (IS_IOS_OR_NEWER(iOS_7_0)) {
-        %init(JonyIve);
-    } else if (IS_IOS_OR_NEWER(iOS_6_0)) {
+	if (IS_IOS_OR_NEWER(iOS_7_0)) {
+		%init(JonyIve);
+	} else if (IS_IOS_OR_NEWER(iOS_6_0)) {
 		%init(ScottForstall);
 	} else {
 		%init(SteveJobs);
