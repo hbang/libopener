@@ -51,6 +51,16 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 
 %end
 
+%group JonyIvePointOne
+
+- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender activationContext:(id)arg5 activationHandler:(id)arg6 {
+	if (HBLOOpenURLCoreHook(url, sender)) {
+		%orig;
+	}
+}
+
+%end
+
 %end
 
 %ctor {
@@ -62,7 +72,9 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 
 	[HBLOHandlerController sharedInstance];
 
-	if (IS_IOS_OR_NEWER(iOS_7_0)) {
+	if (IS_IOS_OR_NEWER(iOS_7_1)) {
+		%init(JonyIvePointOne);
+	} else if (IS_IOS_OR_NEWER(iOS_7_0)) {
 		%init(JonyIve);
 	} else if (IS_IOS_OR_NEWER(iOS_6_0)) {
 		%init(ScottForstall);
