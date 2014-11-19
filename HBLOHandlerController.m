@@ -128,7 +128,7 @@
 	}
 
 	if (IN_SPRINGBOARD) {
-		[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:newUrl publicURLsOnly:NO];
+		[[UIApplication sharedApplication] openURL:newUrl];
 	} else {
 		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:newUrl.scheme];
 
@@ -219,7 +219,7 @@
 
 		return @{ kHBLOHandlersKey: handlers };
 	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
-		[(SpringBoard *)[UIApplication sharedApplication] applicationOpenURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] publicURLsOnly:NO];
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
 	}
 
 	return nil;
