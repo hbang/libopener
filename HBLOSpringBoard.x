@@ -53,10 +53,20 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 
 %group JonyIvePointOne
 
-- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender activationContext:(id)arg5 activationHandler:(id)arg6 {
+- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender activationContext:(id)context activationHandler:(id)handler {
 	if (HBLOOpenURLCoreHook(url, sender)) {
 		%orig;
 	}
+}
+
+%end
+
+%group CraigFederighi
+
+- (void)_openURLCore:(NSURL *)url display:(id)display animating:(BOOL)animating sender:(NSString *)sender activationSettings:(id)settings withResult:(id)result {
+    if (HBLOOpenURLCoreHook(url, sender)) {
+        %orig;
+    }
 }
 
 %end
@@ -72,7 +82,9 @@ BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
 
 	[HBLOHandlerController sharedInstance];
 
-	if (IS_IOS_OR_NEWER(iOS_7_1)) {
+	if (IS_IOS_OR_NEWER(iOS_8_0)) {
+		%init(CraigFederighi);
+	} else if (IS_IOS_OR_NEWER(iOS_7_1)) {
 		%init(JonyIvePointOne);
 	} else if (IS_IOS_OR_NEWER(iOS_7_0)) {
 		%init(JonyIve);
