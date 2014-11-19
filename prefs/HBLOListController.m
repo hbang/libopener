@@ -5,7 +5,7 @@
 #import "../HBLOHandlerController.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <Preferences/PSSpecifier.h>
-#import <libhbangcommon/HBTwitterCell.h>
+#import <libhbangcommon/prefs/HBTwitterCell.h>
 #include <notify.h>
 
 @implementation HBLOListController {
