@@ -1,10 +1,10 @@
 Package: ws.hbang.libopener
 Name: Opener
-Depends: mobilesubstrate, com.rpetrich.rocketbootstrap, ws.hbang.common
-Version: 2.0.1
+Depends: mobilesubstrate, preferenceloader, com.rpetrich.rocketbootstrap, ws.hbang.common
+Version: 2.0.3
 Architecture: iphoneos-arm
 Description: Developer library for overriding link destinations
-Maintainer: HASHBANG Productions <libopener@hbang.ws>
-Author: HASHBANG Productions <libopener@hbang.ws>
-Support: http://cydia.hbang.ws/status#libopener
+Maintainer: HASHBANG Productions <support@hbang.ws>
+Author: HASHBANG Productions <support@hbang.ws>
+Support: https://www.hbang.ws/faq
 Section: Development
