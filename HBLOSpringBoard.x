@@ -4,17 +4,8 @@
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 
-BOOL isHookedValue = NO;
-
 BOOL HBLOOpenURLCoreHook(NSURL *url, NSString *sender) {
-	if (isHookedValue) {
-		isHookedValue = NO;
-	} else if ([[HBLOHandlerController sharedInstance] openURL:url sender:sender]) {
-		isHookedValue = YES;
-		return NO;
-	}
-
-	return YES;
+	return ![[HBLOHandlerController sharedInstance] openURL:url sender:sender];
 }
 
 %hook SpringBoard
