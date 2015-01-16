@@ -172,6 +172,8 @@
 		[self loadHandlers];
 	}
 
+	NSLog(@"libopener: determining replacement for: %@", url);
+
 	for (HBLOHandler *handler in _handlers) {
 		if (![self handlerIsEnabled:handler]) {
 			continue;
