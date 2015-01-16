@@ -8,6 +8,7 @@
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SpringBoardServices.h>
 #import <rocketbootstrap/rocketbootstrap.h>
+#import <Foundation/NSString+LSAdditions.h>
 
 @implementation HBLOHandlerController {
 	NSDictionary *_preferences;
@@ -152,13 +153,10 @@
 	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
 		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
 	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
-		NSArray *items = [url.query componentsSeparatedByString:@"&"];
+		NSDictionary *query = url.query.queryToDict;
 
-		for (NSString *argument in items) {
-			if ([argument hasPrefix:@"url="]) {
-				url = [NSURL URLWithString:[[argument substringWithRange:NSMakeRange(4, argument.length - 4)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-				break;
-			}
+		if (query[@"url"]) {
+			url = [NSURL URLWithString:query[@"url"]];
 		}
 	}
 
