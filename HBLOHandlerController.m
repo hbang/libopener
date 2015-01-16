@@ -121,19 +121,6 @@
 #pragma mark - Open URL
 
 - (BOOL)openURL:(NSURL *)url sender:(NSString *)sender {
-	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
-		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
-	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
-		NSArray *items = [url.query componentsSeparatedByString:@"&"];
-
-		for (NSString *argument in items) {
-			if ([argument hasPrefix:@"url="]) {
-				url = [NSURL URLWithString:[[argument substringWithRange:NSMakeRange(4, argument.length - 4)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-				break;
-			}
-		}
-	}
-
 	NSURL *newUrl = [self getReplacementForURL:url sender:sender];
 
 	if (!newUrl) {
@@ -162,6 +149,19 @@
 }
 
 - (NSURL *)getReplacementForURL:(NSURL *)url sender:(NSString *)sender {
+	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
+		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
+	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
+		NSArray *items = [url.query componentsSeparatedByString:@"&"];
+
+		for (NSString *argument in items) {
+			if ([argument hasPrefix:@"url="]) {
+				url = [NSURL URLWithString:[[argument substringWithRange:NSMakeRange(4, argument.length - 4)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+				break;
+			}
+		}
+	}
+
 	if (!sender) {
 		if (IN_SPRINGBOARD) {
 			sender = ((SpringBoard *)[UIApplication sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
