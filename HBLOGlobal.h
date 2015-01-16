@@ -4,8 +4,6 @@
 #define IN_SPRINGBOARD ([[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.springboard"])
 #endif
 
-BOOL HBLOShouldOverrideOpenURL(NSURL *url);
-
 static NSString *const HBLOErrorDomain = @"HBLOErrorDomain";
 
 static NSString *const kHBLOHandlersURL = @"file:///Library/Opener";

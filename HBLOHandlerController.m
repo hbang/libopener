@@ -122,14 +122,14 @@
 #pragma mark - Open URL
 
 - (BOOL)openURL:(NSURL *)url sender:(NSString *)sender {
-	NSURL *newUrl = [self getReplacementForURL:url sender:sender];
+	NSArray *newURLs = [self getReplacementsForURL:url sender:sender];
 
-	if (!newUrl) {
+	if (!newURL) {
 		return NO;
 	}
 
 	if (IN_SPRINGBOARD) {
-		[[UIApplication sharedApplication] openURL:newUrl];
+		[[UIApplication sharedApplication] openURL:newURL];
 	} else {
 		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:newUrl.scheme];
 
@@ -149,7 +149,7 @@
 	return YES;
 }
 
-- (NSURL *)getReplacementForURL:(NSURL *)url sender:(NSString *)sender {
+- (NSURL *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
 	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
 		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
 	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
@@ -174,21 +174,33 @@
 
 	NSLog(@"libopener: determining replacement for: %@", url);
 
+	NSMutableArray *results = [NSMutableArray array];
+
 	for (HBLOHandler *handler in _handlers) {
 		if (![self handlerIsEnabled:handler]) {
 			continue;
 		}
 
-		NSURL *newUrl = [handler openURL:url sender:sender];
+		id newURL = [handler openURL:url sender:sender];
 
-		NSLog(@"libopener: got %@ from %@", newUrl, handler);
+		NSLog(@"libopener: got %@ from %@", newURL, handler);
 
-		if (newUrl) {
-			return newUrl;
+		if (!newURL) {
+			continue;
+		} else if ([newURL isKindOfClass:NSURL.class])
+			[results addObject:newURL];
+		} else if ([newURL isKindOfClass:NSArray.class]) {
+			[results addObjectsFromArray:newURL];
 		}
 	}
 
-	return nil;
+	for (NSURL *url in results) {
+		if (![[UIApplication sharedApplication] canOpenURL:url]) {
+			[results removeObject:url];
+		}
+	}
+
+	return results.count ? results : nil;
 }
 
 #pragma mark - Preferences
