@@ -19,7 +19,7 @@ after-stage::
 
 	ln -s /usr/lib/libopener.dylib $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib
 	cp libopener.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.plist
-	cp HBLibOpener.h HBLOHandler.h $(THEOS_STAGING_DIR)/usr/include/libopener
+	cp HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h $(THEOS_STAGING_DIR)/usr/include/libopener
 	cp $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib $(THEOS)/lib/libopener.dylib
 	cp -r $(THEOS_STAGING_DIR)/usr/include/libopener $(THEOS)/include/libopener
 
