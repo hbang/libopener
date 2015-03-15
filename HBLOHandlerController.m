@@ -1,17 +1,19 @@
 #import "HBLOGlobal.h"
+#import "HBLOHandlerChooserController.h"
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <Cephei/HBPreferences.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
+#import <MobileCoreServices/NSString+LSAdditions.h>
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SpringBoardServices.h>
 #import <rocketbootstrap/rocketbootstrap.h>
-#import <Foundation/NSString+LSAdditions.h>
 
 @implementation HBLOHandlerController {
-	NSDictionary *_preferences;
+	HBPreferences *_preferences;
 	BOOL _hasLoadedHandlers;
 }
 
@@ -30,6 +32,7 @@
 
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
+		_preferences = [[HBPreferences alloc] initWithIdentifier:@"ws.hbang.libopener"];
 
 		if (IN_SPRINGBOARD) {
 			CPDistributedMessagingCenter *messagingServer = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
@@ -38,8 +41,6 @@
 			[messagingServer registerForMessageName:kHBLOGetHandlersMessage target:self selector:@selector(_receivedMessage:withData:)];
 			[messagingServer registerForMessageName:kHBLOOpenURLMessage target:self selector:@selector(_receivedMessage:withData:)];
 		}
-
-		[self preferencesUpdated];
 	}
 
 	return self;
@@ -121,17 +122,11 @@
 
 #pragma mark - Open URL
 
-- (BOOL)openURL:(NSURL *)url sender:(NSString *)sender {
-	NSArray *newURLs = [self getReplacementsForURL:url sender:sender];
-
-	if (!newURL) {
-		return NO;
-	}
-
+- (BOOL)openURL:(NSURL *)url {
 	if (IN_SPRINGBOARD) {
-		[[UIApplication sharedApplication] openURL:newURL];
+		[[UIApplication sharedApplication] openURL:url];
 	} else {
-		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:newUrl.scheme];
+		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url.scheme];
 
 		for (LSApplicationProxy *app in apps) {
 			if ([app.applicationIdentifier isEqualToString:[NSBundle mainBundle].bundleIdentifier]) {
@@ -142,14 +137,15 @@
 		CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
 		rocketbootstrap_distributedmessagingcenter_apply(center);
 		[center sendMessageAndReceiveReplyName:kHBLOOpenURLMessage userInfo:@{
-			kHBLOOpenURLKey: newUrl.absoluteString
+			kHBLOOpenURLKey: url.absoluteString,
+			kHBLOShowChooserKey: @YES
 		}];
 	}
 
 	return YES;
 }
 
-- (NSURL *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
+- (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
 	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
 		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
 	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
@@ -187,16 +183,16 @@
 
 		if (!newURL) {
 			continue;
-		} else if ([newURL isKindOfClass:NSURL.class])
+		} else if ([newURL isKindOfClass:NSURL.class]) {
 			[results addObject:newURL];
 		} else if ([newURL isKindOfClass:NSArray.class]) {
 			[results addObjectsFromArray:newURL];
 		}
 	}
 
-	for (NSURL *url in results) {
-		if (![[UIApplication sharedApplication] canOpenURL:url]) {
-			[results removeObject:url];
+	for (NSURL *url_ in results) {
+		if (![[UIApplication sharedApplication] canOpenURL:url_]) {
+			[results removeObject:url_];
 		}
 	}
 
@@ -205,13 +201,9 @@
 
 #pragma mark - Preferences
 
-- (void)preferencesUpdated {
-	[_preferences release];
-	_preferences = [[NSDictionary alloc] initWithContentsOfFile:kHBLOPreferencesPath];
-}
-
 - (BOOL)handlerIdentifierIsEnabled:(NSString *)identifier {
-	return _preferences[identifier] ? ((NSNumber *)_preferences[identifier]).boolValue : YES;
+	NSNumber *enabled = [_preferences objectForKey:identifier];
+	return enabled ? enabled.boolValue : YES;
 }
 
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler {
@@ -244,7 +236,11 @@
 
 		return @{ kHBLOHandlersKey: handlers };
 	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
+		if (!data[kHBLOShowChooserKey] || ((NSNumber *)data[kHBLOShowChooserKey]).boolValue) {
+			[[HBLOHandlerChooserController sharedInstance] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] options:nil];
+		} else {
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
+		}
 	}
 
 	return nil;

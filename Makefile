@@ -5,13 +5,14 @@ include theos/makefiles/common.mk
 
 LIBRARY_NAME = libopener
 libopener_FILES = $(wildcard *.x) $(wildcard *.m)
-libopener_FRAMEWORKS = UIKit
-libopener_PRIVATE_FRAMEWORKS = AppSupport MobileCoreServices
-libopener_LIBRARIES = substrate rocketbootstrap
+libopener_FRAMEWORKS = MobileCoreServices UIKit
+libopener_PRIVATE_FRAMEWORKS = AppSupport
+libopener_LIBRARIES = cephei rocketbootstrap substrate
 
-SUBPROJECTS = prefs
+SUBPROJECTS = springboard prefs
 
 include $(THEOS_MAKE_PATH)/library.mk
+SUBPROJECTS += libopenerspringboard
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-stage::

@@ -8,9 +8,8 @@
 - (void)loadHandlers;
 
 - (BOOL)openURL:(NSURL *)url sender:(NSString *)sender;
-- (NSURL *)getReplacementForURL:(NSURL *)url sender:(NSString *)sender;
+- (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender;
 
-- (void)preferencesUpdated;
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler;
 - (BOOL)handlerIdentifierIsEnabled:(NSString *)identifier;
 

@@ -6,7 +6,11 @@
 	<dict>
 		<key>Bundles</key>
 		<array>
-			<string>com.apple.MobileCoreServices</string>
+			<string>com.apple.springboard</string>
+		</array>
+		<key>CoreFoundationVersion</key>
+		<array>
+			<real>1140</real>
 		</array>
 	</dict>
 </dict>
