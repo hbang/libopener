@@ -6,5 +6,5 @@ Architecture: iphoneos-arm
 Description: Developer library for overriding link destinations
 Maintainer: HASHBANG Productions <support@hbang.ws>
 Author: HASHBANG Productions <support@hbang.ws>
-Support: https://www.hbang.ws/faq
+Support: https://www.hbang.ws/faq/
 Section: Development
