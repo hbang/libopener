@@ -1,3 +1,5 @@
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol HBLOHandlerDelegate <NSObject>
 
 /**
@@ -22,7 +24,7 @@
  *
  * @see preferencesClass
  */
-@property (nonatomic, retain) NSBundle *preferencesBundle;
+@property (nonatomic, retain, nullable) NSBundle *preferencesBundle;
 
 /**
  * Custom Preferences list controller class.
@@ -32,7 +34,7 @@
  *
  * @see preferencesBundle
  */
-@property (nonatomic, retain) NSString *preferencesClass;
+@property (nonatomic, retain, nullable) NSString *preferencesClass;
 
 /**
  * Called when a URL is opened in order to check if your handler wants to override the URL.
@@ -43,6 +45,8 @@
  * @returns An NSURL that will be opened instead of the original, an NSArray of NSURLs for multiple
  * apps, or nil to not change the URL.
  */
-- (id)openURL:(NSURL *)url sender:(NSString *)sender;
+- (nullable id)openURL:(NSURL *)url sender:(nullable NSString *)sender;
 
 @end
+
+NS_ASSUME_NONNULL_END

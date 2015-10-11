@@ -5,10 +5,12 @@
 
 #import "HBLOHandler.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
- * Callback block
+ * Legacy callback block.
  */
-typedef NSURL * (^HBLOHandlerCallbackBlock)(NSURL *url);
+typedef NSURL * _Nullable (^HBLOHandlerCallbackBlock)(NSURL *url);
 
 @interface HBLibOpener : NSObject
 
@@ -55,3 +57,5 @@ typedef NSURL * (^HBLOHandlerCallbackBlock)(NSURL *url);
 - (BOOL)handlerIsEnabled:(NSString *)handler;
 
 @end
+
+NS_ASSUME_NONNULL_END
