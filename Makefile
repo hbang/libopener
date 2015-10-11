@@ -2,25 +2,29 @@ TARGET = :clang::5.0
 
 include $(THEOS)/makefiles/common.mk
 
-LIBRARY_NAME = libopener
-libopener_FILES = $(wildcard *.x) $(wildcard *.m)
-libopener_FRAMEWORKS = MobileCoreServices UIKit
-libopener_PRIVATE_FRAMEWORKS = AppSupport
-libopener_LIBRARIES = cephei rocketbootstrap substrate
+FRAMEWORK_NAME = Opener
+Opener_FILES = $(wildcard *.x) $(wildcard *.m)
+Opener_FRAMEWORKS = MobileCoreServices UIKit
+Opener_PRIVATE_FRAMEWORKS = AppSupport
+Opener_LIBRARIES = cephei rocketbootstrap substrate
 
 SUBPROJECTS = springboard prefs
 
-include $(THEOS_MAKE_PATH)/library.mk
+include $(THEOS_MAKE_PATH)/framework.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-stage::
-	mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries $(THEOS_STAGING_DIR)/Library/Opener $(THEOS_STAGING_DIR)/usr/include/libopener
+	mkdir -p $(THEOS_STAGING_DIR)/usr/lib
+	ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib
 
-	ln -s /usr/lib/libopener.dylib $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib
+	mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries
+	ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib
 	cp libopener.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.plist
+
+	mkdir -p $(THEOS_STAGING_DIR)/Library/Opener $(THEOS_STAGING_DIR)/usr/include/libopener
 	cp HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h $(THEOS_STAGING_DIR)/usr/include/libopener
-	cp $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib $(THEOS)/lib/libopener.dylib
-	cp -r $(THEOS_STAGING_DIR)/usr/include/libopener $(THEOS)/include/libopener
+	rsync -ra $(THEOS_STAGING_DIR)/Library/Frameworks/Opener.framework $(THEOS)/lib/
+	rsync -ra $(THEOS_STAGING_DIR)/usr/include/libopener/ $(THEOS)/include/libopener
 
 after-install::
 ifeq ($(RESPRING),0)

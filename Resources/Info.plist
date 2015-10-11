@@ -5,9 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>libopener</string>
+	<string>Opener</string>
 	<key>CFBundleIdentifier</key>
-	<string>ws.hbang.libopenerprefs</string>
+	<string>ws.hbang.libopener</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -22,11 +22,5 @@
 	<string>1.0</string>
 	<key>DTPlatformName</key>
 	<string>iphoneos</string>
-	<key>HBPackageIdentifier</key>
-	<string>ws.hbang.libopener</string>
-	<key>MinimumOSVersion</key>
-	<string>3.0</string>
-	<key>NSPrincipalClass</key>
-	<string>HBLOListController</string>
 </dict>
 </plist>

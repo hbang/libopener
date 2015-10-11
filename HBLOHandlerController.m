@@ -52,7 +52,7 @@
 	for (HBLOHandler *handler2 in _handlers) {
 		if ([handler.identifier isEqualToString:handler2.identifier]) {
 			*error = [NSError errorWithDomain:HBLOErrorDomain code:1 userInfo:@{
-				NSLocalizedDescriptionKey: [NSString stringWithFormat:@"The handler \"%@\" is already registered.", handler.identifier]
+				NSLocalizedDescriptionKey: [NSString stringWithFormat:@"The handler “%@” is already registered.", handler.identifier]
 			}];
 
 			return NO;

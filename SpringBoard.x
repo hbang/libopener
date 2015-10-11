@@ -1,4 +1,3 @@
-#import "HBLOGlobal.h"
 #import "HBLOHandlerController.h"
 
 %ctor {
@@ -7,4 +6,5 @@
 	}
 
 	[HBLOHandlerController sharedInstance];
+	%init;
 }

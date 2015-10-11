@@ -3,8 +3,7 @@
 @implementation HBLOOpenBrowserActivity
 
 + (UIActivityCategory)activityCategory {
-	return UIActivityCategoryShare;
-	// return (UIActivityCategory)HBLOActivityCategoryBrowser;
+	return (UIActivityCategory)HBLOActivityCategoryBrowser;
 }
 
 @end

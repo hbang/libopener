@@ -1,12 +1,14 @@
 #import "HBLOOpenURLActivity.h"
 #import <MobileCoreServices/LSApplicationProxy.h>
+#import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSOpenOperation.h>
 #import <UIKit/UIActivity+Private.h>
+#import <UIKit/UIImage+Private.h>
 
 @implementation HBLOOpenURLActivity {
 	NSURL *_url;
 	NSString *_bundleIdentifier;
-	NSString *_localizedName;
+	LSApplicationProxy *_applicationProxy;
 	NSDictionary *_openOperationOptions;
 }
 
@@ -23,8 +25,7 @@
 }
 
 + (UIActivityCategory)activityCategory {
-	return UIActivityCategoryShare;
-	// TODO: return (UIActivityCategory)HBLOActivityCategoryApp;
+	return (UIActivityCategory)HBLOActivityCategoryApp;
 }
 
 - (instancetype)initWithURL:(NSURL *)url bundleIdentifier:(NSString *)bundleIdentifier openOperationOptions:(NSDictionary *)openOperationOptions {
@@ -33,7 +34,7 @@
 	if (self) {
 		_url = [url copy];
 		_bundleIdentifier = [bundleIdentifier copy];
-		_localizedName = [[LSApplicationProxy applicationProxyForIdentifier:_bundleIdentifier].localizedName copy];
+		_applicationProxy = [[LSApplicationProxy applicationProxyForIdentifier:bundleIdentifier] retain];
 		_openOperationOptions = [openOperationOptions copy];
 	}
 
@@ -45,21 +46,40 @@
 }
 
 - (NSString *)activityTitle {
-	return _localizedName;
+	return _applicationProxy.localizedName;
 }
 
-- (UIImage *)activityImage {
-	return [self.class _activityImageForApplication:_bundleIdentifier];
+- (UIImage *)_activityImage {
+	return [UIImage _iconForResourceProxy:_applicationProxy format:12];
+}
+
+- (UIImage *)_activitySettingsImage {
+	return [UIImage _iconForResourceProxy:_applicationProxy format:0];
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
-	return YES;
+	if (!_applicationProxy.isInstalled) {
+		return NO;
+	}
+
+	for (id item in activityItems) {
+		if ([item isKindOfClass:NSURL.class]) {
+			NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:((NSURL *)item).scheme];
+
+			if (apps.count > 0) {
+				return YES;
+			}
+		}
+	}
+
+	return NO;
 }
 
 - (void)performActivity {
-	LSOpenOperation *openOperation = [[[%c(LSOpenOperation) alloc] initForOpeningResource:_url usingApplication:_bundleIdentifier uniqueDocumentIdentifier:nil sourceIsManaged:NO userInfo:nil options:_openOperationOptions delegate:nil] autorelease];
-	[openOperation main];
-	[self activityDidFinish:openOperation.didSucceed];
+	// LSOpenOperation *openOperation = [[[%c(LSOpenOperation) alloc] initForOpeningResource:_url usingApplication:_bundleIdentifier uniqueDocumentIdentifier:nil sourceIsManaged:NO userInfo:nil options:_openOperationOptions delegate:nil] autorelease];
+	// [openOperation main];
+	// [self activityDidFinish:openOperation.didSucceed];
+	[self activityDidFinish:NO];
 }
 
 #pragma mark - Memory management
@@ -67,7 +87,7 @@
 - (void)dealloc {
 	[_url release];
 	[_bundleIdentifier release];
-	[_localizedName release];
+	[_applicationProxy release];
 	[_openOperationOptions release];
 
 	[super dealloc];
