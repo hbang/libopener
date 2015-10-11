@@ -24,7 +24,8 @@ typedef NSURL * _Nullable (^HBLOHandlerCallbackBlock)(NSURL *url);
 /**
  * Allows you to register a handler with libopener.
  *
- * You should call this from all processes that link against UIKit. See the
+ * You should call this from all processes that link against the MobileCoreServices framework
+ * (`com.apple.MobileCoreServices`). See the
  * [Cydia Substrate](http://www.cydiasubstrate.com/inject/darwin/) documentation for details on filter
  * plists.
  *
