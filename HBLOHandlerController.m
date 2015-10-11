@@ -65,11 +65,11 @@
 
 - (void)loadHandlers {
 	if (_hasLoadedHandlers) {
-		NSLog(@"libopener: you only load handlers once (YOLHO)");
+		HBLogDebug(@"you only load handlers once (YOLHO)");
 		return;
 	}
 
-	NSLog(@"libopener: loading handlers");
+	HBLogInfo(@"loading handlers");
 
 	_hasLoadedHandlers = YES;
 
@@ -77,44 +77,40 @@
 	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL URLWithString:kHBLOHandlersURL] includingPropertiesForKeys:nil options:kNilOptions error:&error];
 
 	if (error) {
-		NSLog(@"libopener: failed to access handler directory %@: %@", kHBLOHandlersURL, error.localizedDescription);
+		HBLogError(@"failed to access handler directory %@: %@", kHBLOHandlersURL, error.localizedDescription);
 		return;
 	}
 
 	for (NSURL *directory in contents) {
-		// NSLog is #defined as doing nothing when !DEBUG with my setup
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-variable"
 		NSString *baseName = directory.pathComponents.lastObject;
-#pragma clang diagnostic pop
 
-		NSLog(@"libopener: loading %@", baseName);
+		HBLogInfo(@"loading %@", baseName);
 
 		NSBundle *bundle = [NSBundle bundleWithURL:directory];
 
 		if (!bundle) {
-			NSLog(@"libopener: failed to load bundle for handler %@", baseName);
+			HBLogError(@"failed to load bundle for handler %@", baseName);
 			return;
 		}
 
 		[bundle load];
 
 		if (!bundle.principalClass) {
-			NSLog(@"libopener: no principal class for handler %@", baseName);
+			HBLogError(@"no principal class for handler %@", baseName);
 			return;
 		}
 
 		HBLOHandler *handler = [[[bundle.principalClass alloc] init] autorelease];
 
 		if (!handler) {
-			NSLog(@"libopener: failed to initialise principal class for %@", baseName);
+			HBLogError(@"libopener: failed to initialise principal class for %@", baseName);
 			return;
 		}
 
 		NSError *error = nil;
 
 		if (![self registerHandler:handler error:&error]) {
-			NSLog(@"libopener: error registering handler %@: %@", baseName, error.localizedDescription);
+			HBLogError(@"libopener: error registering handler %@: %@", baseName, error.localizedDescription);
 			return;
 		}
 	}
@@ -168,7 +164,7 @@
 		[self loadHandlers];
 	}
 
-	NSLog(@"libopener: determining replacement for: %@", url);
+	HBLogDebug(@"determining replacement for: %@", url);
 
 	NSMutableArray *results = [NSMutableArray array];
 
@@ -179,7 +175,7 @@
 
 		id newURL = [handler openURL:url sender:sender];
 
-		NSLog(@"libopener: got %@ from %@", newURL, handler);
+		HBLogDebug(@"got %@ from %@", newURL, handler);
 
 		if (!newURL) {
 			continue;

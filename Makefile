@@ -1,7 +1,6 @@
 TARGET = :clang::5.0
-ARCHS = armv7 arm64
 
-include theos/makefiles/common.mk
+include $(THEOS)/makefiles/common.mk
 
 LIBRARY_NAME = libopener
 libopener_FILES = $(wildcard *.x) $(wildcard *.m)
@@ -12,7 +11,6 @@ libopener_LIBRARIES = cephei rocketbootstrap substrate
 SUBPROJECTS = springboard prefs
 
 include $(THEOS_MAKE_PATH)/library.mk
-SUBPROJECTS += libopenerspringboard
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-stage::
@@ -26,7 +24,7 @@ after-stage::
 
 after-install::
 ifeq ($(RESPRING),0)
-	install.exec "killall Preferences; sleep 0.2; sbopenurl 'prefs:root=Cydia&path=Opener'"
+	install.exec "killall Preferences; sleep 0.2; sbopenurl 'prefs:root=Opener'"
 else
 	install.exec spring
 endif
