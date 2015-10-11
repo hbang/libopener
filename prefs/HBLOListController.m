@@ -13,6 +13,8 @@
     NSMutableDictionary *_prefs;
 }
 
+@dynamic view;
+
 #pragma mark - UIViewController
 
 - (void)loadView {

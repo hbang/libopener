@@ -1,5 +1,5 @@
 #import "HBLOHandlerController.h"
-#import "HBLOHandlerChooserViewController.h"
+#import "HBLOHandlerChooserController.h"
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <version.h>
 

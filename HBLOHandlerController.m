@@ -120,7 +120,7 @@
 
 - (BOOL)openURL:(NSURL *)url {
 	if (IN_SPRINGBOARD) {
-		[[UIApplication sharedApplication] openURL:url];
+		return [[UIApplication sharedApplication] openURL:url];
 	} else {
 		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url.scheme];
 
@@ -136,9 +136,9 @@
 			kHBLOOpenURLKey: url.absoluteString,
 			kHBLOShowChooserKey: @YES
 		}];
-	}
 
-	return YES;
+		return YES;
+	}
 }
 
 - (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
@@ -232,10 +232,10 @@
 
 		return @{ kHBLOHandlersKey: handlers };
 	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
-		if (!data[kHBLOShowChooserKey] || ((NSNumber *)data[kHBLOShowChooserKey]).boolValue) {
+		/*if (!data[kHBLOShowChooserKey] || ((NSNumber *)data[kHBLOShowChooserKey]).boolValue) {
 			[[HBLOHandlerChooserController sharedInstance] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] options:nil];
-		} else {
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
+		} else*/ {
+			[self openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
 		}
 	}
 

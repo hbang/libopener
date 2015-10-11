@@ -1,8 +1,23 @@
 #import "HBLOHandlerChooserController.h"
 #import "HBLOHandlerController.h"
+#import "springboard/HBLOHandlerChooserViewController.h"
 #import <Cephei/HBPreferences.h>
+#import <MobileCoreServices/LSApplicationWorkspace.h>
+#import <UIKit/UIWindow+Private.h>
 
 @implementation HBLOHandlerChooserController
+
++ (instancetype)sharedInstance {
+    static HBLOHandlerChooserController *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [[self alloc] init];
+    });
+
+    return sharedInstance;
+}
+
+#pragma mark - Opening/Preferences
 
 - (BOOL)openURL:(NSURL *)url options:(NSDictionary *)options {
 	NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url.scheme];
@@ -11,7 +26,7 @@
 		return NO;
 	}
 
-	[self _presentChooserForURL:url options:options];
+	[self presentChooserForURL:url options:options];
 
 	return YES;
 }
@@ -21,7 +36,8 @@
 }
 
 - (NSURL *)resolveURLForString:(NSString *)string url:(NSURL *)url {
-
+	HBLogDebug(@"resolveURLForString:%@ url:%@", string, url);
+	return url;
 }
 
 #pragma mark - Chooser
@@ -36,7 +52,15 @@
 		navigationController.navigationBarHidden = YES;
 		window.rootViewController = navigationController;
 
-		HBLOHandlerChooserViewController *viewController = [[HBLOHandlerChooserViewController alloc] initWithURL:url items:nil];
+		HBLOHandlerChooserViewController *viewController = [[[%c(HBLOHandlerChooserViewController) alloc] initWithURL:url openOperationOptions:options] autorelease];
+		viewController.completionHandler = ^(NSString *activityType, BOOL completed) {
+			window.hidden = YES;
+
+			[window release];
+			[navigationController release];
+		};
+
+		[window.rootViewController presentViewController:viewController animated:YES completion:nil];
 	} else {
 		[[HBLOHandlerController sharedInstance] openURL:url];
 	}

@@ -18,3 +18,4 @@ static NSString *const kHBLOHandlerNameKey = @"name";
 static NSString *const kHBLOHandlerIdentifierKey = @"identifier";
 static NSString *const kHBLOHandlerPreferencesClassKey = @"preferencesClass";
 static NSString *const kHBLOOpenURLKey = @"OpenURL";
+static NSString *const kHBLOShowChooserKey = @"ShowChooser";

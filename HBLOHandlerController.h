@@ -7,7 +7,7 @@
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error;
 - (void)loadHandlers;
 
-- (BOOL)openURL:(NSURL *)url sender:(NSString *)sender;
+- (BOOL)openURL:(NSURL *)url;
 - (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender;
 
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler;

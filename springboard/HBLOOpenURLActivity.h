@@ -1,9 +1,9 @@
-typedef NS_ENUM(NSUInteger, HBLOActivityCategory) {
+typedef NS_ENUM(NSInteger, HBLOActivityCategory) {
 	HBLOActivityCategoryBrowser,
 	HBLOActivityCategoryApp
 };
 
-@interface HBLOActivity : UIActivity
+@interface HBLOOpenURLActivity : UIActivity
 
 + (NSString *)nameForCategory:(HBLOActivityCategory)category;
 

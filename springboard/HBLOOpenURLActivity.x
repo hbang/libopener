@@ -1,6 +1,9 @@
-#import "HBLOActivity.h"
+#import "HBLOOpenURLActivity.h"
+#import <MobileCoreServices/LSApplicationProxy.h>
+#import <MobileCoreServices/LSOpenOperation.h>
+#import <UIKit/UIActivity+Private.h>
 
-@implementation HBLOActivity {
+@implementation HBLOOpenURLActivity {
 	NSURL *_url;
 	NSString *_bundleIdentifier;
 	NSString *_localizedName;
@@ -13,7 +16,7 @@
 			return @"Browsers";
 			break;
 
-		case HBLOActivityCategoryApps:
+		case HBLOActivityCategoryApp:
 			return @"Applications";
 			break;
 	}
@@ -21,6 +24,7 @@
 
 + (UIActivityCategory)activityCategory {
 	return UIActivityCategoryShare;
+	// TODO: return (UIActivityCategory)HBLOActivityCategoryApp;
 }
 
 - (instancetype)initWithURL:(NSURL *)url bundleIdentifier:(NSString *)bundleIdentifier openOperationOptions:(NSDictionary *)openOperationOptions {
@@ -53,7 +57,7 @@
 }
 
 - (void)performActivity {
-	LSOpenOperation *openOperation = [[[LSOpenOperation alloc] initForOpeningResource:_url usingApplication:_bundleIdentifier uniqueDocumentIdentifier:nil sourceIsManaged:NO userInfo:nil options:_openOperationOptions delegate:nil] autorelease];
+	LSOpenOperation *openOperation = [[[%c(LSOpenOperation) alloc] initForOpeningResource:_url usingApplication:_bundleIdentifier uniqueDocumentIdentifier:nil sourceIsManaged:NO userInfo:nil options:_openOperationOptions delegate:nil] autorelease];
 	[openOperation main];
 	[self activityDidFinish:openOperation.didSucceed];
 }
