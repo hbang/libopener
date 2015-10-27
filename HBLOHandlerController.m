@@ -1,11 +1,10 @@
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
-#import <AppSupport/CPDistributedMessagingCenter.h>
+#import "HBLOIPCController.h"
 #import <Cephei/HBPreferences.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import <MobileCoreServices/NSString+LSAdditions.h>
-#import <rocketbootstrap/rocketbootstrap.h>
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SpringBoardServices.h>
@@ -33,11 +32,7 @@
 		_preferences = [[HBPreferences alloc] initWithIdentifier:@"ws.hbang.libopener"];
 
 		if (IN_SPRINGBOARD) {
-			CPDistributedMessagingCenter *messagingServer = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
-			rocketbootstrap_distributedmessagingcenter_apply(messagingServer);
-			[messagingServer runServerOnCurrentThread];
-			[messagingServer registerForMessageName:kHBLOGetHandlersMessage target:self selector:@selector(_receivedMessage:withData:)];
-			[messagingServer registerForMessageName:kHBLOOpenURLMessage target:self selector:@selector(_receivedMessage:withData:)];
+			[HBLOIPCController sharedInstance];
 		}
 	}
 
@@ -116,29 +111,6 @@
 
 #pragma mark - Open URL
 
-- (BOOL)openURL:(NSURL *)url {
-	if (IN_SPRINGBOARD) {
-		return [[UIApplication sharedApplication] openURL:url];
-	} else {
-		NSArray *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url.scheme];
-
-		for (LSApplicationProxy *app in apps) {
-			if ([app.applicationIdentifier isEqualToString:[NSBundle mainBundle].bundleIdentifier]) {
-				return NO;
-			}
-		}
-
-		CPDistributedMessagingCenter *center = [CPDistributedMessagingCenter centerNamed:kHBLOMessagingCenterName];
-		rocketbootstrap_distributedmessagingcenter_apply(center);
-		[center sendMessageAndReceiveReplyName:kHBLOOpenURLMessage userInfo:@{
-			kHBLOOpenURLKey: url.absoluteString,
-			kHBLOShowChooserKey: @YES
-		}];
-
-		return YES;
-	}
-}
-
 - (NSArray *)getReplacementsForURL:(NSURL *)url application:(LSApplicationProxy *)application sender:(NSString *)sender options:(NSDictionary *)options {
 	// is it a googlechrome(s):// or googlechrome-x-callback:// url?
 	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
@@ -195,10 +167,21 @@
 		}
 	}
 
-	// iterate over our results and make sure they're all valid, openable, URLs
+	// iterate over our results
 	for (NSURL *url_ in results) {
-		if (![[UIApplication sharedApplication] canOpenURL:url_]) {
+		NSArray <LSApplicationProxy *> *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url.scheme];
+
+		if (apps.count == 0) {
+			// if nothing can open that url scheme, remove it
 			[results removeObject:url_];
+		} else {
+			// if the url can be opened by the same app, we should ignore it
+			for (LSApplicationProxy *app in apps) {
+				if ([app.applicationIdentifier isEqualToString:sender]) {
+					[results removeObject:url_];
+					break;
+				}
+			}
 		}
 	}
 
@@ -220,38 +203,6 @@
 
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler {
 	return [self handlerIdentifierIsEnabled:handler.identifier];
-}
-
-#pragma mark - Messaging server
-
-- (NSDictionary *)_receivedMessage:(NSString *)message withData:(NSDictionary *)data {
-	if (!IN_SPRINGBOARD) {
-		return nil;
-	}
-
-	if ([message isEqualToString:kHBLOGetHandlersMessage]) {
-		[self loadHandlers];
-
-		NSMutableArray *handlers = [NSMutableArray array];
-
-		for (HBLOHandler *handler in _handlers) {
-			[handlers addObject:@{
-				kHBLOHandlerNameKey: handler.name,
-				kHBLOHandlerIdentifierKey: handler.identifier,
-				kHBLOHandlerPreferencesClassKey: handler.preferencesClass ?: @""
-			}];
-		}
-
-		[handlers sortUsingComparator:^NSComparisonResult(NSDictionary *obj1, NSDictionary *obj2) {
-			return [obj1[kHBLOHandlerNameKey] compare:obj2[kHBLOHandlerNameKey]];
-		}];
-
-		return @{ kHBLOHandlersKey: handlers };
-	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
-		[self openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
-	}
-
-	return nil;
 }
 
 @end
