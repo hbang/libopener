@@ -47,6 +47,7 @@
 			[handlers addObject:@{
 				kHBLOHandlerNameKey: handler.name,
 				kHBLOHandlerIdentifierKey: handler.identifier,
+				kHBLOHandlerPreferencesBundleKey: handler.preferencesBundle ? handler.preferencesBundle.bundleURL.absoluteString : @"",
 				kHBLOHandlerPreferencesClassKey: handler.preferencesClass ?: @""
 			}];
 		}
