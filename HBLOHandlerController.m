@@ -1,5 +1,3 @@
-#import "HBLOGlobal.h"
-#import "HBLOHandlerChooserController.h"
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
@@ -7,10 +5,10 @@
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import <MobileCoreServices/NSString+LSAdditions.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SpringBoardServices.h>
-#import <rocketbootstrap/rocketbootstrap.h>
 
 @implementation HBLOHandlerController {
 	HBPreferences *_preferences;
@@ -141,10 +139,13 @@
 	}
 }
 
-- (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
+- (NSArray *)getReplacementsForURL:(NSURL *)url application:(LSApplicationProxy *)application sender:(NSString *)sender options:(NSDictionary *)options {
+	// is it a googlechrome(s):// or googlechrome-x-callback:// url?
 	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
+		// extract the original url from the chrome-specific url
 		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
 	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
+		// grab the url from the query arguments
 		NSDictionary *query = url.query.queryToDict;
 
 		if (query[@"url"]) {
@@ -152,6 +153,7 @@
 		}
 	}
 
+	// no sender given? just set it to the current app or the foreground app
 	if (!sender) {
 		if (IN_SPRINGBOARD) {
 			sender = ((SpringBoard *)[UIApplication sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
@@ -160,6 +162,7 @@
 		}
 	}
 
+	// load the handlers if we haven't yet
 	if (!_hasLoadedHandlers) {
 		[self loadHandlers];
 	}
@@ -168,31 +171,44 @@
 
 	NSMutableArray *results = [NSMutableArray array];
 
+	// loop over all available handlers
 	for (HBLOHandler *handler in _handlers) {
+		// not enabled? no worries, just skip over it
 		if (![self handlerIsEnabled:handler]) {
 			continue;
 		}
 
+		// ask the handler for a replacement URL
 		id newURL = [handler openURL:url sender:sender];
 
 		HBLogDebug(@"got %@ from %@", newURL, handler);
 
 		if (!newURL) {
+			// nothing returned? skip to the next handler
 			continue;
 		} else if ([newURL isKindOfClass:NSURL.class]) {
+			// it's an NSURL? add that to our results
 			[results addObject:newURL];
 		} else if ([newURL isKindOfClass:NSArray.class]) {
+			// it's an array, hopefully of NSURLs? add them to our results
 			[results addObjectsFromArray:newURL];
 		}
 	}
 
+	// iterate over our results and make sure they're all valid, openable, URLs
 	for (NSURL *url_ in results) {
 		if (![[UIApplication sharedApplication] canOpenURL:url_]) {
 			[results removeObject:url_];
 		}
 	}
 
+	// if we have results, return them, else return nil
 	return results.count ? results : nil;
+}
+
+- (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
+	// call through to the more complete method
+	return [self getReplacementsForURL:url application:nil sender:sender options:nil];
 }
 
 #pragma mark - Preferences
@@ -232,11 +248,7 @@
 
 		return @{ kHBLOHandlersKey: handlers };
 	} else if ([message isEqualToString:kHBLOOpenURLMessage]) {
-		/*if (!data[kHBLOShowChooserKey] || ((NSNumber *)data[kHBLOShowChooserKey]).boolValue) {
-			[[HBLOHandlerChooserController sharedInstance] openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]] options:nil];
-		} else*/ {
-			[self openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
-		}
+		[self openURL:[NSURL URLWithString:data[kHBLOOpenURLKey]]];
 	}
 
 	return nil;

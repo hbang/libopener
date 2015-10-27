@@ -7,8 +7,9 @@ Opener_FILES = $(wildcard *.x) $(wildcard *.m)
 Opener_FRAMEWORKS = MobileCoreServices UIKit
 Opener_PRIVATE_FRAMEWORKS = AppSupport
 Opener_LIBRARIES = cephei rocketbootstrap substrate
+Opener_CFLAGS = -include HBLOGlobal.h
 
-SUBPROJECTS = springboard prefs
+SUBPROJECTS = prefs
 
 include $(THEOS_MAKE_PATH)/framework.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk

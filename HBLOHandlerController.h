@@ -1,4 +1,4 @@
-@class HBLOHandler;
+@class HBLOHandler, LSApplicationProxy;
 
 @interface HBLOHandlerController : NSObject
 
@@ -8,7 +8,9 @@
 - (void)loadHandlers;
 
 - (BOOL)openURL:(NSURL *)url;
-- (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender;
+
+- (NSArray <NSURL *> *)getReplacementsForURL:(NSURL *)url application:(LSApplicationProxy *)application sender:(NSString *)sender options:(NSDictionary *)options;
+- (NSArray <NSURL *> *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender;
 
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler;
 - (BOOL)handlerIdentifierIsEnabled:(NSString *)identifier;

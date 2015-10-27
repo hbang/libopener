@@ -1,8 +1,12 @@
-@class HBLOHandlerController;
+#pragma mark - Macros
 
 #ifndef IN_SPRINGBOARD
 #define IN_SPRINGBOARD ([[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.springboard"])
 #endif
+
+#pragma mark - Typedefs
+
+#pragma mark - Constants
 
 static NSString *const HBLOErrorDomain = @"HBLOErrorDomain";
 

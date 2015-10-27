@@ -5,38 +5,68 @@
 	<key>items</key>
 	<array>
 		<dict>
-			<key>footerAlignment</key>
-			<integer>0</integer>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>© 2013—2014, HASHBANG Productions</string>
-			<key>label</key>
-			<string>Opener 2.0</string>
+			<key>condensed</key>
+			<true/>
+			<key>headerCellClass</key>
+			<string>HBPackageNameHeaderCell</string>
+			<key>icon</key>
+			<string>icon.png</string>
+			<key>packageIdentifier</key>
+			<string>ws.hbang.opener</string>
+			<key>packageNameOverride</key>
+			<string>Opener</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>hb_openWebsite</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
+			<key>big</key>
+			<true/>
 			<key>cellClass</key>
-			<string>HBTintedTableCell</string>
+			<string>HBTwitterCell</string>
+			<key>height</key>
+			<integer>64</integer>
 			<key>label</key>
-			<string>Visit Website</string>
+			<string>HASHBANG Productions</string>
+			<key>user</key>
+			<string>hbangws</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>Experiencing issues? Send us an email and we’ll help you.</string>
+			<key>label</key>
+			<string>DEVELOPER</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Adam Demasi</string>
+			<key>user</key>
+			<string>hbkirb</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>ICON</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>Timon Olsthoorn</string>
+			<key>user</key>
+			<string>tmnlsthrn</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>EMAIL_SUPPORT_HEADER</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -46,17 +76,13 @@
 			<key>cellClass</key>
 			<string>HBTintedTableCell</string>
 			<key>label</key>
-			<string>Email Support</string>
+			<string>EMAIL_SUPPORT</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>If you like Opener, please consider a donation.</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
+			<string>DONATE_FOOTER</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -66,10 +92,10 @@
 			<key>cellClass</key>
 			<string>HBTintedTableCell</string>
 			<key>label</key>
-			<string>Donate</string>
+			<string>DONATE</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>About</string>
+	<string>ABOUT</string>
 </dict>
 </plist>
