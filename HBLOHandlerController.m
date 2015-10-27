@@ -1,6 +1,5 @@
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
-#import "HBLOIPCController.h"
 #import <Cephei/HBPreferences.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
@@ -30,10 +29,6 @@
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
 		_preferences = [[HBPreferences alloc] initWithIdentifier:@"ws.hbang.libopener"];
-
-		if (IN_SPRINGBOARD) {
-			[HBLOIPCController sharedInstance];
-		}
 	}
 
 	return self;

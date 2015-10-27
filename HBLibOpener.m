@@ -1,7 +1,6 @@
-#import "HBLOGlobal.h"
+#import "HBLibOpener.h"
 #import "HBLOHandler.h"
 #import "HBLOHandlerController.h"
-#import "HBLOLegacyHandler.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #include <notify.h>
 #import <rocketbootstrap/rocketbootstrap.h>
@@ -11,30 +10,22 @@
 #pragma mark - Public API
 
 + (instancetype)sharedInstance {
-    static HBLibOpener *sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedInstance = [[self alloc] init];
-    });
+	static HBLibOpener *sharedInstance = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sharedInstance = [[self alloc] init];
+	});
 
-    return sharedInstance;
-}
-
-- (BOOL)registerHandlerWithName:(NSString *)name block:(HBLOHandlerCallbackBlock)block {
-	if (!IN_SPRINGBOARD) {
-		return NO;
-	}
-
-    HBLOLegacyHandler *handler = [[[HBLOLegacyHandler alloc] init] autorelease];
-    handler.name = name;
-    handler.identifier = name;
-    handler.legacyBlock = block;
-
-    return [self registerHandler:handler error:nil];
+	return sharedInstance;
 }
 
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error {
-    return [[HBLOHandlerController sharedInstance] registerHandler:handler error:error];
+	return [[HBLOHandlerController sharedInstance] registerHandler:handler error:error];
+}
+
+- (BOOL)registerHandlerWithName:(NSString *)name block:(HBLOHandlerCallbackBlock)block {
+	[NSException raise:NSInternalInconsistencyException format:@"Attempted to register a handler for %@, but legacy Opener 1 handlers are no longer supported. Please contact the developer.", name];
+	return NO;
 }
 
 - (BOOL)handlerIsEnabled:(NSString *)handler {

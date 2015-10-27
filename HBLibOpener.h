@@ -1,5 +1,5 @@
 /**
- * The HBLibOpener class provides the ability to manually register a handler with libopener from a
+ * The HBLibOpener class provides the ability to manually register a handler with Opener from a
  * tweak, as well as the ability to check if a handler has been disabled by the user.
  */
 
@@ -38,10 +38,10 @@ typedef NSURL * _Nullable (^HBLOHandlerCallbackBlock)(NSURL *url);
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error;
 
 /**
- * Allows you to register a new legacy handler with libopener.
+ * Raises an exception.
  *
- * Supported in SpringBoard only. **Deprecated in libopener 2.0.** Use bundles or
- * registerHandler:error: instead.
+ * Supported in SpringBoard only. **Deprecated in Opener 2.0. Removed in Opener
+ * 3.0.** Use bundles or registerHandler:error: instead.
  *
  * The old handler API is deprecated. Links in web views are not supported. Migrate to the new API as
  * soon as possible.

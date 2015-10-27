@@ -1,6 +1,3 @@
-TARGET = :clang::5.0
-ARCHS = armv7 arm64
-
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = libopener
