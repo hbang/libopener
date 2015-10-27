@@ -7,7 +7,7 @@ Opener_FILES = $(wildcard *.x) $(wildcard *.m)
 Opener_FRAMEWORKS = MobileCoreServices UIKit
 Opener_PRIVATE_FRAMEWORKS = AppSupport
 Opener_LIBRARIES = cephei rocketbootstrap substrate
-Opener_CFLAGS = -include HBLOGlobal.h
+Opener_CFLAGS = -include Global.h
 
 SUBPROJECTS = prefs
 
