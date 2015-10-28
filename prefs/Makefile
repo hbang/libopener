@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = libopener
-libopener_FILES = $(wildcard *.m)
+libopener_FILES = $(wildcard *.m) $(wildcard *.x)
 libopener_INSTALL_PATH = /Library/PreferenceBundles
 libopener_FRAMEWORKS = UIKit
 libopener_PRIVATE_FRAMEWORKS = Preferences AppSupport
