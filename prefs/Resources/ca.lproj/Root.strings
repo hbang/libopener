@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Manipuladors</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Es poden apagar manipuladors per tal de que no s’imposin sobre dels enllaços.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener és una biblioteca de desenvolupadors per canviar (imposar-se a) les destinacions dels enllaços - per exemple, es pot decidir que els enllaços de YouTube a Safari s’obrin en una aplicació YouTube de tercers.
+
+Ara mateix no està instal·lat cap paquet manipulador. Això pot passar si s’han elimitat tots els paquets que depenen d’Opener a Cydia, com MapsOpener i YTOpener. Per eliminar aquest panell de configuració, busca per “Opener” a Cydia, i llavors apreta “Modificar” i “Eliminar”.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Sobre</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>No s’ha pogut carregar la configuració d’aquest manipulador.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Si us plau, contacta el desenvolupador.</string>
+</dict>
+</plist>
