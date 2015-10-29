@@ -104,6 +104,26 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>ES</string>
+			<key>label</key>
+			<string>Tony Kraft</string>
+			<key>user</key>
+			<string>ios_tk</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>IT</string>
+			<key>label</key>
+			<string>Andrea De Pasquale</string>
+			<key>user</key>
+			<string>andrea_depa97</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>ZH</string>
 			<key>label</key>
 			<string>darkj2k</string>
