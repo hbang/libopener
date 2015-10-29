@@ -29,14 +29,14 @@ static NSString *const LOBundleClassKey = @"libopener_bundleClass";
 	NSMutableArray *newSpecifiers = [NSMutableArray array];
 
 	for (HBLOHandler *handler in _handlers) {
-		BOOL isLink = YES;//handler.preferencesBundle && handler.preferencesClass;
+		BOOL isLink = handler.preferencesBundle && handler.preferencesClass;
 
 		PSSpecifier *specifier = [PSSpecifier preferenceSpecifierNamed:handler.name target:self set:@selector(setPreferenceValue:specifier:) get:@selector(readPreferenceValue:) detail:Nil cell:isLink ? PSLinkCell : PSSwitchCell edit:Nil];
 
 		if (isLink) {
 			specifier.properties = [@{
 				LOBundleKey: handler.preferencesBundle,
-				LOBundleClassKey: handler.preferencesClass
+				LOBundleClassKey: handler.preferencesClass,
 				PSActionKey: @"showPreferencesForSpecifier:"
 			} mutableCopy];
 		} else {
