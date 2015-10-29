@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Section label for the list of handlers. -->
+    <key>HANDLERS</key>
+    <string>Link håndteringer</string>
+
+    <!-- Footer explaining what the section is used for. -->
+    <key>HANDLERS_EXPLANATION</key>
+    <string>Slå link håndteringer fra for at forhindre dem i at omgå URL-adresser.</string>
+
+    <!-- Explanation used when there are no handlers installed. -->
+    <key>NO_HANDLERS_EXPLANATION</key>
+    <string>Opener er et udvikler bibliotek til at omgå link destinationer - for eksempel, hvis du åbner et YouTube link i safari, vil den åbne linket i et trejde parts YouTube app.
+
+Du har ingen link håndteringer installeret. Dette kan ske efter du afinstallere alle pakker der afhænger af Opener, såsom MapsOpener og YTOpener. For at fjerne denne indstillings side, søg efter "Opener" i Cydia, tap Modify og derefter Remove.</string>
+
+    <!-- Button leading to the about page. -->
+    <key>ABOUT</key>
+    <string>Om</string>
+
+    <!-- Title displayed when a handler’s settings fails to load. -->
+    <key>BUNDLE_LOAD_FAILED_TITLE</key>
+    <string>Indstillingerne for denne link håndtering kunne ikke indlæses.</string>
+
+    <!-- Message body displayed when a handler’s settings fails to load. -->
+    <key>BUNDLE_LOAD_FAILED_BODY</key>
+    <string>Kontakt venligst udvikleren.</string>
+</dict>
+</plist>

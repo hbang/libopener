@@ -84,6 +84,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>DA</string>
+			<key>label</key>
+			<string>Benjamin</string>
+			<key>user</key>
+			<string>JonWhoKnowsNull</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>DE</string>
 			<key>label</key>
 			<string>Cornelius Kötting</string>
