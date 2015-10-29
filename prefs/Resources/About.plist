@@ -66,6 +66,22 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>TRANSLATORS</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>DE</string>
+			<key>label</key>
+			<string>Cornelius Kötting</string>
+			<key>user</key>
+			<string>C0rne1ius4</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>EMAIL_SUPPORT_HEADER</string>
 		</dict>
 		<dict>

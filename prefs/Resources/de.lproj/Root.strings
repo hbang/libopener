@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Handlers</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Schalten sie Handlers aus, sodass URL´s nicht verändert werden</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener ist eine Entwickler Bibliothek, die verändert in welcher App Links geöffnet werden - zum  Beispiel, wird ein YouTube Link nicht in Safari geöffnet, sondern in einer Drittanbieter YouTube App.
+
+Sie haben im Moment keine Handlerpakte instaliert. Das kann passieren wenn sie alle Pakete die von Opener abhängig sind deinstalieren, wie MapsOpener oder YTOpener. Um diesen Einstellungseintrag zu entfernen, suchen sie nach “Opener” in Cydia, drücken dann auf “Verändern“ und “Entfernen“.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Entwickler</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Es gab einen Fehler während die Einstellungen geladen wurden</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Bitte kontaktieren sie den Entwickler.</string>
+</dict>
+</plist>
