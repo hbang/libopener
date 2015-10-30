@@ -122,6 +122,16 @@
 		</dict>
 		<dict>
 			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>HE</string>
+			<key>label</key>
+			<string>Aranshavit</string>
+			<key>user</key>
+			<string>Aranshavit</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
 			<string>HBInitialsLinkTableCell</string>
 			<key>label</key>
 			<string>Name</string>
@@ -141,6 +151,16 @@
 			<string>Andrea De Pasquale</string>
 			<key>user</key>
 			<string>andrea_depa97</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>NL</string>
+			<key>label</key>
+			<string>Timon Olsthoorn</string>
+			<key>user</key>
+			<string>tmnlsthrn</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
