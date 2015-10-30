@@ -156,6 +156,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>TR</string>
+			<key>label</key>
+			<string>F1reCub3s</string>
+			<key>user</key>
+			<string>F1reCub3s</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>ZH</string>
 			<key>label</key>
 			<string>darkj2k</string>
