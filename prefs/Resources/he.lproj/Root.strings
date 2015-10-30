@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>מנהלים</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>כבה מנהלים כדי למנוע מהם מלעקוף כתובות URL.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener הוא ספריית מפתחים לעקיפת יעדי קישורים - לדוגמה, כדי לקשר פתיחת קישורים של YouTube מספארי לאפליקציית YouTube צד ג׳ (לא הרשמית). 
+
+כרגע אין לך מנהלי חבילות מותקנים. זה יכול לקרות אחרי הסרה של כל החבילות שנתלות בOpener, כמו MapsOpener וYTOpener. כדי להסיר את דף הגדרות זה, חפש/י "Opener" בCydia, ואז לחץ/י על שנה והסר.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>אודות</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>ההגדרות למנהל זה נכשלו להיטען</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>אנא צור/צרי קשר עם המפתח.</string>
+</dict>
+</plist>
