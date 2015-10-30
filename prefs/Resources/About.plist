@@ -112,6 +112,18 @@
 		</dict>
 		<dict>
 			<key>cellClass</key>
+			<string>HBInitialsLinkTableCell</string>
+			<key>label</key>
+			<string>Name</string>
+			<key>initials</key>
+			<string>ID</string>
+			<key>label</key>
+			<string>IdleAsianGuy</string>
+			<key>url</key>
+			<string>https://www.reddit.com/user/IdleAsianGuy</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
 			<string>IT</string>
@@ -119,6 +131,16 @@
 			<string>Andrea De Pasquale</string>
 			<key>user</key>
 			<string>andrea_depa97</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>PT</string>
+			<key>label</key>
+			<string>Rui Sousa</string>
+			<key>user</key>
+			<string>Ru1Sous4</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
