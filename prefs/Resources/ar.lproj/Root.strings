@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>التحويلات</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>إيقاف التحويلات سيمنع التحويلات من التأثير على الروابط (URL).</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener هو مكتبة للمطورين يقوم بتحويل الروابط. على سبيل المثال: منع متصفع السفاري من فتح روابط اليوتيوب ليحولها ويفتحها في التطبيقات التي تدعم فتح وتشغيل فديوات اليوتيوب.
+
+ليش لديك أي بكج مثبت يدعم التحويل. وهذا يحصل نتيجة إالغاء تثبيت جميع المحولات التي يعتمد تثبيتها على Opener مثل MapsOpener و YTOpener. إذا اردت ان تلغي تثبيت Opener إذهب الى السيديا (Cydia) ومن ثم ابحث عن "Opener" ومن ثم إلغاء تثبيت.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>حول</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>فشل تحميل إعدادات هذا المحول.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>يرجى الإتصال بالمبرمج.</string>
+</dict>
+</plist>

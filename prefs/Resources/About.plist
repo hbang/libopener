@@ -70,6 +70,16 @@
 		</dict>
 		<dict>
 			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>AR</string>
+			<key>label</key>
+			<string>MiRO</string>
+			<key>user</key>
+			<string>MiRO92</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
 			<string>HBInitialsLinkTableCell</string>
 			<key>label</key>
 			<string>Name</string>
