@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Omdirigeringar</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>St?g av omdirigeringar f?r att hindra dem fr? att omdirigera URL adresser.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener ? ett utvecklarbibliotek f?r omdirigering av l?k destinationer - till exempel f?r att omdirigera ?ppnande av en YouTube l?k i Safari till en 3:e parts YouTube applikation.
+
+Du har f?r n?varande inte n?ra omdirigeringar installerade. Detta kan h?da efter en avinstallation av alla paket som ? beroende av Opener, s?om MapsOpener och YTOpener. F?r att ta bort den h? inst?lningssidan, s?k efter "Opener" i Cydia, sedan p??dra och Ta bort.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Om</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Inst?lningarna f?r denna omdirigering misslyckades att laddas.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>V?ligen kontakta utvecklaren.</string>
+</dict>
+</plist>

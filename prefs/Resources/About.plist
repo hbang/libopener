@@ -186,6 +186,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>SV</string>
+			<key>label</key>
+			<string>Senthet</string>
+			<key>user</key>
+			<string>Senthet</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>TR</string>
 			<key>label</key>
 			<string>F1reCub3s</string>
