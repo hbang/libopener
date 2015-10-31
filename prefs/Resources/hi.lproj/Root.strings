@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>संचालकों</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>यूआरएल अधिभावी से उन्हें रोकने के संचालकों को बंद कर दें।</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>उदाहरण के लिए, एक 3 पार्टी यूट्यूब app करने के लिए सफारी में एक यूट्यूब लिंक खोलने को दिशानिर्देश देने में - सलामी बल्लेबाज लिंक स्थलों अधिभावी के लिए एक डेवलपर पुस्तकालय है।
+
+आप वर्तमान में स्थापित किसी भी हैंडलर संकुल की जरूरत नहीं है। यह एक ऐसी MapsOpener और YTOpener के रूप में सलामी बल्लेबाज पर निर्भर करती है कि सभी संकुल की स्थापना रद्द करने के बाद भी हो सकता है। Cydia में "सलामी बल्लेबाज" के लिए इस सेटिंग पृष्ठ, खोज निकालने के लिए, उसके बाद संशोधित नल और निकालें।</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>के बारे में</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>इस हैंडलर के लिए सेटिंग्स को लोड करने में विफल रहा है।</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>डेवलपर से संपर्क करें।</string>
+</dict>
+</plist>

@@ -132,6 +132,16 @@
 		</dict>
 		<dict>
 			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>HI</string>
+			<key>label</key>
+			<string>meetheindiankid</string>
+			<key>user</key>
+			<string>meetheindiankid</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
 			<string>HBInitialsLinkTableCell</string>
 			<key>label</key>
 			<string>Name</string>
