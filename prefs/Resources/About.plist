@@ -176,6 +176,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>PL</string>
+			<key>label</key>
+			<string>krzysiek borek</string>
+			<key>user</key>
+			<string>krzysiek_borek</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>PT</string>
 			<key>label</key>
 			<string>Rui Sousa</string>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Przechwytywacze</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Wyłącz przechwytywacze, aby uniemożliwić im nadpisanie adresów</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener jest biblioteką dla programistów, pozwlającą zastąpić cel adresu na inny. Przykładem może być przekierowanie adresu YouTube z Safari w aplikacji firmy trzeciej.
+
+Aktualnie nie masz zainstalowanych pakietów dla przechywtywaczy.Zazwyczaj zdarza się to po usunięciu wszystkich, które są zależne od Opener (MapsOpener lub YTOpener). Jeśli nie chcesz, aby dodatek zajmował miejsce w Ustawieniach, usuń go za pomocą Cydii.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Informacje</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Ustawienia dla tego przechywtywacza nie zostały załadowane.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Prosimy o kontakt z autorem.</string>
+</dict>
+</plist>
