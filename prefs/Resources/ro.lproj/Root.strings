@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Manipulanti</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Opreste manipulantii pentru a impiedica interceptarea URL-urilor URLs.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener este o librarie pentru dezvoltatori pentru a modifica destinatia linlk-urilor - de exemplu, pentru a redirecta o adresa de YouTube in Safari catre o alta aplicatie YouTube (3-rd party).
+
+MOmentan nu ai nici un pachet de manipulare instalat. Acest lucru se intampla in general dupa dezinstalarea tuturor pachetelor care depind de Opener, cum ar fi MapsOpener si YTOpener. Pentru a sterge aceasta pagina de setari, cauta “Opener” in Cydia, dupa aceea Modify si Remove in setarile pachetului.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Despre</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Setarile pentru acest manipulant nu au fost incarcate.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Contacteaza dezvoltatorul programului.</string>
+</dict>
+</plist>
