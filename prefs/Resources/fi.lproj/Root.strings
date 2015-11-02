@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Liitännäiset</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Voit laittaa liitännäiset pois päältä, mikä estää niitä ylikuormittamasta linkkejä.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener on linkkien määränpäiden korvaamiseen tarkoitettu kirjasto kehittäjille - esimerkiksi YouTube linkin avaaminen Safarissa voi avata kolmannen osapuolen YouTube sovelluksen.
+
+Sinulla ei ole tällä hetkellä yhtään laajennusta asennettuna. Näin voi tapahtua, jos kaikki Openeria käyttävät paketit on poistettu, kuten MapsOpener ja YTOpener. Poistaaksesi tämänkin Asetuksista, etsi \"Opener\" Cydiassa ja valitse Modify > Remove.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Tietoja</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Tämän liitännäisen asetuksia ei voitu ladata.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Ota yhteyttä kehittäjään.</string>
+</dict>
+</plist>

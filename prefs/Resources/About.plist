@@ -124,6 +124,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>FI</string>
+			<key>label</key>
+			<string>Arto Mikola</string>
+			<key>user</key>
+			<string>ard0u</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>FR</string>
 			<key>label</key>
 			<string>kurt1277</string>
