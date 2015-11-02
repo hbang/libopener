@@ -286,6 +286,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>VI</string>
+			<key>label</key>
+			<string>PJ Duong</string>
+			<key>user</key>
+			<string>duong_pj</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>ZH</string>
 			<key>label</key>
 			<string>darkj2k</string>
