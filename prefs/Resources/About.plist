@@ -94,6 +94,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>CS</string>
+			<key>label</key>
+			<string>Luu Trong Dat</string>
+			<key>user</key>
+			<string>david19au</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>DA</string>
 			<key>label</key>
 			<string>Benjamin</string>

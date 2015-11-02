@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Předavači</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Vypnutím předavačů vypínáte jejich funkci přesměrování do aplikací.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener je knihovna pro vývojáře která umožňuje přesměrování např. YouTube stránek do aplikace YouTube ze třetí strany atd.
+
+V současné době nemáte žedné předavače nainstalované, to se může stát když se smažou všechny tweaky závisející na Opener. Pro smazání této stránky stačí smazat tento tweak.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>O aplikaci</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Nastavení tohoto předavače nešly správně načíst.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Kontaktujte prosím vývojáře o chybě.</string>
+</dict>
+</plist>
