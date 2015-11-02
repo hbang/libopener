@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Behandlere</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Slå av behandlere for å forhindre at de overstyrer URLs.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener er et utviklerbibliotek for overstyring av link destinasjon. For eksempel, for å omdirigere en YouTube link i Safari til en tredjeparts YouTube app.
+
+Du har ingen utvilkerpakker installert. Dette kan skje etter avinstallering av alle pakker som avhenger av Opener, slik som MapsOpener og YTOpener. For å fjerne denne innstillingssiden, søk etter «Opener» i Cydia, trykk så Modify og Remove.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Om</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Innstillingene for denne behandleren kunne ikke lastes.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Vennligst kontakt utvikleren.</string>
+</dict>
+</plist>
