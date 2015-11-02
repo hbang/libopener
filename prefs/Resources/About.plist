@@ -136,6 +136,16 @@
 			<key>initials</key>
 			<string>FR</string>
 			<key>label</key>
+			<string>Overfl0w</string>
+			<key>user</key>
+			<string>SorenSzabo</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
+			<string>FR</string>
+			<key>label</key>
 			<string>kurt1277</string>
 			<key>user</key>
 			<string>kurt1277</string>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Gestionnaires</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Désactivez les gestionnaires pour les empêcher de redéfinir les URLs.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener est une librairie développeur pour redéfinir les destinations de liens - par exemple, Pour rediriger un lien d'ouverture Youtube dans Safari vers une application Youtube tierce.
+
+Vous n'avez pas de gestionnaires installés actuellement. Ceci peur arriver après avoir désinstallé tous les paquets qui dépendent d'Opener, stels que MapsOpener et YTOpener. Pour supprimer cette section des Réglages, cherchez "Opener" dans Cydia, puis appuyez sur "Modifier" puis "Supprimer".</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>À propos</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Le chargement des réglages de ce gestionnaire a échoué.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Contactez le développeur s'il vous plaît.</string>
+</dict>
+</plist>
