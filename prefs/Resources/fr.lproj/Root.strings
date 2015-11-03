@@ -12,9 +12,9 @@
 
 	<!-- Explanation used when there are no handlers installed. -->
 	<key>NO_HANDLERS_EXPLANATION</key>
-	<string>Opener est une librairie développeur pour redéfinir les destinations de liens - par exemple, Pour rediriger un lien d'ouverture Youtube dans Safari vers une application Youtube tierce.
+	<string>Opener est une librairie développeur pour redéfinir les destinations de liens - par exemple, pour rediriger un lien Youtube dans Safari vers une application Youtube tierce.
 
-Vous n'avez pas de gestionnaires installés actuellement. Ceci peur arriver après avoir désinstallé tous les paquets qui dépendent d'Opener, stels que MapsOpener et YTOpener. Pour supprimer cette section des Réglages, cherchez "Opener" dans Cydia, puis appuyez sur "Modifier" puis "Supprimer".</string>
+Vous n'avez actuellement pas de gestionnaires installés. Ceci peut arriver après avoir désinstallé tous les paquets qui dépendent d'Opener, tels que MapsOpener ou YTOpener. Pour supprimer cette section, cherchez "Opener" dans Cydia, puis appuyez sur "Modifier" puis "Supprimer".</string>
 
 	<!-- Button leading to the about page. -->
 	<key>ABOUT</key>
@@ -26,6 +26,6 @@ Vous n'avez pas de gestionnaires installés actuellement. Ceci peur arriver apr�
 
 	<!-- Message body displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_BODY</key>
-	<string>Contactez le développeur s'il vous plaît.</string>
+	<string>Merci de contacter le développeur.</string>
 </dict>
 </plist>
