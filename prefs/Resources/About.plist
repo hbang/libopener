@@ -216,6 +216,16 @@
 			<key>cellClass</key>
 			<string>HBTwitterCell</string>
 			<key>initials</key>
+			<string>KO</string>
+			<key>label</key>
+			<string>Jinhyeok Lee</string>
+			<key>user</key>
+			<string>zenyr</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>initials</key>
 			<string>NB</string>
 			<key>label</key>
 			<string>Stein Åge Brækkan</string>

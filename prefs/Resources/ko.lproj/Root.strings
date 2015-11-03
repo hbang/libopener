@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>핸들러</string>
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>URL을 덮어씌우지 않으려면 핸들러를 해제하세요.</string>
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener는 링크 대상을 덮어씌우기 위한 개발자 라이브러리입니다 - 예를 들면, Safari의 YouTube 링크를 제3사의 YouTube 앱으로 보냅니다.
+현재 설치된 핸들러 패키지가 하나도 없습니다. Opener를 요구하는 MapsOpener나 YTOpener 등의 패키지를 삭제하셨을 수 있습니다. 이 설정 화면을 제거하시려면 Cydia에서 "Opener"를 찾으신 뒤 [수정] - [삭제]를 눌러주세요.</string>
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>정보</string>
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>이 핸들러의 설정을 읽지 못했습니다.</string>
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>개발자에게 문의해주세요.</string>
+</dict>
+</plist>
