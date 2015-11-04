@@ -17,6 +17,10 @@ static NSString *const LOBundleClassKey = @"libopener_bundleClass";
 	return @"Root";
 }
 
++ (UIColor *)hb_tintColor {
+	return [UIColor colorWithRed:52.f / 255.f green:170.f / 255.f blue:220.f / 255.f alpha:1];
+}
+
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
