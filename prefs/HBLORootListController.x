@@ -25,7 +25,12 @@ static NSString *const LOBundleClassKey = @"libopener_bundleClass";
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
+	[self _updateHandlers];
+}
 
+#pragma mark - Update state
+
+- (void)_updateHandlers {
 	HBLOHandlerController *handlerController = [%c(HBLOHandlerController) sharedInstance];
 	[handlerController loadHandlers];
 
