@@ -3,6 +3,7 @@
 #import "../HBLOHandlerController.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <Preferences/PSSpecifier.h>
+#import <UIKit/UIImage+Private.h>
 #include <notify.h>
 
 static NSString *const LOBundleKey = @"libopener_bundle";
@@ -46,6 +47,24 @@ static NSString *const LOBundleClassKey = @"libopener_bundleClass";
 				PSKeyNameKey: handler.identifier,
 				PSValueChangedNotificationKey: @"ws.hbang.libopener/ReloadPrefs"
 			} mutableCopy];
+		}
+
+		UIImage *icon = nil;
+		NSDictionary *info = handler.preferencesBundle.infoDictionary;
+
+		// if Info.plist CFBundleIconFile is set, use that
+		if (info[@"CFBundleIconFile"]) {
+			icon = [UIImage imageNamed:info[@"CFBundleIconFile"] inBundle:handler.preferencesBundle];
+		}
+
+		// if that didn't work or the key doesn't exist, try icon.png
+		if (!icon) {
+			icon = [UIImage imageNamed:@"icon" inBundle:handler.preferencesBundle];
+		}
+
+		// if we have an icon, set it on the specifier
+		if (icon) {
+			specifier.properties[PSIconImageKey] = icon;
 		}
 
 		[newSpecifiers addObject:specifier];
