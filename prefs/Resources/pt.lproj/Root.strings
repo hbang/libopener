@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Manipuladores</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Desative manipuladores para impedir que sobreponham URLs.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener é uma biblioteca para desenvolvedores que sobrepoe o destino de links. Por exemplo, ao clicar em um link do youtube você será redirecionado para um aplicativo de terceiros ao invés do Safari.
+
+Você não tem nenhum manipulador instalado. Isso pode ocorrer ao remover todos os pacotes que dependem do Opener, como o MapsOpener e YTOpener. Para remover essa página de configurações, procure por "Opener" no Cydia e então clique em Modificar e depois Remover.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Sobre</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Erro ao carregar a configuração desse manipulador.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Por favor contate o desenvolvedor.</string>
+</dict>
+</plist>
