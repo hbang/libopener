@@ -1,6 +1,6 @@
 Package: ws.hbang.libopener
 Name: Opener
-Depends: firmware (>= 5.0), mobilesubstrate, preferenceloader, com.rpetrich.rocketbootstrap, ws.hbang.common (>= 1.2)
+Depends: firmware (>= 5.0), mobilesubstrate, preferenceloader, com.rpetrich.rocketbootstrap, ws.hbang.common (>= 1.4)
 Version: 3.0
 Architecture: iphoneos-arm
 Description: Developer library for overriding link destinations
