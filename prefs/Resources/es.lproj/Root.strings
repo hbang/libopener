@@ -16,10 +16,6 @@
 
 Usted actualmente no tiene ningún paquete de controlador instalados. Esto puede suceder después de desinstalar todos los paquetes que dependen de abridor, como MapsOpener y YTOpener. Para eliminar esta configuración de la página, busque "abrelatas" en Cydia, luego puntee en Modificar y Eliminar.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Referencia</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>La configuración de este controlador no se pudo cargar.</string>

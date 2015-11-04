@@ -16,10 +16,6 @@
 
 Vous ne disposez pas actuellement tous les paquets de gestionnaires installés . Cela peut se produire après la désinstallation de tous les paquets qui dépendent Opener , comme MapsOpener et YTOpener . Pour supprimer cette page Paramètres , recherche " Opener " dans Cydia , puis appuyez sur Modifier et Supprimer.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Sur</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Les paramètres de ce gestionnaire n'a pas pu charger.</string>

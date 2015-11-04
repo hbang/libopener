@@ -16,10 +16,6 @@
 
 Bạn hiện tại không có Xử Lý cài đặt. Điều này có thể xảy ra sau khi bạn gỡ bỏ tất cả những cái phụ thuột vào Opener, như là MapsOpener và YTOpener. Để loại bỏ trang này trong ứng dụng Cài Đặt, mở Cydia và tìm "Opener", sau đó chạm lên "Modify" và "Huỷ Bỏ".</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Về</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Các thiết lập cho cái Xử Lý không hoạt động.</string>

@@ -16,10 +16,6 @@
 
 Du har ingen utvilkerpakker installert. Dette kan skje etter avinstallering av alle pakker som avhenger av Opener, slik som MapsOpener og YTOpener. For å fjerne denne innstillingssiden, søk etter «Opener» i Cydia, trykk så Modify og Remove.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Om</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Innstillingene for denne behandleren kunne ikke lastes.</string>

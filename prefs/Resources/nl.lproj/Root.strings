@@ -16,10 +16,6 @@
 
 U heeft op dit moment geen handelaar-pakketten geïnstalleerd. Dit kan gebeuren na het verwijderen van alle pakketen die afhangen van Opener, zoals MapsOpener en YTOpener. Om deze pagina te verwijderen uit Instellingen, zoek naar “Opener” in Cydia, klik dan op Wijzig en Verwijder.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Over</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>De instellingen voor deze handelaar kunnen niet worden geladen.</string>

@@ -16,10 +16,6 @@
 
 Du har ingen link håndteringer installeret. Dette kan ske efter du afinstallere alle pakker der afhænger af Opener, såsom MapsOpener og YTOpener. For at fjerne denne indstillings side, søg efter "Opener" i Cydia, tap Modify og derefter Remove.</string>
 
-    <!-- Button leading to the about page. -->
-    <key>ABOUT</key>
-    <string>Om</string>
-
     <!-- Title displayed when a handler’s settings fails to load. -->
     <key>BUNDLE_LOAD_FAILED_TITLE</key>
     <string>Indstillingerne for denne link håndtering kunne ikke indlæses.</string>

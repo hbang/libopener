@@ -16,10 +16,6 @@
 
 आप वर्तमान में स्थापित किसी भी हैंडलर संकुल की जरूरत नहीं है। यह एक ऐसी MapsOpener और YTOpener के रूप में सलामी बल्लेबाज पर निर्भर करती है कि सभी संकुल की स्थापना रद्द करने के बाद भी हो सकता है। Cydia में "सलामी बल्लेबाज" के लिए इस सेटिंग पृष्ठ, खोज निकालने के लिए, उसके बाद संशोधित नल और निकालें।</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>के बारे में</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>इस हैंडलर के लिए सेटिंग्स को लोड करने में विफल रहा है।</string>

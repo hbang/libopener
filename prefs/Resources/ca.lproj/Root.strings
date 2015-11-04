@@ -16,10 +16,6 @@
 
 Ara mateix no està instal·lat cap paquet manipulador. Això pot passar si s’han elimitat tots els paquets que depenen d’Opener a Cydia, com MapsOpener i YTOpener. Per eliminar aquest panell de configuració, busca per “Opener” a Cydia, i llavors apreta “Modificar” i “Eliminar”.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Sobre</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>No s’ha pogut carregar la configuració d’aquest manipulador.</string>

@@ -16,10 +16,6 @@
 
 На данный момент у Вас не установлено ни одного регулятора. Такое может наблюдаться после удаления пакетов, имеющих зависимость на Opener, например, MapsOpener или YTOpener. Чтобы удалить эту страницу из настроек, найдите “Opener” в Cydia, затем нажмите “изменить” и “удалить”.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Про нас</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Настройки этого регулятора невозможно загрузить</string>

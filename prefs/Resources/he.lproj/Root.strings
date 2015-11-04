@@ -16,10 +16,6 @@
 
 כרגע אין לך מנהלי חבילות מותקנים. זה יכול לקרות אחרי הסרה של כל החבילות שנתלות בOpener, כמו MapsOpener וYTOpener. כדי להסיר את דף הגדרות זה, חפש/י "Opener" בCydia, ואז לחץ/י על שנה והסר.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>אודות</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>ההגדרות למנהל זה נכשלו להיטען</string>

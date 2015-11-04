@@ -16,10 +16,6 @@
 
 You currently don’t have any handler packages installed. This can happen after uninstalling all packages that depend on Opener, such as MapsOpener and YTOpener. To remove this Settings page, search for “Opener” in Cydia, then tap Modify and Remove.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>About</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>The settings for this handler failed to load.</string>

@@ -16,10 +16,6 @@
 
 Saat ini Anda tidak memiliki instalasi paket handler. Ini bisa terjadi setelah Anda melepas pemasangan semua paket yang bergantung terhadap Opener, seperti MapsOpener dan YTOpener. Untuk menghapus halaman Pengaturan ini, cari “Opener” pada Cydia, lalu pilih Modify dan Remove.</string>
 
-    <!-- Button leading to the about page. -->
-    <key>ABOUT</key>
-    <string>Tentang</string>
-
     <!-- Title displayed when a handler’s settings fails to load. -->
     <key>BUNDLE_LOAD_FAILED_TITLE</key>
     <string>Pengaturan untuk handler ini gagal dimuat.</string>

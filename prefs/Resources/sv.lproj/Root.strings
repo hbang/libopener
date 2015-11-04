@@ -16,10 +16,6 @@
 
 Du har f?r n?varande inte n?ra omdirigeringar installerade. Detta kan h?da efter en avinstallation av alla paket som ? beroende av Opener, s?om MapsOpener och YTOpener. F?r att ta bort den h? inst?lningssidan, s?k efter "Opener" i Cydia, sedan p??dra och Ta bort.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Om</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Inst?lningarna f?r denna omdirigering misslyckades att laddas.</string>

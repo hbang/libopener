@@ -16,10 +16,6 @@
 
 V současné době nemáte žedné předavače nainstalované, to se může stát když se smažou všechny tweaky závisející na Opener. Pro smazání této stránky stačí smazat tento tweak.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>O aplikaci</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Nastavení tohoto předavače nešly správně načíst.</string>

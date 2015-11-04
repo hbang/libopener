@@ -14,11 +14,7 @@
 	<key>NO_HANDLERS_EXPLANATION</key>
 	<string>Opener 是一个覆盖目的连结的开发函式库，例如，将 Safari 内的 YouTube 连结由第三方的 YouTube 软件打开。
 	
-	您目前没有安装任何“处理程序”，这有可能是依存 Opener 的套件被移除了，例如 MapsOpener 及 YTOpener，要移除此设置画面请在 Cydia 内搜寻 Opener 然后选择变更并移除。</string>
-
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>关于</string>
+您目前没有安装任何“处理程序”，这有可能是依存 Opener 的套件被移除了，例如 MapsOpener 及 YTOpener，要移除此设置画面请在 Cydia 内搜寻 Opener 然后选择变更并移除。</string>
 
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>

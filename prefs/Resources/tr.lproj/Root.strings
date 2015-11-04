@@ -16,10 +16,6 @@
 
 Şu anda yüklü herhangi bir işleyici paketleri yok. Bu tür MapsOpener ve YTOpener olarak Açıcı bağımlı tüm paketleri , kaldırdıktan sonra meydana gelebilir . Cydia </string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>yaklaşık</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Bu sihirbaz ayarlarını indirmek için başarısız.</string>

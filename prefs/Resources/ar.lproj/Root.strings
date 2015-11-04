@@ -16,10 +16,6 @@
 
 ليش لديك أي بكج مثبت يدعم التحويل. وهذا يحصل نتيجة إالغاء تثبيت جميع المحولات التي يعتمد تثبيتها على Opener مثل MapsOpener و YTOpener. إذا اردت ان تلغي تثبيت Opener إذهب الى السيديا (Cydia) ومن ثم ابحث عن "Opener" ومن ثم إلغاء تثبيت.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>حول</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>فشل تحميل إعدادات هذا المحول.</string>

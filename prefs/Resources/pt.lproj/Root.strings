@@ -16,10 +16,6 @@
 
 Você não tem nenhum manipulador instalado. Isso pode ocorrer ao remover todos os pacotes que dependem do Opener, como o MapsOpener e YTOpener. Para remover essa página de configurações, procure por "Opener" no Cydia e então clique em Modificar e depois Remover.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Sobre</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Erro ao carregar a configuração desse manipulador.</string>

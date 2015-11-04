@@ -16,10 +16,6 @@
 
 Aktualnie nie masz zainstalowanych pakietów dla przechywtywaczy.Zazwyczaj zdarza się to po usunięciu wszystkich, które są zależne od Opener (MapsOpener lub YTOpener). Jeśli nie chcesz, aby dodatek zajmował miejsce w Ustawieniach, usuń go za pomocą Cydii.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Informacje</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Ustawienia dla tego przechywtywacza nie zostały załadowane.</string>

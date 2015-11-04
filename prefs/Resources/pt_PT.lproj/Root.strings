@@ -16,10 +16,6 @@
 
 Actualmente não tem nenhum pacote de handler instalado. Isto pode ocorrer após remover todos os pacotes que dependem do Opener, como por exemplo o MapsOpener e o YTOpener. Para remover esta pagina de configurações, por favor abra o Cydia, pesquise por “Opener” e depois escolha a opção Modificar e Remover.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Acerca de</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>As configurações para esta handler apresentaram um erro no carregamento.</string>
