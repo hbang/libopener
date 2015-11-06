@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Handlery</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Vypnúť handlery na prevenciu proti prepisovaniu URL.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Otvárač je vývojárska knižnica pre prepisovania odkazov  - napríklad presmerovať otvorenie odkazu na YouTube v Safari alebo neoficiálny YouTube klient.
+
+Nebudete v súčasnosti nemáte žiadne Handlery nainštalované. To sa môže stať po odinštalovaní všetkých balíkov, ktoré sú závislé na otvárač, ako je MapsOpener a YTOpener. Ak chcete odstrániť túto stránku, hľadajte "Opener" v Cydií, potom kliknite na tlačidlo Modify a Remove.</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Nastavenia sa nepodarilo načítať.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Prosím kontaktuje developera.</string>
+</dict>
+</plist>
