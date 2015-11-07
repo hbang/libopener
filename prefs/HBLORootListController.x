@@ -6,9 +6,6 @@
 #import <UIKit/UIImage+Private.h>
 #include <notify.h>
 
-static NSString *const LOBundleKey = @"libopener_bundle";
-static NSString *const LOBundleClassKey = @"libopener_bundleClass";
-
 @implementation HBLORootListController {
 	NSArray <HBLOHandler *> *_handlers;
 }
@@ -45,12 +42,16 @@ static NSString *const LOBundleClassKey = @"libopener_bundleClass";
 
 		if (isLink) {
 			specifier.properties = [@{
-				LOBundleKey: handler.preferencesBundle,
-				LOBundleClassKey: handler.preferencesClass,
-				PSActionKey: @"showPreferencesForSpecifier:"
+				PSIDKey: handler.identifier,
+				PSBundleIsControllerKey: @YES,
+				PSLazilyLoadedBundleKey: handler.preferencesBundle.bundlePath,
+				PSDetailControllerClassKey: handler.preferencesClass
 			} mutableCopy];
+
+			specifier.controllerLoadAction = @selector(lazyLoadBundle:);
 		} else {
 			specifier.properties = [@{
+				PSIDKey: handler.identifier,
 				PSDefaultValueKey: @YES,
 				PSDefaultsKey: @"ws.hbang.libopener",
 				PSKeyNameKey: handler.identifier,
@@ -59,68 +60,33 @@ static NSString *const LOBundleClassKey = @"libopener_bundleClass";
 		}
 
 		UIImage *icon = nil;
-		NSDictionary *info = handler.preferencesBundle.infoDictionary;
+		NSBundle *iconBundle = handler.preferencesBundle ?: [NSBundle bundleForClass:handler.class];
 
 		// if Info.plist CFBundleIconFile is set, use that
-		if (info[@"CFBundleIconFile"]) {
-			icon = [UIImage imageNamed:info[@"CFBundleIconFile"] inBundle:handler.preferencesBundle];
+		if (iconBundle.infoDictionary[@"CFBundleIconFile"]) {
+			icon = [UIImage imageNamed:iconBundle.infoDictionary[@"CFBundleIconFile"] inBundle:iconBundle];
 		}
 
 		// if that didn't work or the key doesn't exist, try icon.png
 		if (!icon) {
-			icon = [UIImage imageNamed:@"icon" inBundle:handler.preferencesBundle];
+			icon = [UIImage imageNamed:@"icon" inBundle:iconBundle];
 		}
 
 		// if we have an icon, set it on the specifier
 		if (icon) {
-			specifier.properties[PSIconImageKey] = icon;
+			specifier.properties[PSIconImageKey] = [icon copy];
+		} else {
+			[specifier removePropertyForKey:PSIconImageKey];
 		}
 
 		[newSpecifiers addObject:specifier];
 	}
 
 	if (newSpecifiers.count > 0) {
-		[self insertContiguousSpecifiers:newSpecifiers afterSpecifierID:@"HandlersGroupCell"];
 		[self removeSpecifierID:@"HandlersNoneInstalledGroupCell"];
+		[self insertContiguousSpecifiers:newSpecifiers afterSpecifierID:@"HandlersGroupCell"];
 	} else {
 		[self removeSpecifierID:@"HandlersGroupCell"];
-	}
-}
-
-#pragma mark - Callbacks
-
-- (void)showPreferencesForSpecifier:(PSSpecifier *)specifier {
-	NSBundle *bundle = specifier.properties[LOBundleKey];
-	[bundle load];
-
-	Class principalClass = NSClassFromString(specifier.properties[LOBundleClassKey]);
-	BOOL failed = NO;
-
-	if (!principalClass) {
-		principalClass = bundle.principalClass;
-
-		if (!principalClass) {
-			failed = YES;
-		}
-	}
-
-	PSListController *controller = [[[principalClass alloc] init] autorelease];
-
-	if (!controller) {
-		failed = YES;
-	}
-
-	if (failed) {
-		NSBundle *openerBundle = [NSBundle bundleForClass:self.class];
-		NSBundle *uikitBundle = [NSBundle bundleForClass:UIView.class];
-
-		UIAlertView *alertView = [[[UIAlertView alloc] init] autorelease];
-		alertView.title = NSLocalizedStringFromTableInBundle(@"BUNDLE_LOAD_FAILED_TITLE", @"Root", openerBundle, @"Title displayed when a handler’s settings fails to load.");
-		alertView.message = NSLocalizedStringFromTableInBundle(@"BUNDLE_LOAD_FAILED_BODY", @"Root", openerBundle, @"Message body displayed when a handler’s settings fails to load.");
-		[alertView addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OK", @"Localizable", uikitBundle, @"OK")];
-		[alertView show];
-	} else {
-		[self pushController:controller];
 	}
 }
 
