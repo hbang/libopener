@@ -162,26 +162,30 @@
 		}
 	}
 
+	NSMutableArray *candidates = [NSMutableArray array];
+
 	// iterate over our results
 	for (NSURL *url_ in results) {
-		NSArray <LSApplicationProxy *> *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url.scheme];
+		NSArray <LSApplicationProxy *> *apps = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:url_.scheme];
 
+		// if nothing can open that url scheme, we don't want it (sorry)
 		if (apps.count == 0) {
-			// if nothing can open that url scheme, remove it
-			[results removeObject:url_];
-		} else {
-			// if the url can be opened by the same app, we should ignore it
-			for (LSApplicationProxy *app in apps) {
-				if ([app.applicationIdentifier isEqualToString:sender]) {
-					[results removeObject:url_];
-					break;
-				}
+			continue;
+		}
+
+		// if the url can be opened by the same app, we should ignore it
+		for (LSApplicationProxy *app in apps) {
+			if ([app.applicationIdentifier isEqualToString:sender]) {
+				continue;
 			}
 		}
+
+		// add to the candidates
+		[candidates addObject:url_];
 	}
 
 	// if we have results, return them, else return nil
-	return results.count ? results : nil;
+	return candidates.count ? candidates : nil;
 }
 
 - (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
