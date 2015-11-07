@@ -23,7 +23,7 @@
 	return [[HBLOHandlerController sharedInstance] registerHandler:handler error:error];
 }
 
-- (BOOL)registerHandlerWithName:(NSString *)name block:(HBLOHandlerCallbackBlock)block {
+- (BOOL)registerHandlerWithName:(NSString *)name block:(id)block {
 	[NSException raise:NSInternalInconsistencyException format:@"Attempted to register a handler for %@, but legacy Opener 1 handlers are no longer supported. Please contact the developer.", name];
 	return NO;
 }
