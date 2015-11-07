@@ -8,7 +8,25 @@ BOOL isOverriding = NO;
 // TODO: SBSOpenSensitiveURLAndUnlock() late loads MobileCoreServices. not sure
 // if it's worth supporting such situations… use case: sbopenurl
 
+@interface LSApplicationWorkspace ()
+
+- (NSURL *)_opener_URLOverrideForURL:(NSURL *)url;
+
+@end
+
 %hook LSApplicationWorkspace
+
+%new - (NSURL *)_opener_URLOverrideForURL:(NSURL *)url {
+	NSArray *newURLs = [[HBLOHandlerController sharedInstance] getReplacementsForURL:url sender:[NSBundle mainBundle].bundleIdentifier];
+
+	// none? fair enough, just return the original url
+	if (!newURLs || newURLs.count == 0) {
+		return nil;
+	}
+
+	// well, looks like we're getting newURL[0]! how, uh, boring
+	return newURLs[0];
+}
 
 - (NSURL *)URLOverrideForURL:(NSURL *)url {
 	// if we're currently trying to find replacements, we don't want to replace
@@ -20,21 +38,17 @@ BOOL isOverriding = NO;
 	// consult with HBLOHandlerController to see if there's any possible URL
 	// replacements
 	isOverriding = YES;
-	NSArray *newURLs = [[HBLOHandlerController sharedInstance] getReplacementsForURL:url sender:[NSBundle mainBundle].bundleIdentifier];
+	NSURL *newURL = [self _opener_URLOverrideForURL:url];
 	isOverriding = NO;
 
-	// none? fair enough, just return the original url
-	if (!newURLs || newURLs.count == 0) {
-		return %orig;
-	}
-
-	// well, looks like we're getting newURL[0]! how, uh, boring
-	return newURLs[0];
+	// if we got a url, return that. if not, well, we tried… call the original
+	// function
+	return newURL ?: %orig;
 }
 
 - (BOOL)openURL:(NSURL *)url withOptions:(NSDictionary *)options {
 	// need to make sure all openURL: requests go through URLOverrideForURL:
-	return %orig([self URLOverrideForURL:url], options);
+	return %orig([self _opener_URLOverrideForURL:url] ?: url, options);
 }
 
 %end
