@@ -65,262 +65,16 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>openTranslations</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>HBTintedTableCell</string>
 			<key>label</key>
 			<string>TRANSLATORS</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>AR</string>
-			<key>label</key>
-			<string>MiRO</string>
-			<key>user</key>
-			<string>MiRO92</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBInitialsLinkTableCell</string>
-			<key>label</key>
-			<string>Name</string>
-			<key>initials</key>
-			<string>CA</string>
-			<key>label</key>
-			<string>Quan van der Knokke</string>
-			<key>url</key>
-			<string>https://www.reddit.com/user/Q-Quan</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>CS</string>
-			<key>label</key>
-			<string>Luu Trong Dat</string>
-			<key>user</key>
-			<string>david19au</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>DA</string>
-			<key>label</key>
-			<string>Benjamin</string>
-			<key>user</key>
-			<string>JonWhoKnowsNull</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>DE</string>
-			<key>label</key>
-			<string>Rima Ledba</string>
-			<key>user</key>
-			<string>techr3p</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>ES</string>
-			<key>label</key>
-			<string>Tony Kraft</string>
-			<key>user</key>
-			<string>ios_tk</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>FI</string>
-			<key>label</key>
-			<string>Arto Mikola</string>
-			<key>user</key>
-			<string>ard0u</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>FR</string>
-			<key>label</key>
-			<string>Overfl0w</string>
-			<key>user</key>
-			<string>SorenSzabo</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>FR</string>
-			<key>label</key>
-			<string>kurt1277</string>
-			<key>user</key>
-			<string>kurt1277</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>HE</string>
-			<key>label</key>
-			<string>Aranshavit</string>
-			<key>user</key>
-			<string>Aranshavit</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>HI</string>
-			<key>label</key>
-			<string>meetheindiankid</string>
-			<key>user</key>
-			<string>meetheindiankid</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBInitialsLinkTableCell</string>
-			<key>label</key>
-			<string>Name</string>
-			<key>initials</key>
-			<string>ID</string>
-			<key>label</key>
-			<string>IdleAsianGuy</string>
-			<key>url</key>
-			<string>https://www.reddit.com/user/IdleAsianGuy</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>IT</string>
-			<key>label</key>
-			<string>Andrea De Pasquale</string>
-			<key>user</key>
-			<string>andrea_depa97</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>JA</string>
-			<key>label</key>
-			<string>koh_kun</string>
-			<key>user</key>
-			<string>koh_kun</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>KO</string>
-			<key>label</key>
-			<string>Jinhyeok Lee</string>
-			<key>user</key>
-			<string>zenyr</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>NB</string>
-			<key>label</key>
-			<string>Stein Åge Brækkan</string>
-			<key>user</key>
-			<string>braekk</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>NL</string>
-			<key>label</key>
-			<string>Timon Olsthoorn</string>
-			<key>user</key>
-			<string>tmnlsthrn</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>PL</string>
-			<key>label</key>
-			<string>Krzysiek Borek</string>
-			<key>user</key>
-			<string>krzysiek_borek</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>PT</string>
-			<key>label</key>
-			<string>Rui Sousa</string>
-			<key>user</key>
-			<string>Ru1Sous4</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>RO</string>
-			<key>label</key>
-			<string>Raz</string>
-			<key>user</key>
-			<string>razvici</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>RU</string>
-			<key>label</key>
-			<string>Yury</string>
-			<key>user</key>
-			<string>YorkFieldX</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>SV</string>
-			<key>label</key>
-			<string>Senthet</string>
-			<key>user</key>
-			<string>Senthet</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>TR</string>
-			<key>label</key>
-			<string>F1reCub3s</string>
-			<key>user</key>
-			<string>F1reCub3s</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>VI</string>
-			<key>label</key>
-			<string>PJ Duong</string>
-			<key>user</key>
-			<string>duong_pj</string>
-		</dict>
-		<dict>
-			<key>cellClass</key>
-			<string>HBTwitterCell</string>
-			<key>initials</key>
-			<string>ZH</string>
-			<key>label</key>
-			<string>darkj2k</string>
-			<key>user</key>
-			<string>darkj2k</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -332,7 +86,7 @@
 			<key>action</key>
 			<string>hb_sendSupportEmail</string>
 			<key>cell</key>
-			<string>PSButtonCell</string>
+			<string>PSLinkCell</string>
 			<key>cellClass</key>
 			<string>HBTintedTableCell</string>
 			<key>label</key>
@@ -348,7 +102,7 @@
 			<key>action</key>
 			<string>hb_openDonate</string>
 			<key>cell</key>
-			<string>PSButtonCell</string>
+			<string>PSLinkCell</string>
 			<key>cellClass</key>
 			<string>HBTintedTableCell</string>
 			<key>label</key>
