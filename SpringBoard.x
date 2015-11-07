@@ -47,6 +47,7 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 		// application was nil? welp, just give up
 		HBLogWarn(@"could not get an SBApplication for url %@", url);
 		completion(url, application);
+		return;
 	}
 
 	// wow, we got all this way. pass back the replaced url and app
