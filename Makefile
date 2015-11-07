@@ -1,4 +1,8 @@
-TARGET = :clang::5.0
+TARGET = iphone:clang:latest:5.0
+
+APPLEDOCFILES = $(wildcard *.h) $(wildcard prefs/*.h)
+DOCS_STAGING_DIR = _docs
+DOCS_OUTPUT_PATH = docs
 
 include $(THEOS)/makefiles/common.mk
 
@@ -47,3 +51,20 @@ ifeq ($(RESPRING),0)
 else
 	install.exec spring
 endif
+
+docs::
+	# eventually, this should probably be in theos.
+	# for now, this is good enough :p
+
+	[[ -d "$(DOCS_STAGING_DIR)" ]] && rm -r "$(DOCS_STAGING_DIR)" || true
+
+	-appledoc --project-name opener --project-company "HASHBANG Productions" --company-id ws.hbang --project-version 1.2 --no-install-docset \
+		--keep-intermediate-files --create-html --publish-docset --docset-feed-url "https://hbang.github.io/libopener/xcode-docset.atom" \
+		--docset-atom-filename xcode-docset.atom --docset-package-url "https://hbang.github.io/libopener/docset.xar" \
+		--docset-package-filename docset --docset-fallback-url "https://hbang.github.io/libopener/" --docset-feed-name opener \
+		--index-desc README.md --no-repeat-first-par \
+		--output "$(DOCS_STAGING_DIR)" $(APPLEDOCFILES)
+
+	[[ -d "$(DOCS_OUTPUT_PATH)" ]] || git clone -b gh-pages git@github.com:hbang/libopener.git "$(DOCS_OUTPUT_PATH)"
+	rsync -ra "$(DOCS_STAGING_DIR)"/{html,publish}/ "$(DOCS_OUTPUT_PATH)"
+	rm -r "$(DOCS_STAGING_DIR)"
