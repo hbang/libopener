@@ -1,6 +1,6 @@
 TARGET = iphone:clang:latest:5.0
 
-APPLEDOCFILES = $(wildcard *.h) $(wildcard prefs/*.h)
+APPLEDOCFILES = HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h
 DOCS_STAGING_DIR = _docs
 DOCS_OUTPUT_PATH = docs
 
@@ -58,10 +58,10 @@ docs::
 
 	[[ -d "$(DOCS_STAGING_DIR)" ]] && rm -r "$(DOCS_STAGING_DIR)" || true
 
-	-appledoc --project-name opener --project-company "HASHBANG Productions" --company-id ws.hbang --project-version 1.2 --no-install-docset \
+	-appledoc --project-name Opener --project-company "HASHBANG Productions" --company-id ws.hbang --project-version 3.0 --no-install-docset \
 		--keep-intermediate-files --create-html --publish-docset --docset-feed-url "https://hbang.github.io/libopener/xcode-docset.atom" \
 		--docset-atom-filename xcode-docset.atom --docset-package-url "https://hbang.github.io/libopener/docset.xar" \
-		--docset-package-filename docset --docset-fallback-url "https://hbang.github.io/libopener/" --docset-feed-name opener \
+		--docset-package-filename docset --docset-fallback-url "https://hbang.github.io/libopener/" --docset-feed-name Opener \
 		--index-desc README.md --no-repeat-first-par \
 		--output "$(DOCS_STAGING_DIR)" $(APPLEDOCFILES)
 
