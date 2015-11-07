@@ -197,7 +197,11 @@
 }
 
 - (BOOL)handlerIsEnabled:(HBLOHandler *)handler {
-	return [self handlerIdentifierIsEnabled:handler.identifier];
+	if (handler.preferencesBundle && handler.preferencesClass) {
+		return YES;
+	} else {
+		return [self handlerIdentifierIsEnabled:handler.identifier];
+	}
 }
 
 @end
