@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Handleri</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Isključite handlere kako bi ste spriječili preusmjeravanje URL-ova.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener je razvojna biblioteka koja služi za preusmjeravanje destinacija linka - na primjer, za preusmjeravanje otvaranja YouTube linka u Safariju na YouTube aplikaciju od treće strane.
+
+Vi trenutno nemate niti jedan handler paket instaliran. Ovo se može dogoditi nakon uklanjanja svih paketa koje ovise o Openeru, kao što su MapsOpener i YTOpener. Da bi ste uklonili ovu stranicu Postavka, potražite "Opener" u Cydiji, te pritisnite Modify and Remove.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>O</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Postavke ovog handlera se nisu mogle učitati.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Molimo Vas kontaktirajte razvojni tim.</string>
+</dict>
+</plist>
