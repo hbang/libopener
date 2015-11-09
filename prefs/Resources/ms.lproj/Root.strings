@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Pengendali</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Tutup pengendali untuk mengelakkan mereka dari menukar URL.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener adalah perpustakaan pembuat untuk menukar destinasi pautan - sebagai contoh, untuk mengarahkan membuka pautan YouTube di Safari ke pihak ketiga app YouTube.
+
+Kamu sekarang tidak mempunyai pakej pengendali dipasang. Ini boleh terjadi selepas membuang semua pakej yang bergantung pada Opener, seperti MapsOpener dan YTOpener. Untuk membuang muka Settings ini, cari “Opener” di Cydia, kemudia tekan Modify(Ubah) dan Buang.</string>
+
+	<!-- Button leading to the about page. -->
+	<key>ABOUT</key>
+	<string>Tentang</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Tetapan untuk pengendali ini tidak berjaya dimuatkan.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Sila hubungi Pembuat.</string>
+</dict>
+</plist>
