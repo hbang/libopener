@@ -4,17 +4,17 @@
 <dict>
 	<!-- Section label for the list of handlers. -->
 	<key>HANDLERS</key>
-	<string>Manejadores</string>
+	<string>Controladores</string>
 
 	<!-- Footer explaining what the section is used for. -->
 	<key>HANDLERS_EXPLANATION</key>
-	<string>Apague manipuladores para evitar que anulando URLs.</string>
+	<string>Deshabilite controladores para evitar que cambien el destino de URLs.</string>
 
 	<!-- Explanation used when there are no handlers installed. -->
 	<key>NO_HANDLERS_EXPLANATION</key>
-	<string>Abridor es una biblioteca de desarrollador para anular enlace destinos - por ejemplo, para redirigir la apertura de un enlace de YouTube en Safari a un tercio de partido YouTube aplicación.
+	<string>Opener es una biblioteca de desarrollador para cambiar el comportamiento de enlaces específicos - por ejemplo, para redirigir la apertura de un enlace de YouTube en Safari a una aplicación de YouTube de terceros.
 
-Usted actualmente no tiene ningún paquete de controlador instalados. Esto puede suceder después de desinstalar todos los paquetes que dependen de abridor, como MapsOpener y YTOpener. Para eliminar esta configuración de la página, busque "abrelatas" en Cydia, luego puntee en Modificar y Eliminar.</string>
+Usted actualmente no tiene ningún paquete de controlador instalado. Esto puede suceder después de desinstalar todos los paquetes que dependen de Opener, como MapsOpener y YTOpener. Para eliminar esta página de configuración, busque "Opener" en Cydia, luego toque Modificar y Eliminar.</string>
 
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
@@ -22,6 +22,6 @@ Usted actualmente no tiene ningún paquete de controlador instalados. Esto puede
 
 	<!-- Message body displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_BODY</key>
-	<string>Contacto el desarrollador, por favor.</string>
+	<string>Por favor contáctese con el desarrollador.</string>
 </dict>
 </plist>
