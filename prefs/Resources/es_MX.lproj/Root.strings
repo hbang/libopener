@@ -1,1 +1,27 @@
-../es.lproj/Root.strings
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Controladores</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Deshabilite controladores para evitar que cambien el destino de URLs.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener es una biblioteca de desarrollador para cambiar el comportamiento de enlaces específicos - por ejemplo, para redirigir la apertura de un enlace de YouTube en Safari a una aplicación de YouTube de terceros.
+
+Usted actualmente no tiene ningún paquete de controlador instalado. Esto puede suceder después de desinstalar todos los paquetes que dependen de Opener, como MapsOpener y YTOpener. Para eliminar esta página de configuración, busque "Opener" en Cydia, luego toque Modificar y Eliminar.</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>La configuración de este controlador no se pudo cargar.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Por favor contáctese con el desarrollador.</string>
+</dict>
+</plist>
