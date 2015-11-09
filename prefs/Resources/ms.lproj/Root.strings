@@ -16,10 +16,6 @@
 
 Kamu sekarang tidak mempunyai pakej pengendali dipasang. Ini boleh terjadi selepas membuang semua pakej yang bergantung pada Opener, seperti MapsOpener dan YTOpener. Untuk membuang muka Settings ini, cari “Opener” di Cydia, kemudia tekan Modify(Ubah) dan Buang.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>Tentang</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Tetapan untuk pengendali ini tidak berjaya dimuatkan.</string>

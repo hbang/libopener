@@ -16,10 +16,6 @@
 
 Vi trenutno nemate niti jedan handler paket instaliran. Ovo se može dogoditi nakon uklanjanja svih paketa koje ovise o Openeru, kao što su MapsOpener i YTOpener. Da bi ste uklonili ovu stranicu Postavka, potražite "Opener" u Cydiji, te pritisnite Modify and Remove.</string>
 
-	<!-- Button leading to the about page. -->
-	<key>ABOUT</key>
-	<string>O</string>
-
 	<!-- Title displayed when a handler’s settings fails to load. -->
 	<key>BUNDLE_LOAD_FAILED_TITLE</key>
 	<string>Postavke ovog handlera se nisu mogle učitati.</string>
