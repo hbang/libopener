@@ -78,28 +78,28 @@
 
 		if (!bundle) {
 			HBLogError(@"failed to load bundle for handler %@", baseName);
-			return;
+			continue;
 		}
 
 		[bundle load];
 
 		if (!bundle.principalClass) {
 			HBLogError(@"no principal class for handler %@", baseName);
-			return;
+			continue;
 		}
 
 		HBLOHandler *handler = [[[bundle.principalClass alloc] init] autorelease];
 
 		if (!handler) {
 			HBLogError(@"libopener: failed to initialise principal class for %@", baseName);
-			return;
+			continue;
 		}
 
 		NSError *error = nil;
 
 		if (![self registerHandler:handler error:&error]) {
 			HBLogError(@"libopener: error registering handler %@: %@", baseName, error.localizedDescription);
-			return;
+			continue;
 		}
 	}
 }
