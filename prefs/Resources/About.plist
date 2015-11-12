@@ -89,6 +89,8 @@
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
 			<string>HBTintedTableCell</string>
+			<key>defaults</key>
+			<string>ws.hbang.libopener</string>
 			<key>label</key>
 			<string>EMAIL_SUPPORT</string>
 		</dict>
