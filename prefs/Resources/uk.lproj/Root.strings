@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Обробники</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Вимкніть обробники, щоб запобігти перевизначення URL-адрес.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Opener – це спеціальна бібліотека, що створена для перевизначення напрямків посилань. Приміром, Opener дозволяє спрямувати відкрите у браузері Safari посилання на YouTube до стороннього YouTube-застосунку. Наразі у вас немає встановлених обробників. Це могло статися після видалення всіх пакетів Opener, такі як MapsOpener і YTOpener. Щоб видалити цю сторінку, знайдіть "Opener" у Cydia, а потім натисніть редагувати та видалити.</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Не вдалося завантажити налаштування для цього обробника.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Будь ласка, зв'яжіться з розробником.</string>
+</dict>
+</plist>
