@@ -1,6 +1,5 @@
 TARGET = iphone:clang:latest:5.0
 
-APPLEDOCFILES = HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h
 DOCS_STAGING_DIR = _docs
 DOCS_OUTPUT_PATH = docs
 
@@ -63,7 +62,7 @@ docs::
 		--docset-atom-filename xcode-docset.atom --docset-package-url "https://hbang.github.io/libopener/docset.xar" \
 		--docset-package-filename docset --docset-fallback-url "https://hbang.github.io/libopener/" --docset-feed-name Opener \
 		--index-desc README.md --no-repeat-first-par \
-		--output "$(DOCS_STAGING_DIR)" $(APPLEDOCFILES)
+		--output "$(DOCS_STAGING_DIR)" $(Opener_PUBLIC_HEADERS)
 
 	[[ -d "$(DOCS_OUTPUT_PATH)" ]] || git clone -b gh-pages git@github.com:hbang/libopener.git "$(DOCS_OUTPUT_PATH)"
 	rsync -ra "$(DOCS_STAGING_DIR)"/{html,publish}/ "$(DOCS_OUTPUT_PATH)"
