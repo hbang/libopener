@@ -18,7 +18,7 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 %new - (void)_opener_applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender completion:(HBLOSpringBoardOpenURLCompletion)completion {
 	// get the application proxy
-	LSApplicationProxy *applicationProxy = [LSApplicationProxy applicationProxyForIdentifier:application.bundleIdentifier];
+	LSApplicationProxy *applicationProxy = application.bundleIdentifier ? [LSApplicationProxy applicationProxyForIdentifier:application.bundleIdentifier] : nil;
 
 	// get the replacements
 	NSArray <NSURL *> *replacements = [[HBLOHandlerController sharedInstance] getReplacementsForURL:url application:applicationProxy sender:sender options:nil];
@@ -44,10 +44,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	}
 
 	if (!newApplication) {
-		// application was nil? welp, just give up
+		// application was nil? welp, give a warning to be sure
 		HBLogWarn(@"could not get an SBApplication for url %@", url);
-		completion(url, application);
-		return;
 	}
 
 	// wow, we got all this way. pass back the replaced url and app
@@ -59,8 +57,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	__block id newResult = [result copy];
 
 	[self _opener_applicationOpenURL:url withApplication:application sender:sender completion:^(NSURL *newURL, SBApplication *newApplication) {
-		if (newURL && newApplication) {
-			%orig(newURL, newApplication, sender, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
+		if (newURL) {
+			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
 		}
 
 		[newResult release];
@@ -73,8 +71,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	__block id newHandler = [handler copy];
 
 	[self _opener_applicationOpenURL:url withApplication:application sender:sender completion:^(NSURL *newURL, SBApplication *newApplication) {
-		if (newURL && newApplication) {
-			%orig(newURL, newApplication, sender, publicURLsOnly, animating, needsPermission, context, newHandler);
+		if (newURL) {
+			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, context, newHandler);
 		}
 
 		[newHandler release];
@@ -87,8 +85,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	__block id newHandler = [handler copy];
 
 	[self _opener_applicationOpenURL:url withApplication:application sender:sender completion:^(NSURL *newURL, SBApplication *newApplication) {
-		if (newURL && newApplication) {
-			%orig(newURL, newApplication, sender, publicURLsOnly, animating, needsPermission, flags, newHandler);
+		if (newURL) {
+			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, flags, newHandler);
 		}
 
 		[newHandler release];
@@ -99,8 +97,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 %group ScottForstall // 6.0 – 6.1
 - (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission additionalActivationFlags:(id)flags {
 	[self _opener_applicationOpenURL:url withApplication:application sender:sender completion:^(NSURL *newURL, SBApplication *newApplication) {
-		if (newURL && newApplication) {
-			%orig(newURL, newApplication, sender, publicURLsOnly, animating, needsPermission, flags);
+		if (newURL) {
+			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, flags);
 		}
 	}];
 }
