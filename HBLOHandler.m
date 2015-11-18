@@ -2,7 +2,7 @@
 
 @implementation HBLOHandler
 
-- (NSURL *)openURL:(NSURL *)url sender:(NSString *)sender {
+- (id)openURL:(NSURL *)url sender:(NSString *)sender {
 	[NSException raise:NSInternalInconsistencyException format:@"Handler %@ did not override openURL:sender:, or called the superclass implementation.", self.class];
 	return nil;
 }
