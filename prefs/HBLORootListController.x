@@ -25,6 +25,11 @@
 	[self _updateHandlers];
 }
 
+- (void)reloadSpecifiers {
+	[super reloadSpecifiers];
+	[self _updateHandlers];
+}
+
 #pragma mark - Update state
 
 - (void)_updateHandlers {
