@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Handlers</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>กรุณาปิด Handler เพื่อป้องกันการเขียน URL ทับ</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Openner เป็นไลบราลี่สำหรับนักพัฒนาในการเขียนทับจุดหมายปลายทางของลิงก์ เช่น การเปลี่ยนเส้นทางในการเปิด YouTube บน Safari มาเป็นแอพ YouTube แทน
+
+ตอนนี้คุณไม่มีแพคเกจ Handler ติดตั้งอยู่ สิ่งนี้อาจเกิดขึ้นหลังจากถอนการติดตั้งแพคเกจที่ขึ้นกับ Opener เช่น MapOpener และ YTOpener หากต้องการลบหน้าการตั้งค่านี้ ให้ค้นคำว่า "Opener" ใน Cydia หลังจากนั้นแตะปุ่มเปลี่ยนแปลงและลบ</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>การโหลดตั้งค่าสำหรับ Handler นี้ล้มเหลว</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>กรุณาติดต่อผู้พัฒนา</string>
+</dict>
+</plist>
