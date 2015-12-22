@@ -26,7 +26,7 @@
 			<key>big</key>
 			<true/>
 			<key>cellClass</key>
-			<string>HBInitialsLinkTableCell</string>
+			<string>HBLinkTableCell</string>
 			<key>height</key>
 			<integer>64</integer>
 			<key>icon</key>
@@ -92,7 +92,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>HBInitialsLinkTableCell</string>
+			<string>HBLinkTableCell</string>
 			<key>label</key>
 			<string>TRANSLATORS</string>
 			<key>url</key>
@@ -108,7 +108,7 @@
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>cellClass</key>
-			<string>HBInitialsLinkTableCell</string>
+			<string>HBLinkTableCell</string>
 			<key>label</key>
 			<string>DONATE</string>
 			<key>url</key>
