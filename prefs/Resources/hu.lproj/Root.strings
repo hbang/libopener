@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Section label for the list of handlers. -->
+	<key>HANDLERS</key>
+	<string>Irányítók</string>
+
+	<!-- Footer explaining what the section is used for. -->
+	<key>HANDLERS_EXPLANATION</key>
+	<string>Kapcsold ki az irányítókat, ezzel megelõzve az URL felülírást.</string>
+
+	<!-- Explanation used when there are no handlers installed. -->
+	<key>NO_HANDLERS_EXPLANATION</key>
+	<string>Az Opener egy fejlesztõi csomag, amellyel a link úticélját tudod felülírni - például átirányít egy Safariban megnyitott YouTube linket egy harmadik személy által fejlesztett YouTube alkalmazásba.
+
+Jelenleg nincs semmilyen irányító program telepítve. Ez akkor fordul elõ, ha töröltél minden olyan programot, ami az Opener-hez kapcsolódik, például a MapsOpener vagy YTOpener. Ahhoz, hogy eltüntesd ezt a beállítások fület, keress rá az Opener-re a Cydiaban, majd töröld azt.</string>
+
+	<!-- Title displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_TITLE</key>
+	<string>Nem sikerült a beállítások betöltése az irányítóhoz.</string>
+
+	<!-- Message body displayed when a handler’s settings fails to load. -->
+	<key>BUNDLE_LOAD_FAILED_BODY</key>
+	<string>Kérlek vedd fel a kapcsolatot a fejlesztõvel.</string>
+</dict>
+</plist>
