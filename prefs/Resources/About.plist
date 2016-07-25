@@ -15,8 +15,6 @@
 			<string>icon.png</string>
 			<key>packageIdentifier</key>
 			<string>ws.hbang.libopener</string>
-			<key>packageNameOverride</key>
-			<string>Opener</string>
 		</dict>
 		<dict>
 			<key>cell</key>
