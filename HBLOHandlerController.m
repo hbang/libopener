@@ -1,6 +1,6 @@
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
-#import <Cephei/HBPreferences.h>
+#import "HBLOPreferences.h"
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import <MobileCoreServices/NSString+LSAdditions.h>
@@ -9,7 +9,6 @@
 #import <SpringBoardServices/SpringBoardServices.h>
 
 @implementation HBLOHandlerController {
-	HBPreferences *_preferences;
 	BOOL _hasLoadedHandlers;
 }
 
@@ -28,7 +27,6 @@
 
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
-		_preferences = [[HBPreferences alloc] initWithIdentifier:@"ws.hbang.libopener"];
 	}
 
 	return self;
@@ -138,12 +136,14 @@
 
 	HBLogDebug(@"determining replacement for: %@", url);
 
+	HBLOPreferences *preferences = [HBLOPreferences sharedInstance];
+
 	NSMutableArray *results = [NSMutableArray array];
 
 	// loop over all available handlers
 	for (HBLOHandler *handler in _handlers) {
 		// not enabled? no worries, just skip over it
-		if (![self handlerIsEnabled:handler]) {
+		if (![preferences isHandlerEnabled:handler]) {
 			continue;
 		}
 
@@ -193,21 +193,6 @@
 - (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
 	// call through to the more complete method
 	return [self getReplacementsForURL:url application:nil sender:sender options:nil];
-}
-
-#pragma mark - Preferences
-
-- (BOOL)handlerIdentifierIsEnabled:(NSString *)identifier {
-	NSNumber *enabled = [_preferences objectForKey:identifier];
-	return enabled ? enabled.boolValue : YES;
-}
-
-- (BOOL)handlerIsEnabled:(HBLOHandler *)handler {
-	if (handler.preferencesBundle && handler.preferencesClass) {
-		return YES;
-	} else {
-		return [self handlerIdentifierIsEnabled:handler.identifier];
-	}
 }
 
 @end

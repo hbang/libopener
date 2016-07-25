@@ -1,13 +1,14 @@
 #import "HBLibOpener.h"
 #import "HBLOHandler.h"
 #import "HBLOHandlerController.h"
+#import "HBLOPreferences.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #include <notify.h>
 #import <rocketbootstrap/rocketbootstrap.h>
 
 @implementation HBLibOpener
 
-#pragma mark - Public API
+#pragma mark - Singleton
 
 + (instancetype)sharedInstance {
 	static HBLibOpener *sharedInstance = nil;
@@ -19,6 +20,8 @@
 	return sharedInstance;
 }
 
+#pragma mark - Public API
+
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error {
 	return [[HBLOHandlerController sharedInstance] registerHandler:handler error:error];
 }
@@ -29,7 +32,7 @@
 }
 
 - (BOOL)handlerIsEnabled:(NSString *)handler {
-	return [[HBLOHandlerController sharedInstance] handlerIdentifierIsEnabled:handler];
+	return [[HBLOPreferences sharedInstance] isHandlerIdentifierEnabled:handler];
 }
 
 @end
