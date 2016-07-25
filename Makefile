@@ -12,7 +12,7 @@ Opener_FRAMEWORKS = MobileCoreServices UIKit
 Opener_PRIVATE_FRAMEWORKS = AppSupport
 Opener_EXTRA_FRAMEWORKS = Cephei
 Opener_LIBRARIES = rocketbootstrap substrate
-Opener_CFLAGS = -include Global.h
+Opener_CFLAGS = -include Global.h -fobjc-arc
 
 SUBPROJECTS = prefs
 

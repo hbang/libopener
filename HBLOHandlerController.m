@@ -88,7 +88,7 @@
 			continue;
 		}
 
-		HBLOHandler *handler = [[[bundle.principalClass alloc] init] autorelease];
+		HBLOHandler *handler = [[bundle.principalClass alloc] init];
 
 		if (!handler) {
 			HBLogError(@"libopener: failed to initialise principal class for %@", baseName);

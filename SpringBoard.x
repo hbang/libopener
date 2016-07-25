@@ -60,8 +60,6 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 		if (newURL) {
 			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
 		}
-
-		[newResult release];
 	}];
 }
 %end
@@ -74,8 +72,6 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 		if (newURL) {
 			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, context, newHandler);
 		}
-
-		[newHandler release];
 	}];
 }
 %end
@@ -88,8 +84,6 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 		if (newURL) {
 			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, flags, newHandler);
 		}
-
-		[newHandler release];
 	}];
 }
 %end
