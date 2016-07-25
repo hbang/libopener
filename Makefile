@@ -21,7 +21,10 @@ include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-Opener-stage::
 	# create directories
-	mkdir -p $(THEOS_STAGING_DIR)/usr/lib
+	mkdir -p $(THEOS_STAGING_DIR)/DEBIAN $(THEOS_STAGING_DIR)/usr/lib
+
+	# preinst -> DEBIAN/preinst
+	cp preinst $(THEOS_STAGING_DIR)/DEBIAN
 
 	# libopener.dylib -> Opener.framework
 	ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib
