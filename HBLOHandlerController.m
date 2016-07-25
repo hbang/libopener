@@ -61,8 +61,10 @@
 
 	_hasLoadedHandlers = YES;
 
+	NSURL *handlersURL = [NSURL URLWithString:kHBLOHandlersURL].URLByResolvingSymlinksInPath;
+
 	NSError *error = nil;
-	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL URLWithString:kHBLOHandlersURL] includingPropertiesForKeys:nil options:kNilOptions error:&error];
+	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:handlersURL includingPropertiesForKeys:nil options:kNilOptions error:&error];
 
 	if (error) {
 		HBLogError(@"failed to access handler directory %@: %@", kHBLOHandlersURL, error.localizedDescription);
