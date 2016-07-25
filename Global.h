@@ -1,7 +1,11 @@
 #pragma mark - Macros
 
-#ifndef IN_SPRINGBOARD
-#define IN_SPRINGBOARD ([[NSBundle mainBundle].bundleIdentifier isEqualToString:@"com.apple.springboard"])
+#if DEBUG
+#define HBLOLogDebug(...) HBLogDebug(__VA_ARGS__)
+#else
+#define HBLOLogDebug(...) if ([HBLOPreferences sharedInstance].debugLoggingEnabled) { \
+		HBLogInfo(__VA_ARGS__); \
+	}
 #endif
 
 #pragma mark - Typedefs

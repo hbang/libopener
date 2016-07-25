@@ -35,8 +35,12 @@
 #pragma mark - Registration/loading
 
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error {
+	HBLOLogDebug(@"registering handler %@", handler.identifier);
+
 	for (HBLOHandler *handler2 in _handlers) {
 		if ([handler.identifier isEqualToString:handler2.identifier]) {
+			HBLogError(@"another handler is registered with this identifier – not registering this one");
+
 			*error = [NSError errorWithDomain:HBLOErrorDomain code:1 userInfo:@{
 				NSLocalizedDescriptionKey: [NSString stringWithFormat:@"The handler “%@” is already registered.", handler.identifier]
 			}];
@@ -51,11 +55,11 @@
 
 - (void)loadHandlers {
 	if (_hasLoadedHandlers) {
-		HBLogDebug(@"you only load handlers once (YOLHO)");
+		HBLOLogDebug(@"you only load handlers once (YOLHO)");
 		return;
 	}
 
-	HBLogInfo(@"loading handlers");
+	HBLOLogDebug(@"loading handlers");
 
 	_hasLoadedHandlers = YES;
 
@@ -72,7 +76,7 @@
 	for (NSURL *directory in contents) {
 		NSString *baseName = directory.pathComponents.lastObject;
 
-		HBLogInfo(@"loading %@", baseName);
+		HBLOLogDebug(@"loading %@", baseName);
 
 		NSBundle *bundle = [NSBundle bundleWithURL:directory];
 
@@ -91,14 +95,14 @@
 		HBLOHandler *handler = [[bundle.principalClass alloc] init];
 
 		if (!handler) {
-			HBLogError(@"libopener: failed to initialise principal class for %@", baseName);
+			HBLogError(@"failed to initialise principal class for %@", baseName);
 			continue;
 		}
 
 		NSError *error = nil;
 
 		if (![self registerHandler:handler error:&error]) {
-			HBLogError(@"libopener: error registering handler %@: %@", baseName, error.localizedDescription);
+			HBLogError(@"error registering handler %@: %@", baseName, error.localizedDescription);
 			continue;
 		}
 	}
@@ -134,7 +138,7 @@
 		[self loadHandlers];
 	}
 
-	HBLogDebug(@"determining replacement for: %@", url);
+	HBLOLogDebug(@"determining replacement for %@ (requested by %@)", url, sender);
 
 	HBLOPreferences *preferences = [HBLOPreferences sharedInstance];
 
@@ -150,7 +154,7 @@
 		// ask the handler for a replacement URL
 		id newURL = [handler openURL:url sender:sender];
 
-		HBLogDebug(@"got %@ from %@", newURL, handler);
+		HBLOLogDebug(@" → %@ returned: %@", handler.identifier, newURL);
 
 		if (!newURL) {
 			// nothing returned? skip to the next handler
@@ -161,6 +165,8 @@
 		} else if ([newURL isKindOfClass:NSArray.class]) {
 			// it's an array, hopefully of NSURLs? add them to our results
 			[results addObjectsFromArray:newURL];
+		} else {
+			HBLogError(@"%@ returned invalid value of type %@: %@", handler.identifier, ((NSObject *)newURL).class, newURL);
 		}
 	}
 
@@ -178,6 +184,7 @@
 		// if the url can be opened by the same app, we should ignore it
 		for (LSApplicationProxy *app in apps) {
 			if ([app.applicationIdentifier isEqualToString:sender]) {
+				HBLOLogDebug(@"url scheme %@: is supported by the sending app – ignoring", url_.scheme);
 				continue;
 			}
 		}
@@ -186,8 +193,21 @@
 		[candidates addObject:url_];
 	}
 
-	// if we have results, return them, else return nil
-	return candidates.count ? candidates : nil;
+	// if we don’t have anything
+	if (candidates.count == 0) {
+		// we have nothing. return nil
+		HBLOLogDebug(@"no candidates available");
+		return nil;
+	} else if (candidates.count == 1) {
+		// if there’s one, log singular
+		HBLOLogDebug(@"replacement: %@", candidates[0]);
+	} else {
+		// if there’s multiple, log plural
+		HBLOLogDebug(@"replacements: %@", candidates);
+	}
+
+	// return the candidates
+	return candidates;
 }
 
 - (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {

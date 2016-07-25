@@ -27,6 +27,26 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>DEBUG_LOGGING_EXPLANATION</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>ws.hbang.libopener</string>
+			<key>key</key>
+			<string>_DebugLogging</string>
+			<key>label</key>
+			<string>DEBUG_LOGGING</string>
+			<key>PostNotification</key>
+			<string>ws.hbang.libopener/ReloadPrefs</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>cell</key>

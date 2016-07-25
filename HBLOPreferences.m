@@ -25,6 +25,7 @@
 
 	if (self) {
 		_preferences = [HBPreferences preferencesForIdentifier:@"ws.hbang.libopener"];
+		[_preferences registerBool:&_debugLoggingEnabled default:NO forKey:@"_DebugLogging"];
 	}
 
 	return self;

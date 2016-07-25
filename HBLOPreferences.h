@@ -7,6 +7,6 @@
 - (BOOL)isHandlerEnabled:(HBLOHandler *)handler;
 - (BOOL)isHandlerIdentifierEnabled:(NSString *)identifier;
 
-@property (nonatomic) BOOL inDebugMode;
+@property (nonatomic) BOOL debugLoggingEnabled;
 
 @end
