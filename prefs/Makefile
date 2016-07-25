@@ -6,7 +6,7 @@ libopener_INSTALL_PATH = /Library/PreferenceBundles
 libopener_FRAMEWORKS = UIKit
 libopener_PRIVATE_FRAMEWORKS = Preferences AppSupport
 libopener_EXTRA_FRAMEWORKS = CepheiPrefs Opener
-libopener_CFLAGS = -include ../Global.h
+libopener_CFLAGS = -include ../Global.h -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

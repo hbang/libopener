@@ -104,12 +104,4 @@
 	}
 }
 
-#pragma mark - Memory management
-
-- (void)dealloc {
-	[_handlers release];
-
-	[super dealloc];
-}
-
 @end
