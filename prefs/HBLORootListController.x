@@ -2,6 +2,7 @@
 #import "../HBLOHandler.h"
 #import "../HBLOHandlerController.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <CepheiPrefs/HBAppearanceSettings.h>
 #import <Preferences/PSSpecifier.h>
 #import <UIKit/UIImage+Private.h>
 #include <notify.h>
@@ -14,11 +15,19 @@
 	return @"Root";
 }
 
-+ (UIColor *)hb_tintColor {
-	return [UIColor colorWithRed:52.f / 255.f green:170.f / 255.f blue:220.f / 255.f alpha:1];
-}
-
 #pragma mark - UIViewController
+
+- (instancetype)init {
+	self = [super init];
+
+	if (self) {
+		HBAppearanceSettings *appearanceSettings = [[HBAppearanceSesttings alloc] init];
+		appearanceSettings.tintColor = [UIColor colorWithRed:52.f / 255.f green:170.f / 255.f blue:220.f / 255.f alpha:1];
+		self.hb_appearanceSettings = appearanceSettings;
+	}
+
+	return self;
+}
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
