@@ -14,6 +14,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 @end
 
+#pragma mark - SpringBoard hooks
+
 %hook SpringBoard
 
 %new - (void)_opener_applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender completion:(HBLOSpringBoardOpenURLCompletion)completion {
@@ -52,7 +54,7 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	completion(newURL, newApplication);
 }
 
-%group CraigFederighi // 8.0 – 9.0 (wow, streak!)
+%group CraigFederighi // 8.0 – 9.3 (wow, streak!)
 - (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission activationSettings:(id)activationSettings withResult:(id)result {
 	__block id newResult = [result copy];
 
@@ -109,6 +111,8 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 %end
 
 %end
+
+#pragma mark - Constructor
 
 %ctor {
 	if (!IN_SPRINGBOARD) {
