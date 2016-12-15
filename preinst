@@ -1,2 +1,6 @@
 #!/bin/bash
-/usr/libexec/cydia/move.sh /Library/Opener
+if [[ -x /usr/libexec/cydia/move.sh ]]; then
+	/usr/libexec/cydia/move.sh /Library/Opener
+else
+	:
+fi
