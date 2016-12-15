@@ -10,8 +10,8 @@ Opener_FILES = $(wildcard *.x) $(wildcard *.m)
 Opener_PUBLIC_HEADERS = HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h
 Opener_FRAMEWORKS = MobileCoreServices UIKit
 Opener_PRIVATE_FRAMEWORKS = AppSupport
-Opener_EXTRA_FRAMEWORKS = Cephei
-Opener_LIBRARIES = rocketbootstrap substrate
+Opener_EXTRA_FRAMEWORKS = Cephei CydiaSubstrate
+Opener_LIBRARIES = rocketbootstrap
 Opener_CFLAGS = -include Global.h -fobjc-arc
 
 SUBPROJECTS = prefs
