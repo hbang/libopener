@@ -1,4 +1,5 @@
-TARGET = iphone:clang:latest:5.0
+export TARGET = iphone:clang:latest:5.0
+export ADDITIONAL_CFLAGS = -Wextra -Wno-unused-parameter
 
 DOCS_STAGING_DIR = _docs
 DOCS_OUTPUT_PATH = docs
