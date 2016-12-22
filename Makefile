@@ -1,4 +1,3 @@
-FOR_RELEASE = 1
 export TARGET = iphone:clang:latest:5.0
 export ADDITIONAL_CFLAGS = -Wextra -Wno-unused-parameter
 
