@@ -9,7 +9,7 @@ include $(THEOS)/makefiles/common.mk
 FRAMEWORK_NAME = Opener
 Opener_FILES = $(wildcard *.x) $(wildcard *.m)
 Opener_PUBLIC_HEADERS = HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h
-Opener_FRAMEWORKS = MobileCoreServices UIKit
+Opener_FRAMEWORKS = MobileCoreServices
 Opener_PRIVATE_FRAMEWORKS = AppSupport
 Opener_EXTRA_FRAMEWORKS = Cephei CydiaSubstrate
 Opener_LIBRARIES = rocketbootstrap
