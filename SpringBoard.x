@@ -54,6 +54,19 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	completion(newURL, newApplication);
 }
 
+%group PhilSchiller // 10.0 – 10.2
+- (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission activationSettings:(id)activationSettings withResult:(id)result {
+	__block id newResult = [result copy];
+
+	// TODO: kinda rushing… find out how to get the sender
+	[self _opener_applicationOpenURL:url withApplication:application sender:nil completion:^(NSURL *newURL, SBApplication *newApplication) {
+		if (newURL) {
+			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
+		}
+	}];
+}
+%end
+
 %group CraigFederighi // 8.0 – 9.3 (wow, streak!)
 - (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission activationSettings:(id)activationSettings withResult:(id)result {
 	__block id newResult = [result copy];
@@ -123,7 +136,9 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 	%init;
 
-	if (IS_IOS_OR_NEWER(iOS_8_0)) {
+	if (IS_IOS_OR_NEWER(iOS_10_0)) {
+		%init(PhilSchiller);
+	} else if (IS_IOS_OR_NEWER(iOS_8_0)) {
 		%init(CraigFederighi);
 	} else if (IS_IOS_OR_NEWER(iOS_7_1)) {
 		%init(JonyIvePointOne);
