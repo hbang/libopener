@@ -61,7 +61,7 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	// TODO: kinda rushing… find out how to get the sender
 	[self _opener_applicationOpenURL:url withApplication:application sender:nil completion:^(NSURL *newURL, SBApplication *newApplication) {
 		if (newURL) {
-			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
+			%orig(newURL, newApplication ?: application, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
 		}
 	}];
 }
