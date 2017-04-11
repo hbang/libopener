@@ -1,6 +1,12 @@
 export TARGET = iphone:clang:latest:5.0
 export ADDITIONAL_CFLAGS = -Wextra -Wno-unused-parameter
 
+INSTALL_TARGET_PROCESSES = lsd Preferences
+
+ifeq ($(RESPRING),1)
+INSTALL_TARGET_PROCESSES += SpringBoard
+endif
+
 DOCS_STAGING_DIR = _docs
 DOCS_OUTPUT_PATH = docs
 
@@ -21,25 +27,23 @@ include $(THEOS_MAKE_PATH)/framework.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-Opener-stage::
-	# create directories
-	mkdir -p $(THEOS_STAGING_DIR)/DEBIAN $(THEOS_STAGING_DIR)/usr/lib
+	@# create directories
+	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/DEBIAN $(THEOS_STAGING_DIR)/usr/lib$(ECHO_END)
 
-	# preinst -> DEBIAN/preinst
-	cp preinst $(THEOS_STAGING_DIR)/DEBIAN
+	@# preinst -> DEBIAN/preinst
+	$(ECHO_NOTHING)cp preinst $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
 
-	# libopener.dylib -> Opener.framework
-	ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib
+	@# libopener.dylib -> Opener.framework
+	$(ECHO_NOTHING)ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib$(ECHO_END)
 
-	# Opener -> libopener.dylib
-	mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries
-	ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib
-	cp libopener.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.plist
+	@# Opener -> libopener.dylib
+	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries$(ECHO_END)
+	$(ECHO_NOTHING)ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib$(ECHO_END)
+	$(ECHO_NOTHING)cp libopener.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.plist$(ECHO_END)
 
 after-install::
 ifeq ($(RESPRING),0)
-	install.exec "killall Preferences; sleep 0.2; sbopenurl 'prefs:root=Opener'"
-else
-	install.exec spring
+	install.exec "uiopen 'prefs:root=Opener'"
 endif
 
 docs::
