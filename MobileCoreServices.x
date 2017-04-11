@@ -52,3 +52,14 @@ BOOL isOverriding = NO;
 }
 
 %end
+
+#pragma mark - Constructor
+
+%ctor {
+	NSURL *executableURL = [NSBundle mainBundle].executableURL;
+
+	// only load these hooks if we’re not in lsd, otherwise we crash in URLOverrideForURL: on iOS 10
+	if (![executableURL.path isEqualToString:@"/usr/libexec/lsd"]) {
+		%init;
+	}
+}
