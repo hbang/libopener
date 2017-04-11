@@ -127,8 +127,10 @@
 	// no sender given? just set it to the current app or the foreground app
 	if (!sender) {
 		if (IN_SPRINGBOARD) {
-			sender = ((SpringBoard *)[%c(UIApplication) sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier ?: [NSBundle mainBundle].bundleIdentifier;
-		} else {
+			sender = ((SpringBoard *)[%c(SpringBoard) sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier;
+		}
+		
+		if (!sender) {
 			sender = [NSBundle mainBundle].bundleIdentifier;
 		}
 	}
