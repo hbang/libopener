@@ -5,24 +5,74 @@ All iOS versions since 5.0 are supported, on all devices.
 
 Documentation is available at **[hbang.github.io/libopener](https://hbang.github.io/libopener/)**.
 
-## Integrating Opener into your Theos projects
-It’s really easy to integrate Opener into a Theos project. First, install Opener on your device.
+## Creating an Opener handler
+Make sure Opener is already installed on your device.
 
-Now, copy the dynamic libraries and headers into the location you cloned Theos to. (Hopefully you have `$THEOS`, `$THEOS_DEVICE_IP`, and `$THEOS_DEVICE_PORT` set and exported in your shell.)
+Theos includes headers and a linkable framework for Opener, so you don’t need to worry about copying files over from your device.
+
+To develop a handler, create a bundle project. You can do this with a Theos makefile similar to this one:
+
+```make
+INSTALL_TARGET_PROCESSES = SpringBoard
+
+include $(THEOS)/makefiles/common.mk
+
+BUNDLE_NAME = MyAwesomeHandler
+MyAwesomeHandler_FILES = XXXMyAwesomeHandler.m
+MyAwesomeHandler_INSTALL_PATH = /Library/Opener
+MyAwesomeHandler_EXTRA_FRAMEWORKS = Opener
+
+include $(THEOS_MAKE_PATH)/bundle.mk
+```
+
+A handler class subclasses from [HBLOHandler](https://hbang.github.io/libopener/Classes/HBLOHandler.html). Here is a simple example:
+
+```objc
+#import <Opener/HBLOHandler.h>
+
+@interface XXXMyAwesomeHandler : HBLOHandler
+
+@end
+```
+
+```objc
+#import "XXXMyAwesomeHandler.h"
+
+@implementation XXXMyAwesomeHandler
+
+- (instancetype)init {
+	self = [super init];
+
+	if (self) {
+		self.name = @"My Awesome Handler";
+		self.identifier = @"com.example.myawesomehandler";
+	}
+
+	return self;
+}
+
+- (id)openURL:(NSURL *)url sender:(NSString *)sender {
+	if ([url.host isEqualToString:@"hbang.ws"]) {
+		return [NSURL URLWithString:[NSString stringWithFormat:@"hbang://open%@", url.path]];
+	}
+
+	return nil;
+}
+
+@end
+```
+
+In this example, URLs being opened that have a hostname of `hbang.ws` will be overridden to open a hypothetical app that supports the `hbang://` URI scheme. This means `https://hbang.ws/apps/` turns into `hbang://open/apps/`.
+
+You must also add `ws.hbang.libopener` to the `Depends:` list in your control file. If Opener isn’t present on the device, your binaries will fail to load. For example:
 
 ```
-scp -rP $THEOS_DEVICE_PORT root@$THEOS_DEVICE_IP:/Library/Frameworks/Opener.framework $THEOS/lib
+Depends: mobilesubstrate, something-else, some-other-package, ws.hbang.libopener (>= 3.1.2)
 ```
 
-Next, for all projects that will be using Opener, add it to the instance’s libraries:
+You should specify the current version of Opener as the minimum requirement, so you can guarantee all features you use are available.
 
-```
-MyAwesomeTweak_EXTRA_FRAMEWORKS += Opener
-```
-
-You can now use Opener in your project.
-
-Please note that Opener is now a framework, instead of a library. Frameworks are only properly supported with [kirb/theos](https://github.com/kirb/theos); other variants of Theos may or may not support it.
+Please note that Opener is now a framework (`/Library/Frameworks/Opener.framework`), instead of a library (`/usr/lib/libopener.dylib`). Frameworks are only properly supported with recent versions of [Theos](https://github.com/theos/theos). For backwards compatibility, libopener.dylib is symlinked to the corresponding framework binary. Do not use it in new code.
 
 ## License
-Licensed under [Apache License, version 2.0](https://github.com/hbang/libopener/blob/master/LICENSE.md).
+Licensed under the Apache License, version 2.0. Refer to [LICENSE.md](LICENSE.md).
