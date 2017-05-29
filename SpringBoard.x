@@ -33,7 +33,7 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 	NSURL *newURL = replacements[0];
 
-	// determine the apps that own that url's scheme
+	// determine the apps that own that url’s scheme
 	NSArray <LSApplicationProxy *> *appsForScheme = [[LSApplicationWorkspace defaultWorkspace] applicationsAvailableForHandlingURLScheme:newURL.scheme];
 	LSApplicationProxy *newApplicationProxy = appsForScheme[0];
 	SBApplication *newApplication = nil;
