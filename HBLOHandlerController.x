@@ -1,9 +1,9 @@
 #import "HBLOHandlerController.h"
 #import "HBLOHandler.h"
 #import "HBLOPreferences.h"
+#import <Cephei/NSString+HBAdditions.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
-#import <MobileCoreServices/NSString+LSAdditions.h>
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SpringBoardServices.h>
@@ -117,7 +117,7 @@
 		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
 	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
 		// grab the url from the query arguments
-		NSDictionary *query = url.query.queryToDict;
+		NSDictionary *query = url.query.hb_queryStringComponents;
 
 		if (query[@"url"]) {
 			url = [NSURL URLWithString:query[@"url"]];
