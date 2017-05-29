@@ -9,4 +9,9 @@ Author: HASHBANG Productions <support@hbang.ws>
 Depiction: https://cydia.hbang.ws/depiction/ws.hbang.libopener/
 Support: https://hbang.ws/support/
 Section: Development
+Icon: file:///Library/PreferenceBundles/Opener.bundle/icon@2x.png
+Depiction: https://cydia.hbang.ws/package/ws.hbang.libopener/
+Support: https://hbang.ws/support/
+Sponsor: thebigboss.org <http://thebigboss.org>
+Tag: purpose::extension, compatible::ios5, compatible::ios6, compatible::ios7, compatible::ios8, compatible::ios9, compatible::ios10
 dev: hbang
