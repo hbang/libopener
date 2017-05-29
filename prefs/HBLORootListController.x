@@ -62,7 +62,12 @@
 				PSDetailControllerClassKey: handler.preferencesClass
 			} mutableCopy];
 
-			specifier.controllerLoadAction = @selector(lazyLoadBundle:);
+			if ([specifier respondsToSelector:@selector(setControllerLoadAction:)]) {
+				specifier.controllerLoadAction = @selector(lazyLoadBundle:);
+			} else {
+				// for iOS 5
+				specifier->action = @selector(lazyLoadBundle:);
+			}
 		} else {
 			specifier.properties = [@{
 				PSIDKey: handler.identifier,
