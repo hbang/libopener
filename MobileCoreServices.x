@@ -46,10 +46,19 @@ BOOL isOverriding = NO;
 	return newURL ?: %orig;
 }
 
+%group PreSchiller
 - (BOOL)openURL:(NSURL *)url withOptions:(NSDictionary *)options {
 	// need to make sure all openURL: requests go through URLOverrideForURL:
 	return %orig([self _opener_URLOverrideForURL:url] ?: url, options);
 }
+%end
+
+%group PhilSchiller
+- (BOOL)openURL:(NSURL *)url withOptions:(NSDictionary *)options error:(NSError **)error {
+	// need to make sure all openURL: requests go through URLOverrideForURL:
+	return %orig([self _opener_URLOverrideForURL:url] ?: url, options, error);
+}
+%end
 
 %end
 
@@ -61,5 +70,11 @@ BOOL isOverriding = NO;
 	// only load these hooks if we’re not in lsd, otherwise we crash in URLOverrideForURL: on iOS 10
 	if (![executableURL.path isEqualToString:@"/usr/libexec/lsd"]) {
 		%init;
+
+		if (IS_IOS_OR_NEWER(iOS_10_0)) {
+			%init(PhilSchiller);
+		} else {
+			%init(PreSchiller);
+		}
 	}
 }
