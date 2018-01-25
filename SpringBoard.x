@@ -54,7 +54,20 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 	completion(newURL, newApplication);
 }
 
-%group PhilSchiller // 10.0 – 10.2
+%group AngelaAhrendts // 11.0 – 11.1
+- (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application animating:(BOOL)animating activationSettings:(id)activationSettings origin:(id)origin withResult:(id)result {
+	__block id newResult = [result copy];
+
+	// TODO: origin is probably an SBApplication? maybe a string again? please? pleeeease?
+	[self _opener_applicationOpenURL:url withApplication:application sender:nil completion:^(NSURL *newURL, SBApplication *newApplication) {
+		if (newURL) {
+			%orig(newURL, newApplication ?: application, animating, activationSettings, origin, newResult);
+		}
+	}];
+}
+%end
+
+%group PhilSchiller // 10.0 – 10.3
 - (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission activationSettings:(id)activationSettings withResult:(id)result {
 	__block id newResult = [result copy];
 
@@ -136,7 +149,9 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 	%init;
 
-	if (IS_IOS_OR_NEWER(iOS_10_0)) {
+	if (IS_IOS_OR_NEWER(iOS_11_0)) {
+		%init(AngelaAhrendts);
+	} else if (IS_IOS_OR_NEWER(iOS_10_0)) {
 		%init(PhilSchiller);
 	} else if (IS_IOS_OR_NEWER(iOS_8_0)) {
 		%init(CraigFederighi);
