@@ -16,12 +16,10 @@ FRAMEWORK_NAME = Opener
 Opener_FILES = $(wildcard *.x) $(wildcard *.m)
 Opener_PUBLIC_HEADERS = Opener.h HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate.h
 Opener_FRAMEWORKS = MobileCoreServices
-Opener_PRIVATE_FRAMEWORKS = AppSupport
 Opener_EXTRA_FRAMEWORKS = Cephei CydiaSubstrate
-Opener_LIBRARIES = rocketbootstrap
 Opener_CFLAGS = -include Global.h -fobjc-arc
 
-SUBPROJECTS = prefs
+SUBPROJECTS = springboard prefs
 
 include $(THEOS_MAKE_PATH)/framework.mk
 include $(THEOS_MAKE_PATH)/aggregate.mk

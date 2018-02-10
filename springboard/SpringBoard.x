@@ -141,10 +141,6 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 #pragma mark - Constructor
 
 %ctor {
-	if (!IN_SPRINGBOARD) {
-		return;
-	}
-
 	[HBLOHandlerController sharedInstance];
 
 	%init;
