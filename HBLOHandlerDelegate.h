@@ -1,13 +1,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- * HBLOHandlerDelegate is the protocol that all handlers must conform to.
- * HBLOHandler conforms to this protocol for you, but handler classes do not
- * necessarily need to subclass HBLOHandler.
- *
- * For more information on the methods and properties of this protocol, refer to
- * the documentation for HBLOHandler.
- */
+/// HBLOHandlerDelegate is the protocol that all handlers must conform to. HBLOHandler conforms to
+/// this protocol for you, but handler classes do not necessarily need to subclass HBLOHandler.
+///
+/// For more information on the methods and properties of this protocol, refer to the documentation
+/// for HBLOHandler.
 @protocol HBLOHandlerDelegate <NSObject>
 
 @property (nonatomic, retain) NSString *name;
