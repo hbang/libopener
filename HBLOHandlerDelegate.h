@@ -1,3 +1,5 @@
+#import <Foundation/Foundation.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// HBLOHandlerDelegate is the protocol that all handlers must conform to. HBLOHandler conforms to

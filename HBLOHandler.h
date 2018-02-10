@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "HBLOHandlerDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// To prevent conflicts, use a reverse DNS name, such as your package’s identifier. If your handler
 /// previously supported Opener versions prior to 2.0, use the name you passed to
-/// -[HBLibOpener registerHandlerWithName:block:].
+/// -[HBLibOpener registerHandlerWithName:block:] so the user’s preferences are retained.
 @property (nonatomic, retain) NSString *identifier;
 
 /// Custom Preferences list controller bundle.
