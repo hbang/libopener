@@ -6,7 +6,6 @@
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
-#import <SpringBoardServices/SpringBoardServices.h>
 
 @implementation HBLOHandlerController {
 	BOOL _hasLoadedHandlers;

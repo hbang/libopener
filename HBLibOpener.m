@@ -2,9 +2,6 @@
 #import "HBLOHandler.h"
 #import "HBLOHandlerController.h"
 #import "HBLOPreferences.h"
-#import <AppSupport/CPDistributedMessagingCenter.h>
-#include <notify.h>
-#import <rocketbootstrap/rocketbootstrap.h>
 
 @implementation HBLibOpener
 
