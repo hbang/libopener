@@ -145,6 +145,16 @@
 
 	NSMutableArray *results = [NSMutableArray array];
 
+	// if this is an applink override request, extract the original url and return that, skipping our
+	// replacement logic
+	if ([url.scheme isEqualToString:@"http"] && url.pathComponents.count == 2 && [url.pathComponents[1] isEqualToString:@"_opener_app_link_hax_"]) {
+		NSDictionary <NSString *, NSString *> *query = url.query.hb_queryStringComponents;
+		NSURL *originalURL = [NSURL URLWithString:query[@"url"]];
+
+		HBLOLogDebug(@"this is an override, returning original url %@", originalURL);
+		return @[ originalURL ];
+	}
+
 	// loop over all available handlers
 	for (HBLOHandler *handler in _handlers) {
 		// not enabled? no worries, just skip over it
