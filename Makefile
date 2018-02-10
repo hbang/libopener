@@ -28,13 +28,10 @@ include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-Opener-stage::
 	@# create directories
-	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/DEBIAN $(THEOS_STAGING_DIR)/usr/lib$(ECHO_END)
+	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
 
 	@# preinst -> DEBIAN/preinst
 	$(ECHO_NOTHING)cp preinst $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
-
-	@# libopener.dylib -> Opener.framework
-	$(ECHO_NOTHING)ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/usr/lib/libopener.dylib$(ECHO_END)
 
 	@# Opener -> libopener.dylib
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries$(ECHO_END)
@@ -47,9 +44,6 @@ ifeq ($(RESPRING),0)
 endif
 
 docs::
-	# eventually, this should probably be in theos.
-	# for now, this is good enough :p
-
 	[[ -d "$(DOCS_STAGING_DIR)" ]] && rm -r "$(DOCS_STAGING_DIR)" || true
 
 	-appledoc --project-name Opener --project-company "HASHBANG Productions" --company-id ws.hbang --project-version 3.0 --no-install-docset \
