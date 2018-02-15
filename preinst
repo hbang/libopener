@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ -x /usr/libexec/cydia/move.sh ]]; then
-	/usr/libexec/cydia/move.sh /Library/Opener
+	bash /usr/libexec/cydia/move.sh /Library/Opener
 else
 	mkdir -p /Library/Opener
 fi
