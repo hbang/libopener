@@ -1,6 +1,20 @@
 #!/bin/bash
-if [[ -x /usr/libexec/cydia/move.sh ]]; then
-	bash /usr/libexec/cydia/move.sh /Library/Opener
+set -e
+
+mkdir -p /usr/lib/Opener
+
+# if /Library/Opener exists and /usr/lib/Opener/Handlers doesn’t yet, move it over. else if cydia’s
+# move script exists, use it to create a stashed handlers dir. else, just create it ourselves
+if [[ -d /Library/Opener || -h /Library/Opener ]] && [[ ! -d /usr/lib/Opener/Handlers ]]; then
+	mv /Library/Opener /usr/lib/Opener/Handlers
+elif [[ -x /usr/libexec/cydia/move.sh ]]; then
+	mkdir -p /usr/lib/Opener
+	bash /usr/libexec/cydia/move.sh /usr/lib/Opener/Handlers
 else
-	mkdir -p /Library/Opener
+	mkdir -p /usr/lib/Opener/Handlers
+fi
+
+# if /Library/Opener isn’t a symlink, make it be one now
+if [[ ! -h /Library/Opener ]]; then
+	ln -s /usr/lib/Opener/Handlers /Library/Opener
 fi

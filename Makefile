@@ -18,6 +18,7 @@ Opener_PUBLIC_HEADERS = Opener.h HBLibOpener.h HBLOHandler.h HBLOHandlerDelegate
 Opener_FRAMEWORKS = MobileCoreServices
 Opener_EXTRA_FRAMEWORKS = Cephei CydiaSubstrate
 Opener_CFLAGS = -include Global.h -fobjc-arc
+Opener_INSTALL_PATH = /usr/lib/Opener
 
 SUBPROJECTS = springboard prefs
 
@@ -26,14 +27,21 @@ include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-Opener-stage::
 	@# create directories
-	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
+	$(ECHO_NOTHING)mkdir -p \
+		$(THEOS_STAGING_DIR)/DEBIAN $(THEOS_STAGING_DIR)/usr/lib \
+		$(THEOS_STAGING_DIR)/Library/Frameworks \
+		$(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries$(ECHO_END)
 
-	@# preinst -> DEBIAN/preinst
+	@# preinst -> /DEBIAN/preinst
 	$(ECHO_NOTHING)cp preinst $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
 
-	@# Opener -> libopener.dylib
-	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries$(ECHO_END)
-	$(ECHO_NOTHING)ln -s /Library/Frameworks/Opener.framework/Opener $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib$(ECHO_END)
+	@# /Library/Frameworks/Opener.framework -> /usr/lib/Opener/Opener.framework
+	$(ECHO_NOTHING)ln -s /usr/lib/Opener/Opener.framework $(THEOS_STAGING_DIR)/Library/Frameworks/Opener.framework$(ECHO_END)
+
+	@# /usr/lib/Opener/Opener.framework/Opener -> /Library/MobileSubstrate/DynamicLibraries/libopener.dylib
+	$(ECHO_NOTHING)ln -s /usr/lib/Opener/Opener.framework/Opener $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.dylib$(ECHO_END)
+
+	@# libopener.plist -> /Library/MobileSubstrate/DynamicLibraries/libopener.plist
 	$(ECHO_NOTHING)cp libopener.plist $(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries/libopener.plist$(ECHO_END)
 
 after-install::
