@@ -28,7 +28,7 @@ include $(THEOS_MAKE_PATH)/bundle.mk
 A handler class subclasses from [HBLOHandler](https://hbang.github.io/libopener/Classes/HBLOHandler.html). Here is a simple example:
 
 ```objc
-#import <Opener/HBLOHandler.h>
+#import <Opener/Opener.h>
 
 @interface XXXMyAwesomeHandler : HBLOHandler
 
@@ -71,8 +71,6 @@ Depends: mobilesubstrate, something-else, some-other-package, ws.hbang.libopener
 ```
 
 You should specify the current version of Opener as the minimum requirement, so you can guarantee all features you use are available.
-
-Please note that Opener is now a framework (`/Library/Frameworks/Opener.framework`), instead of a library (`/usr/lib/libopener.dylib`). Frameworks are only properly supported with recent versions of [Theos](https://github.com/theos/theos). For backwards compatibility, libopener.dylib is symlinked to the corresponding framework binary. Do not use it in new code.
 
 ## License
 Licensed under the Apache License, version 2.0. Refer to [LICENSE.md](LICENSE.md).
