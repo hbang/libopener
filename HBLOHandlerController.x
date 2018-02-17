@@ -7,8 +7,12 @@
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBApplication.h>
 
+// ignore an override for 10 mins after the user requests it
+static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
+
 @implementation HBLOHandlerController {
 	BOOL _hasLoadedHandlers;
+	NSMutableDictionary <NSString *, NSDate *> *_tempIgnoredOverrides;
 }
 
 + (instancetype)sharedInstance {
@@ -26,6 +30,7 @@
 
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
+		_tempIgnoredOverrides = [[NSMutableDictionary alloc] init];
 	}
 
 	return self;
@@ -151,8 +156,20 @@
 		NSDictionary <NSString *, NSString *> *query = url.query.hb_queryStringComponents;
 		NSURL *originalURL = [NSURL URLWithString:query[@"url"]];
 
+		_tempIgnoredOverrides[url.host] = [NSDate date];
+
 		HBLOLogDebug(@"this is an override, returning original url %@", originalURL);
 		return @[ originalURL ];
+	}
+
+	// if the url is currently ignored, return it and skip our replacement logic
+	if (_tempIgnoredOverrides[url.host]) {
+		NSTimeInterval delta = [[NSDate date] timeIntervalSinceDate:_tempIgnoredOverrides[url.host]];
+
+		if (delta > kHBLOHandlerIgnoredTimeInterval) {
+			HBLOLogDebug(@"this is currently ignored, returning original url");
+			return @[ url ];
+		}
 	}
 
 	// loop over all available handlers

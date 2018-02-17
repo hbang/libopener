@@ -35,7 +35,7 @@ static SBActivationSetting activationSettingAppLink = 0;
 	LSApplicationProxy *applicationProxy = application.bundleIdentifier ? [LSApplicationProxy applicationProxyForIdentifier:application.bundleIdentifier] : nil;
 
 	// if we don’t know the sender, it might be in the activation settings. try it
-	if (!sender) {
+	if (!sender && IS_IOS_OR_NEWER(iOS_10_0)) {
 		sender = [activationSettings objectForActivationSetting:SBActivationSettingSourceIdentifier];
 	}
 
@@ -104,9 +104,6 @@ static SBActivationSetting activationSettingAppLink = 0;
 		if (activationSettingAppLink != 0) {
 			[activationSettings setObject:appLink forActivationSetting:activationSettingAppLink];
 		}
-
-		HBLogDebug(@"new activation settings %@", activationSettings);
-		HBLogDebug(@"url %@ app %@", url, applicationProxy);
 
 		// activate our breadcrumb enabling code
 		overrideBreadcrumbHax = YES;
