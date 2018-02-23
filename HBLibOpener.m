@@ -17,7 +17,7 @@
 	return sharedInstance;
 }
 
-#pragma mark - Public API
+#pragma mark - Handler registration
 
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error {
 	return [[HBLOHandlerController sharedInstance] registerHandler:handler error:error];

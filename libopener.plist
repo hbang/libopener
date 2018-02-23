@@ -8,6 +8,11 @@
 		<array>
 			<string>com.apple.MobileCoreServices</string>
 		</array>
+		<key>CoreFoundationVersion</key>
+		<array>
+			<integer>0</integer>
+			<integer>1199</integer>
+		</array>
 	</dict>
 </dict>
 </plist>

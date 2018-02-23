@@ -42,8 +42,7 @@
 }
 
 - (BOOL)isHandlerIdentifierEnabled:(NSString *)identifier {
-	NSNumber *enabled = [_preferences objectForKey:identifier];
-	return enabled ? enabled.boolValue : YES;
+	return [_preferences boolForKey:identifier default:YES];
 }
 
 @end

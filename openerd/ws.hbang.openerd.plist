@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>ws.hbang.openerd</string>
+	<key>Program</key>
+	<string>/usr/libexec/openerd</string>
+	<key>ExecuteAllowed</key>
+	<true/>
+	<key>MachServices</key>
+	<dict>
+		<key>ws.hbang.libopener.openerdservice</key>
+		<true/>
+	</dict>
+	<key>UserName</key>
+	<string>mobile</string>
+</dict>
+</plist>

@@ -3,6 +3,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString *const HBLOErrorDomain = @"HBLOErrorDomain";
+
 /// The HBLibOpener class provides the ability to manually register a handler with Opener from a
 /// tweak, as well as the ability to check if a handler has been disabled by the user.
 @interface HBLibOpener : NSObject

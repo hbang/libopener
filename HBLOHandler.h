@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import "HBLOHandlerDelegate.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -9,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// Opener handles enabling and disabling of the handler for you. If you would like to override this
 /// and provide your own preferences, you can set preferencesBundle and preferencesClass.
-@interface HBLOHandler : NSObject <HBLOHandlerDelegate>
+@interface HBLOHandler : NSObject
 
 /// Name of the handler, shown in Settings.
 @property (nonatomic, retain) NSString *name;

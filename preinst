@@ -18,3 +18,9 @@ fi
 if [[ ! -h /Library/Opener ]]; then
 	ln -s /usr/lib/Opener/Handlers /Library/Opener
 fi
+
+# fix directories not turning into symlinks
+if [[ -d /Library/Frameworks/Opener.framework ]]; then
+	rm -r /Library/Frameworks/Opener.framework
+	ln -s /usr/lib/Opener/Opener.framework /Library/Frameworks/Opener.framework
+fi

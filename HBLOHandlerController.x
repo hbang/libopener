@@ -1,18 +1,22 @@
 #import "HBLOHandlerController.h"
+#import "HBLibOpener.h"
 #import "HBLOHandler.h"
+#import "HBLOOpenOperation.h"
 #import "HBLOPreferences.h"
 #import <Cephei/NSString+HBAdditions.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
-#import <SpringBoard/SpringBoard.h>
-#import <SpringBoard/SBApplication.h>
+#import <SpringBoardServices/SpringBoardServices.h>
+#import <version.h>
 
-// ignore an override for 10 mins after the user requests it
-static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
+#define HBLOAssertOpenerdOnly() \
+	if (!_isInOpenerd) { \
+		[NSException raise:NSInternalInconsistencyException format:@"-[%@ %@] can only be called within openerd.", self.class, NSStringFromSelector(_cmd)]; \
+	}
 
 @implementation HBLOHandlerController {
+	BOOL _isInOpenerd;
 	BOOL _hasLoadedHandlers;
-	NSMutableDictionary <NSString *, NSDate *> *_tempIgnoredOverrides;
 }
 
 + (instancetype)sharedInstance {
@@ -30,7 +34,15 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
-		_tempIgnoredOverrides = [[NSMutableDictionary alloc] init];
+
+		// we’re “in” openerd if we literally are in openerd (or Preferences) on iOS 9 or newer. on
+		// older iOS, we’re in-process so this is always YES
+		if (IS_IOS_OR_NEWER(iOS_9_0)) {
+			NSBundle *bundle = [NSBundle mainBundle];
+			_isInOpenerd = [bundle.executablePath isEqualToString:@"/usr/libexec/openerd"] || [bundle.bundleIdentifier isEqualToString:@"com.apple.Preferences"];
+		} else {
+			_isInOpenerd = YES;
+		}
 	}
 
 	return self;
@@ -39,12 +51,12 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 #pragma mark - Registration/loading
 
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error {
+	HBLOAssertOpenerdOnly();
+
 	HBLOLogDebug(@"registering handler %@", handler.identifier);
 
 	for (HBLOHandler *handler2 in _handlers) {
 		if ([handler.identifier isEqualToString:handler2.identifier]) {
-			HBLogError(@"another handler is registered with this identifier – not registering this one");
-
 			*error = [NSError errorWithDomain:HBLOErrorDomain code:1 userInfo:@{
 				NSLocalizedDescriptionKey: [NSString stringWithFormat:@"The handler “%@” is already registered.", handler.identifier]
 			}];
@@ -58,6 +70,8 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 }
 
 - (void)loadHandlers {
+	HBLOAssertOpenerdOnly();
+
 	if (_hasLoadedHandlers) {
 		HBLOLogDebug(@"you only load handlers once (YOLHO)");
 		return;
@@ -114,7 +128,55 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 
 #pragma mark - Open URL
 
-- (NSArray *)getReplacementsForURL:(NSURL *)url application:(LSApplicationProxy *)application sender:(NSString *)sender options:(NSDictionary *)options {
+- (NSString *)foregroundBundleIdentifier {
+	NSString *sender = nil;
+
+	// if in springboard or openerd, ask SpringBoardServices for the frontmost app identifier
+	if (IN_SPRINGBOARD || _isInOpenerd) {
+		sender = SBSCopyFrontmostApplicationDisplayIdentifier();
+	}
+
+	// if we didn’t get anything and aren’t in openerd, just try the current process’s bundle id
+	if (!sender && !_isInOpenerd) {
+		sender = [NSBundle mainBundle].bundleIdentifier;
+	}
+
+	// return what we got, or just use springboard as a last resort
+	return sender ?: @"com.apple.springboard";
+}
+
+- (nullable NSArray <HBLOOpenOperation *> *)getReplacementsForOpenOperation:(HBLOOpenOperation *)openOperation {
+	if (_isInOpenerd) {
+		// too easy
+		return [self _getReplacementsForOpenOperation:openOperation];
+	} else {
+		// send the message, and hopefully have it placed in the response buffer
+		NSData *input = [NSKeyedArchiver archivedDataWithRootObject:openOperation];
+		LMResponseBuffer buffer;
+		kern_return_t result = LMConnectionSendTwoWayData(&openerdService, 0, (__bridge CFDataRef)input, &buffer);
+
+		// if it failed, log and return nil
+		if (result != KERN_SUCCESS) {
+			HBLogError(@"could not contact openerd! error %i", result);
+			return nil;
+		}
+
+		// translate the message to NSData, then NSDictionary
+		CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (const UInt8 *)LMMessageGetData(&buffer.message), LMMessageGetDataLength(&buffer.message), kCFAllocatorNull);
+		NSArray <HBLOOpenOperation *> *output = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)data];
+		LMResponseBufferFree(&buffer);
+
+		// return what we got, or nothing if we got nothing
+		return output && output.count > 0 ? output : nil;
+	}
+}
+
+- (nullable NSArray <HBLOOpenOperation *> *)_getReplacementsForOpenOperation:(HBLOOpenOperation *)openOperation {
+	HBLOAssertOpenerdOnly();
+
+	NSURL *url = openOperation.URL;
+	NSString *sender = openOperation.application.applicationIdentifier;
+
 	// is it a googlechrome(s):// or googlechrome-x-callback:// url?
 	if ([url.scheme isEqualToString:@"googlechrome"] || [url.scheme isEqualToString:@"googlechromes"]) {
 		// extract the original url from the chrome-specific url
@@ -128,15 +190,9 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 		}
 	}
 
-	// no sender given? just set it to the current app or the foreground app
+	// no sender given? just set it to our best guess of the foreground app
 	if (!sender) {
-		if (IN_SPRINGBOARD) {
-			sender = ((SpringBoard *)[%c(SpringBoard) sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier;
-		}
-		
-		if (!sender) {
-			sender = [NSBundle mainBundle].bundleIdentifier;
-		}
+		openOperation.application = [LSApplicationProxy applicationProxyForIdentifier:self.foregroundBundleIdentifier];
 	}
 
 	// load the handlers if we haven't yet
@@ -144,43 +200,21 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 		[self loadHandlers];
 	}
 
-	HBLOLogDebug(@"determining replacement for %@ (requested by %@)", url, sender);
+	HBLOLogDebug(@"determining replacement for %@ (requested by %@)", url, openOperation.application.applicationIdentifier);
 
 	HBLOPreferences *preferences = [HBLOPreferences sharedInstance];
-
 	NSMutableArray *results = [NSMutableArray array];
-
-	// if this is an applink override request, extract the original url and return that, skipping our
-	// replacement logic
-	if ([url.scheme isEqualToString:@"http"] && url.pathComponents.count == 2 && [url.pathComponents[1] isEqualToString:@"_opener_app_link_hax_"]) {
-		NSDictionary <NSString *, NSString *> *query = url.query.hb_queryStringComponents;
-		NSURL *originalURL = [NSURL URLWithString:query[@"url"]];
-
-		_tempIgnoredOverrides[url.host] = [NSDate date];
-
-		HBLOLogDebug(@"this is an override, returning original url %@", originalURL);
-		return @[ originalURL ];
-	}
-
-	// if the url is currently ignored, return it and skip our replacement logic
-	if (_tempIgnoredOverrides[url.host]) {
-		NSTimeInterval delta = [[NSDate date] timeIntervalSinceDate:_tempIgnoredOverrides[url.host]];
-
-		if (delta > kHBLOHandlerIgnoredTimeInterval) {
-			HBLOLogDebug(@"this is currently ignored, returning original url");
-			return @[ url ];
-		}
-	}
 
 	// loop over all available handlers
 	for (HBLOHandler *handler in _handlers) {
 		// not enabled? no worries, just skip over it
 		if (![preferences isHandlerEnabled:handler]) {
+			HBLOLogDebug(@" → %@ is disabled", handler.identifier);
 			continue;
 		}
 
 		// ask the handler for a replacement URL
-		id newURL = [handler openURL:url sender:sender];
+		id newURL = [handler openURL:url sender:openOperation.application.applicationIdentifier];
 
 		HBLOLogDebug(@" → %@ returned: %@", handler.identifier, newURL);
 
@@ -211,36 +245,24 @@ static NSTimeInterval const kHBLOHandlerIgnoredTimeInterval = 60 * 10;
 
 		// if the url can be opened by the same app, we should ignore it
 		for (LSApplicationProxy *app in apps) {
-			if ([app.applicationIdentifier isEqualToString:sender]) {
+			if ([app isEqual:openOperation.application]) {
 				HBLOLogDebug(@"url scheme %@: is supported by the sending app – ignoring", url_.scheme);
 				continue;
 			}
-		}
 
-		// add to the candidates
-		[candidates addObject:url_];
+			// add it to the candidates
+			[candidates addObject:[HBLOOpenOperation openOperationWithURL:url_ application:app]];
+		}
 	}
 
-	// if we don’t have anything
+	// if we don’t have anything, log and return nil. if we do, log that and return the array
 	if (candidates.count == 0) {
-		// we have nothing. return nil
 		HBLOLogDebug(@"no candidates available");
 		return nil;
-	} else if (candidates.count == 1) {
-		// if there’s one, log singular
-		HBLOLogDebug(@"replacement: %@", candidates[0]);
 	} else {
-		// if there’s multiple, log plural
 		HBLOLogDebug(@"replacements: %@", candidates);
+		return candidates;
 	}
-
-	// return the candidates
-	return candidates;
-}
-
-- (NSArray *)getReplacementsForURL:(NSURL *)url sender:(NSString *)sender {
-	// call through to the more complete method
-	return [self getReplacementsForURL:url application:nil sender:sender options:nil];
 }
 
 @end

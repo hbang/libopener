@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+launchctl stop com.apple.lsd
+launchctl load -w /Library/LaunchDaemons/ws.hbang.openerd.plist

@@ -8,6 +8,12 @@
 		<array>
 			<string>com.apple.springboard</string>
 		</array>
+		<key>Executables</key>
+		<array>
+			<string>lsd</string>
+		</array>
+		<key>Mode</key>
+		<string>Any</string>
 	</dict>
 </dict>
 </plist>
