@@ -1,6 +1,7 @@
 #import "../HBLOHandlerController.h"
 #import "../HBLOOpenOperation.h"
 #import <Cephei/NSString+HBAdditions.h>
+#import <FrontBoard/FBSystemService.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSAppLink.h>
@@ -11,6 +12,7 @@
 #import <version.h>
 
 typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *application);
+typedef void (^HBLOFrontBoardLaunchApplicationCompletion)(NSString *appBundleIdentifier);
 
 @interface SpringBoard ()
 
@@ -18,12 +20,60 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 @end
 
+//////////////////////////////////////////////////////////////////////
+@interface FBSOpenApplicationOptions : NSObject <NSCopying>
+
+@property (nonatomic, copy) NSDictionary *dictionary;
+@property (nonatomic, retain, readonly) NSURL *url;
+
++ (instancetype)optionsWithDictionary:(NSDictionary *)dictionary;
+
+@end
+
+typedef NS_ENUM(NSInteger, BSHandleType) {
+	BSHandleTypeIdk // TODO
+};
+
+@class BSMachPortTaskNameRight;
+
+@interface BSProcessHandle : NSObject
+
+@property (nonatomic, copy, readonly) NSString *name;
+@property (nonatomic, copy, readonly) NSString *bundleIdentifier;
+@property (nonatomic, copy) NSString *bundlePath;
+@property (nonatomic, copy) NSString *jobLabel;
+@property (nonatomic, readonly) pid_t pid;
+@property (nonatomic, retain, readonly) BSMachPortTaskNameRight *taskNameRight;
+@property (nonatomic, readonly) BSHandleType type;
+@property (nonatomic, readonly, getter=isValid) BOOL valid;
+
+@end
+
+@interface FBSProcessHandle : BSProcessHandle
+
+@end
+//////////////////////////////////////////////////////////////////////
+
+@interface FBSystemService ()
+
+- (void)_opener_activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion;
+
+@end
+
 #pragma mark - Classic hooks
 
 %hook SpringBoard
 
-%new - (void)_opener_applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender completion:(HBLOSpringBoardOpenURLCompletion)completion {	// get the replacement
+%new - (void)_opener_applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender completion:(HBLOSpringBoardOpenURLCompletion)completion {
+	// get the replacement
 	NSArray <HBLOOpenOperation *> *replacements = [[HBLOHandlerController sharedInstance] getReplacementsForOpenOperation:[HBLOOpenOperation openOperationWithURL:url sender:sender]];
+
+	// if there are none, return nothing
+	if (!replacements) {
+		completion(url, application);
+		return;
+	}
+
 	HBLOOpenOperation *newOpenOperation = replacements[0];
 	SBApplication *newApplication;
 
@@ -103,78 +153,65 @@ typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *appl
 
 #pragma mark - App Links hooks
 
-@interface FBSOpenApplicationOptions : NSObject <NSCopying>
-
-@property (nonatomic, copy) NSDictionary *dictionary;
-@property (nonatomic, retain, readonly) NSURL *url;
-
-+ (instancetype)optionsWithDictionary:(NSDictionary *)dictionary;
-
-@end
-
-typedef NS_ENUM(NSInteger, BSHandleType) {
-	BSHandleTypeIdk // TODO
-};
-
-@class BSMachPortTaskNameRight;
-
-@interface BSProcessHandle : NSObject
-
-@property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, copy, readonly) NSString *bundleIdentifier;
-@property (nonatomic, copy) NSString *bundlePath;
-@property (nonatomic, copy) NSString *jobLabel;
-@property (nonatomic, readonly) pid_t pid;
-@property (nonatomic, retain, readonly) BSMachPortTaskNameRight *taskNameRight;
-@property (nonatomic, readonly) BSHandleType type;
-@property (nonatomic, readonly, getter=isValid) BOOL valid;
-
-@end
-
-@interface FBSProcessHandle : BSProcessHandle
-
-@end
-
-%group AppLink
 %hook FBSystemService
 
-- (void)activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source originalSource:(FBSProcessHandle *)originalSource withResult:(id)resultBlock {
-	LSAppLink *appLink = options.dictionary[@"__AppLink"];
+%group AppLink
+%new - (void)_opener_activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion {
+	LSAppLink *appLink = options.dictionary[@"__AppLink4LS"] ?: options.dictionary[@"__AppLink"];
 	NSURL *originalURL = appLink.URL;
 
-	// if there’s no URL involved, we have nothing to do here
-	if (!originalURL) {
-		%orig;
+	HBLogDebug(@"origurl %@ strategy %@", originalURL, @(appLink.openStrategy));
+
+	// if there’s no app link, or it’s been forced to browser mode, we have nothing to do here
+	if (!originalURL || (!IS_IOS_OR_NEWER(iOS_11_0) && appLink.openStrategy == LSAppLinkOpenStrategyBrowser)) {
+		completion(nil);
 		return;
 	}
 
 	// if this is one of our ugly hack urls, fix it up
-	if ([originalURL.scheme isEqualToString:@"https"] && [originalURL.host isEqualToString:@"openerinternal.hbang.ws"] && [originalURL.path isEqualToString:@"/"]) {
+	if ([originalURL.scheme isEqualToString:@"https"] && [originalURL.host isEqualToString:@"opener.hbang.ws"] && [originalURL.path isEqualToString:@"/"]) {
 		NSDictionary <NSString *, NSString *> *query = originalURL.query.hb_queryStringComponents;
 		originalURL = [NSURL URLWithString:query[@"original"]];
 	}
-	HBLogDebug(@"real url %@", originalURL);
 
 	// get the replacement
-	NSArray <HBLOOpenOperation *> *result = [[HBLOHandlerController sharedInstance] getReplacementsForOpenOperation:[HBLOOpenOperation openOperationWithURL:originalURL sender:originalSource.bundleIdentifier]];
-	HBLogDebug(@"we got back %@", result);
+	NSArray <HBLOOpenOperation *> *result = [[HBLOHandlerController sharedInstance] getReplacementsForOpenOperation:[HBLOOpenOperation openOperationWithURL:originalURL sender:source.bundleIdentifier]];
 
 	// if there are none, we have nothing to do. just call orig and return
 	if (!result) {
-		%orig;
+		completion(nil);
 		return;
 	}
 
-	// override the URL on the app link to be something the app can understand
-	appLink.URL = result[0].URL;
+	// set the app on the app link so the system knows where we redirected to
+	appLink.targetApplicationProxy = result[0].application;
 
-	// TODO: this definitely does not work, lol
+	// override the payload url (options.dictionary is actually mutable)
+	((NSMutableDictionary *)options.dictionary)[@"__PayloadURL"] = result[0].URL;
+	[(NSMutableDictionary *)options.dictionary removeObjectForKey:@"__Actions"];
 
 	// get an SBApplication for the app we want to launch
-	%orig(result[0].application.applicationIdentifier, options, source, originalSource, resultBlock);
+	completion(result[0].application.applicationIdentifier);
 }
-
 %end
+
+%group AngelaAhrendts // 11.0 – 11.1
+- (void)activateApplication:(NSString *)bundleIdentifier requestID:(NSUInteger)requestID options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source originalSource:(FBSProcessHandle *)originalSource withResult:(id)resultBlock {
+	[(NSMutableDictionary *)options.dictionary removeObjectForKey:@"__Actions"];
+	[self _opener_activateApplication:bundleIdentifier options:options source:originalSource completion:^(NSString *appBundleIdentifier) {
+		%orig(appBundleIdentifier ?: bundleIdentifier, requestID, options, source, originalSource, resultBlock);
+	}];
+}
+%end
+
+%group PhilSchiller // 9.0 – 10.3
+- (void)activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source originalSource:(FBSProcessHandle *)originalSource withResult:(id)resultBlock {
+	[self _opener_activateApplication:bundleIdentifier options:options source:originalSource completion:^(NSString *appBundleIdentifier) {
+		%orig(appBundleIdentifier ?: bundleIdentifier, options, source, originalSource, resultBlock);
+	}];
+}
+%end
+
 %end
 
 #pragma mark - Constructor
@@ -189,6 +226,12 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 
 	if (IS_IOS_OR_NEWER(iOS_9_0)) {
 		%init(AppLink);
+	}
+	
+	if (IS_IOS_OR_NEWER(iOS_11_0)) {
+		%init(AngelaAhrendts);
+	} else if (IS_IOS_OR_NEWER(iOS_9_0)) {
+		%init(PhilSchiller);
 	} else if (IS_IOS_OR_NEWER(iOS_8_0)) {
 		%init(CraigFederighi);
 	} else if (IS_IOS_OR_NEWER(iOS_7_1)) {

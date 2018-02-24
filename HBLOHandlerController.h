@@ -2,12 +2,12 @@
 
 @interface HBLOHandlerController : NSObject
 
++ (NSString *)foregroundBundleIdentifier;
+
 + (instancetype)sharedInstance;
 
 - (BOOL)registerHandler:(HBLOHandler *)handler error:(NSError **)error;
 - (void)loadHandlers;
-
-- (NSString *)foregroundBundleIdentifier;
 
 - (NSArray <HBLOOpenOperation *> *)getReplacementsForOpenOperation:(HBLOOpenOperation *)openOperation;
 

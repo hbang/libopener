@@ -46,9 +46,14 @@ typedef void (^LSAppLinkPluginGetAppLinksCompletion)(NSArray <LSAppLink *> *appL
 	NSURL *appLinkURL = self.URLComponents.URL;
 	
 	if (![appLinkURL.scheme isEqualToString:@"http"] && ![appLinkURL.scheme isEqualToString:@"https"]) {
-		appLinkURL = [NSURL URLWithString:[@"https://openerinternal.hbang.ws/?" stringByAppendingString:@{
-			@"original": self.URLComponents.URL.absoluteString
-		}.hb_queryString]];
+		NSURLComponents *newURLComponents = [[%c(NSURLComponents) alloc] init];
+		newURLComponents.scheme = @"http";
+		newURLComponents.host = @"opener.hbang.ws";
+		newURLComponents.path = @"/_opener_app_link_hax_";
+		newURLComponents.queryItems = @[
+			[%c(NSURLQueryItem) queryItemWithName:@"original" value:self.URLComponents.URL.absoluteString]
+		];
+		appLinkURL = newURLComponents.URL;
 	}
 
 	// determine the app that’ll open it, which sadly means we need to call through a second time
@@ -62,7 +67,14 @@ typedef void (^LSAppLinkPluginGetAppLinksCompletion)(NSArray <LSAppLink *> *appL
 
 	// create an LSAppLink and provide it back to the app
 	NSError *error = nil;
-	LSAppLink *appLink = [%c(LSAppLink) _appLinkWithURL:appLinkURL applicationProxy:result[0].application plugIn:self error:&error];
+	LSAppLink *appLink;
+
+	if ([%c(LSAppLink) respondsToSelector:@selector(_appLinkWithURL:applicationProxy:plugIn:)]) {
+		appLink = [%c(LSAppLink) _appLinkWithURL:appLinkURL applicationProxy:result[0].application plugIn:self];
+	} else {
+		appLink = [%c(LSAppLink) _appLinkWithURL:appLinkURL applicationProxy:result[0].application plugIn:self error:&error];
+	}
+
 	completion(appLink, error);
 }
 

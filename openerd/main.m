@@ -6,7 +6,7 @@
 
 void ReceivedRelayedNotification(CFMachPortRef port, void *bytes, CFIndex size, void *info) {
 	LMMessage *request = bytes;
-	mach_port_t replyPort = message->head.msgh_remote_port;
+	mach_port_t replyPort = request->head.msgh_remote_port;
 
 	// check that we aren’t being given a corrupt message
 	if (!LMDataWithSizeIsValidMessage(request, size)) {

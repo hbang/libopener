@@ -6,18 +6,59 @@
 #import <Cephei/NSString+HBAdditions.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
+#import <SpringBoard/SpringBoard.h>
+#import <SpringBoard/SBApplication.h>
 #import <SpringBoardServices/SpringBoardServices.h>
 #import <version.h>
 
 #define HBLOAssertOpenerdOnly() \
-	if (!_isInOpenerd) { \
+	if (![self.class isInOpenerd]) { \
 		[NSException raise:NSInternalInconsistencyException format:@"-[%@ %@] can only be called within openerd.", self.class, NSStringFromSelector(_cmd)]; \
 	}
 
 @implementation HBLOHandlerController {
-	BOOL _isInOpenerd;
 	BOOL _hasLoadedHandlers;
 }
+
+#pragma mark - Helpers
+
++ (BOOL)isInOpenerd {
+	static BOOL isInOpenerd;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		// we’re “in” openerd if we literally are in openerd (or Preferences) on iOS 9 or newer. on
+		// older iOS, we’re in-process so this is always YES
+		if (IS_IOS_OR_NEWER(iOS_9_0)) {
+			NSBundle *bundle = [NSBundle mainBundle];
+			isInOpenerd = [bundle.executablePath isEqualToString:@"/usr/libexec/openerd"] || [bundle.bundleIdentifier isEqualToString:@"com.apple.Preferences"];
+		} else {
+			isInOpenerd = YES;
+		}
+	});
+
+	return isInOpenerd;
+}
+
++ (NSString *)foregroundBundleIdentifier {
+	NSString *sender = nil;
+
+	// get the frontmost app identifier via SBS if in openerd, or directly if in SpringBoard
+	if ([self.class isInOpenerd]) {
+		sender = SBSCopyFrontmostApplicationDisplayIdentifier();
+	} else if (IN_SPRINGBOARD) {
+		sender = ((SpringBoard *)[%c(SpringBoard) sharedApplication])._accessibilityFrontMostApplication.bundleIdentifier;
+	}
+
+	// if we didn’t get anything and aren’t in openerd, just try the current process’s bundle id
+	if (!sender && ![self.class isInOpenerd]) {
+		sender = [NSBundle mainBundle].bundleIdentifier;
+	}
+
+	// return what we got, or just use springboard as a last resort
+	return sender ?: @"com.apple.springboard";
+}
+
+#pragma mark - Object
 
 + (instancetype)sharedInstance {
 	static HBLOHandlerController *sharedInstance = nil;
@@ -34,15 +75,6 @@
 
 	if (self) {
 		_handlers = [[NSMutableArray alloc] init];
-
-		// we’re “in” openerd if we literally are in openerd (or Preferences) on iOS 9 or newer. on
-		// older iOS, we’re in-process so this is always YES
-		if (IS_IOS_OR_NEWER(iOS_9_0)) {
-			NSBundle *bundle = [NSBundle mainBundle];
-			_isInOpenerd = [bundle.executablePath isEqualToString:@"/usr/libexec/openerd"] || [bundle.bundleIdentifier isEqualToString:@"com.apple.Preferences"];
-		} else {
-			_isInOpenerd = YES;
-		}
 	}
 
 	return self;
@@ -128,25 +160,8 @@
 
 #pragma mark - Open URL
 
-- (NSString *)foregroundBundleIdentifier {
-	NSString *sender = nil;
-
-	// if in springboard or openerd, ask SpringBoardServices for the frontmost app identifier
-	if (IN_SPRINGBOARD || _isInOpenerd) {
-		sender = SBSCopyFrontmostApplicationDisplayIdentifier();
-	}
-
-	// if we didn’t get anything and aren’t in openerd, just try the current process’s bundle id
-	if (!sender && !_isInOpenerd) {
-		sender = [NSBundle mainBundle].bundleIdentifier;
-	}
-
-	// return what we got, or just use springboard as a last resort
-	return sender ?: @"com.apple.springboard";
-}
-
 - (nullable NSArray <HBLOOpenOperation *> *)getReplacementsForOpenOperation:(HBLOOpenOperation *)openOperation {
-	if (_isInOpenerd) {
+	if ([self.class isInOpenerd]) {
 		// too easy
 		return [self _getReplacementsForOpenOperation:openOperation];
 	} else {
@@ -192,7 +207,7 @@
 
 	// no sender given? just set it to our best guess of the foreground app
 	if (!sender) {
-		openOperation.application = [LSApplicationProxy applicationProxyForIdentifier:self.foregroundBundleIdentifier];
+		openOperation.application = [LSApplicationProxy applicationProxyForIdentifier:[self.class foregroundBundleIdentifier]];
 	}
 
 	// load the handlers if we haven't yet
