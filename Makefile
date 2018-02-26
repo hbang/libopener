@@ -31,7 +31,7 @@ after-Opener-stage::
 		$(THEOS_STAGING_DIR)/Library/MobileSubstrate/DynamicLibraries$(ECHO_END)
 
 	@# {pre,post}inst -> /DEBIAN/
-	$(ECHO_NOTHING)cp preinst postinst prerm $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
+	$(ECHO_NOTHING)cp preinst postinst prerm postrm $(THEOS_STAGING_DIR)/DEBIAN$(ECHO_END)
 
 	@# /Library/Frameworks/Opener.framework -> /usr/lib/Opener/Opener.framework
 	$(ECHO_NOTHING)ln -s /usr/lib/Opener/Opener.framework $(THEOS_STAGING_DIR)/Library/Frameworks/Opener.framework$(ECHO_END)
