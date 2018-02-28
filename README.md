@@ -52,7 +52,8 @@ A handler class subclasses from [HBLOHandler](https://hbang.github.io/libopener/
 }
 
 - (id)openURL:(NSURL *)url sender:(NSString *)sender {
-	if ([url.host isEqualToString:@"hbang.ws"]) {
+	if (([url.scheme isEqualToString:@"http"] || [url.scheme isEqualToString:@"https"])
+		&& [url.host isEqualToString:@"hbang.ws"]) {
 		return [NSURL URLWithString:[NSString stringWithFormat:@"hbang://open%@", url.path]];
 	}
 
@@ -62,7 +63,7 @@ A handler class subclasses from [HBLOHandler](https://hbang.github.io/libopener/
 @end
 ```
 
-In this example, URLs being opened that have a hostname of `hbang.ws` will be overridden to open a hypothetical app that supports the `hbang://` URI scheme. This means `https://hbang.ws/apps/` turns into `hbang://open/apps/`.
+In this example, URLs being opened that are web pages (http:// or https:// scheme) and have a hostname of `hbang.ws` will be overridden to open a hypothetical app that supports the `hbang://` URI scheme. This means `https://hbang.ws/apps/` turns into `hbang://open/apps/`.
 
 You must also add `ws.hbang.libopener` to the `Depends:` list in your control file. If Opener isn’t present on the device, your binaries will fail to load. For example:
 
