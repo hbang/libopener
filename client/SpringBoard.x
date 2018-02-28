@@ -157,12 +157,15 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 
 %group AppLink
 %new - (void)_opener_activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion {
-	LSAppLink *appLink = options.dictionary[@"__AppLink4LS"] ?: options.dictionary[@"__AppLink"];
-	NSURL *originalURL = appLink.URL;
+	// on iOS 9, the second arg is a dictionary. on iOS 10+, it’s an object with a dictionary property
+	NSMutableDictionary <NSString *, id> *realOptions = (NSMutableDictionary *)([options isKindOfClass:NSDictionary.class] ? options : options.dictionary);
 
-	HBLogDebug(@"origurl %@ strategy %@", originalURL, @(appLink.openStrategy));
+	// get the app link, or the payload url for a traditional url open
+	LSAppLink *appLink = realOptions[@"__AppLink4LS"] ?: realOptions[@"__AppLink"];
+	NSURL *originalURL = appLink.URL ?: realOptions[@"__PayloadURL"];
 
-	// if there’s no app link, or it’s been forced to browser mode, we have nothing to do here
+	// if there’s no link, or it’s been forced to browser mode (removed in iOS 11), we have nothing
+	// to do here
 	if (!originalURL || (!IS_IOS_OR_NEWER(iOS_11_0) && appLink.openStrategy == LSAppLinkOpenStrategyBrowser)) {
 		completion(nil);
 		return;
@@ -184,11 +187,13 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 	}
 
 	// set the app on the app link so the system knows where we redirected to
-	appLink.targetApplicationProxy = result[0].application;
+	if (appLink) {
+		appLink.targetApplicationProxy = result[0].application;
+	}
 
-	// override the payload url (options.dictionary is actually mutable)
-	((NSMutableDictionary *)options.dictionary)[@"__PayloadURL"] = result[0].URL;
-	[(NSMutableDictionary *)options.dictionary removeObjectForKey:@"__Actions"];
+	// override the payload url
+	realOptions[@"__PayloadURL"] = result[0].URL;
+	[realOptions removeObjectForKey:@"__Actions"];
 
 	// get an SBApplication for the app we want to launch
 	completion(result[0].application.applicationIdentifier);
@@ -197,7 +202,6 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 
 %group AngelaAhrendts // 11.0 – 11.1
 - (void)activateApplication:(NSString *)bundleIdentifier requestID:(NSUInteger)requestID options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source originalSource:(FBSProcessHandle *)originalSource withResult:(id)resultBlock {
-	[(NSMutableDictionary *)options.dictionary removeObjectForKey:@"__Actions"];
 	[self _opener_activateApplication:bundleIdentifier options:options source:originalSource completion:^(NSString *appBundleIdentifier) {
 		%orig(appBundleIdentifier ?: bundleIdentifier, requestID, options, source, originalSource, resultBlock);
 	}];
