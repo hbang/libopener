@@ -11,6 +11,6 @@
 
 - (NSArray <HBLOOpenOperation *> *)getReplacementsForOpenOperation:(HBLOOpenOperation *)openOperation;
 
-@property (nonatomic, retain) NSMutableArray *handlers;
+@property (nonatomic, retain) NSMutableArray <HBLOHandler *> *handlers;
 
 @end

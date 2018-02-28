@@ -118,7 +118,7 @@
 	NSURL *handlersURL = [NSURL URLWithString:kHBLOHandlersURL].URLByResolvingSymlinksInPath;
 
 	NSError *error = nil;
-	NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:handlersURL includingPropertiesForKeys:nil options:kNilOptions error:&error];
+	NSArray <NSURL *> *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:handlersURL includingPropertiesForKeys:nil options:kNilOptions error:&error];
 
 	if (error) {
 		HBLogError(@"failed to access handler directory %@: %@", kHBLOHandlersURL, error.localizedDescription);
@@ -200,7 +200,7 @@
 		url = [NSURL URLWithString:[@"http" stringByAppendingString:[url.absoluteString substringWithRange:NSMakeRange(12, url.absoluteString.length - 12)]]];
 	} else if ([url.scheme isEqualToString:@"googlechrome-x-callback"]) {
 		// grab the url from the query arguments
-		NSDictionary *query = url.query.hb_queryStringComponents;
+		NSDictionary <NSString *, NSString *> *query = url.query.hb_queryStringComponents;
 
 		if (query[@"url"]) {
 			url = [NSURL URLWithString:query[@"url"]];
@@ -220,7 +220,7 @@
 	HBLOLogDebug(@"determining replacement for %@ (requested by %@)", url, openOperation.application.applicationIdentifier);
 
 	HBLOPreferences *preferences = [HBLOPreferences sharedInstance];
-	NSMutableArray *results = [NSMutableArray array];
+	NSMutableArray <NSURL *> *results = [NSMutableArray array];
 
 	// loop over all available handlers
 	for (HBLOHandler *handler in _handlers) {
@@ -249,7 +249,7 @@
 		}
 	}
 
-	NSMutableArray *candidates = [NSMutableArray array];
+	NSMutableArray <HBLOOpenOperation *> *candidates = [NSMutableArray array];
 
 	// iterate over our results
 	for (NSURL *url_ in results) {
