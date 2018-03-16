@@ -1,5 +1,6 @@
 #import "../HBLOHandlerController.h"
 #import "../HBLOOpenOperation.h"
+#import <Cephei/HBOutputForShellCommand.h>
 #import <Cephei/NSString+HBAdditions.h>
 #import <FrontBoard/FBSystemService.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
@@ -12,7 +13,7 @@
 #import <version.h>
 
 typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *application);
-typedef void (^HBLOFrontBoardLaunchApplicationCompletion)(NSString *appBundleIdentifier);
+typedef void (^HBLOFrontBoardLaunchApplicationCompletion)(NSURL *url, NSString *appBundleIdentifier);
 
 @interface SpringBoard ()
 
@@ -52,11 +53,18 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 @interface FBSProcessHandle : BSProcessHandle
 
 @end
+
+@interface BSAuditToken : NSObject <NSCopying>
+
+@property (nonatomic, copy, readonly) NSString *bundleID;
+@property (nonatomic, readonly) pid_t pid;
+
+@end
 //////////////////////////////////////////////////////////////////////
 
 @interface FBSystemService ()
 
-- (void)_opener_activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion;
+- (void)_opener_activateURL:(NSURL *)url application:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(id)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion;
 
 @end
 
@@ -92,18 +100,6 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 	// wow, we got all this way. pass back the replaced url and app
 	completion(newOpenOperation.URL, newApplication);
 }
-
-%group CraigFederighi // 8.0 – 9.3 (wow, streak!)
-- (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission activationSettings:(SBActivationSettings *)activationSettings withResult:(id)result {
-	__block id newResult = [result copy];
-
-	[self _opener_applicationOpenURL:url withApplication:application sender:sender completion:^(NSURL *newURL, SBApplication *newApplication) {
-		if (newURL) {
-			%orig(newURL, newApplication ?: application, sender, publicURLsOnly, animating, needsPermission, activationSettings, newResult);
-		}
-	}];
-}
-%end
 
 %group JonyIvePointOne // 7.1
 - (void)applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender publicURLsOnly:(BOOL)publicURLsOnly animating:(BOOL)animating needsPermission:(BOOL)needsPermission activationContext:(id)context activationHandler:(id)handler {
@@ -155,34 +151,44 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 
 %hook FBSystemService
 
-%group AppLink
-%new - (void)_opener_activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion {
+%group FrontBoard
+%new - (void)_opener_activateURL:(NSURL *)url application:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(id)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion {
 	// on iOS 9, the second arg is a dictionary. on iOS 10+, it’s an object with a dictionary property
 	NSMutableDictionary <NSString *, id> *realOptions = (NSMutableDictionary *)([options isKindOfClass:NSDictionary.class] ? options : options.dictionary);
+	HBLogDebug(@"options? %@ %@ %@", url, bundleIdentifier, options);
 
-	// get the app link, or the payload url for a traditional url open
+	NSString *sourceBundleIdentifier = [source respondsToSelector:@selector(bundleIdentifier)] ? ((FBSProcessHandle *)source).bundleIdentifier : ((BSAuditToken *)source).bundleID;
 	LSAppLink *appLink = realOptions[@"__AppLink4LS"] ?: realOptions[@"__AppLink"];
-	NSURL *originalURL = appLink.URL ?: realOptions[@"__PayloadURL"];
+	NSURL *originalURL = url;
+
+	// if we don’t already have the url (iOS 9+), get the app link url, or the payload url for a
+	// traditional url open
+	if (!url) {
+		originalURL = appLink.URL ?: realOptions[@"__PayloadURL"];
+	}
 
 	// if there’s no link, or it’s been forced to browser mode (removed in iOS 11), we have nothing
 	// to do here
 	if (!originalURL || (!IS_IOS_OR_NEWER(iOS_11_0) && appLink.openStrategy == LSAppLinkOpenStrategyBrowser)) {
-		completion(nil);
+		completion(nil, nil);
 		return;
 	}
 
-	// if this is one of our ugly hack urls, fix it up
+	// if this is one of our ugly hack urls, fix it up and remove the app link because our app link is
+	// ugglllyyy
 	if ([originalURL.scheme isEqualToString:@"https"] && [originalURL.host isEqualToString:@"opener.hbang.ws"] && [originalURL.path isEqualToString:@"/"]) {
 		NSDictionary <NSString *, NSString *> *query = originalURL.query.hb_queryStringComponents;
 		originalURL = [NSURL URLWithString:query[@"original"]];
+		[realOptions removeObjectForKey:@"__AppLink"];
+		[realOptions removeObjectForKey:@"__AppLink4LS"];
 	}
 
 	// get the replacement
-	NSArray <HBLOOpenOperation *> *result = [[HBLOHandlerController sharedInstance] getReplacementsForOpenOperation:[HBLOOpenOperation openOperationWithURL:originalURL sender:source.bundleIdentifier]];
+	NSArray <HBLOOpenOperation *> *result = [[HBLOHandlerController sharedInstance] getReplacementsForOpenOperation:[HBLOOpenOperation openOperationWithURL:originalURL sender:sourceBundleIdentifier]];
 
 	// if there are none, we have nothing to do. just call orig and return
 	if (!result) {
-		completion(nil);
+		completion(nil, nil);
 		return;
 	}
 
@@ -191,27 +197,35 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 		appLink.targetApplicationProxy = result[0].application;
 	}
 
-	// override the payload url
+	// override the payload url, and remove the user activities (actions)
 	realOptions[@"__PayloadURL"] = result[0].URL;
 	[realOptions removeObjectForKey:@"__Actions"];
 
 	// get an SBApplication for the app we want to launch
-	completion(result[0].application.applicationIdentifier);
+	completion(result[0].URL, result[0].application.applicationIdentifier);
 }
 %end
 
 %group AngelaAhrendts // 11.0 – 11.1
 - (void)activateApplication:(NSString *)bundleIdentifier requestID:(NSUInteger)requestID options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source originalSource:(FBSProcessHandle *)originalSource withResult:(id)resultBlock {
-	[self _opener_activateApplication:bundleIdentifier options:options source:originalSource completion:^(NSString *appBundleIdentifier) {
+	[self _opener_activateURL:nil application:bundleIdentifier options:options source:originalSource completion:^(NSURL *url, NSString *appBundleIdentifier) {
 		%orig(appBundleIdentifier ?: bundleIdentifier, requestID, options, source, originalSource, resultBlock);
 	}];
 }
 %end
 
-%group PhilSchiller // 9.0 – 10.3
+%group PhilSchiller // 10.0 – 10.3
 - (void)activateApplication:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(FBSProcessHandle *)source originalSource:(FBSProcessHandle *)originalSource withResult:(id)resultBlock {
-	[self _opener_activateApplication:bundleIdentifier options:options source:originalSource completion:^(NSString *appBundleIdentifier) {
+	[self _opener_activateURL:nil application:bundleIdentifier options:options source:originalSource completion:^(NSURL *url, NSString *appBundleIdentifier) {
 		%orig(appBundleIdentifier ?: bundleIdentifier, options, source, originalSource, resultBlock);
+	}];
+}
+%end
+
+%group CraigFederighi // 8.0 – 9.3
+- (void)activateURL:(NSURL *)url application:(NSString *)bundleIdentifier options:(NSMutableDictionary *)options source:(BSAuditToken *)source originalSource:(BSAuditToken *)originalSource withResult:(id)resultBlock {
+	[self _opener_activateURL:url application:bundleIdentifier options:(id)options source:originalSource completion:^(NSURL *url, NSString *appBundleIdentifier) {
+		%orig(url, appBundleIdentifier ?: bundleIdentifier, options, source, originalSource, resultBlock);
 	}];
 }
 %end
@@ -228,13 +242,20 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 
 	%init;
 
-	if (IS_IOS_OR_NEWER(iOS_9_0)) {
-		%init(AppLink);
+	// ensure we have a fresh start on respring by stopping openerd. handlers *probably* don’t restart
+	// openerd themselves, so we kinda need to do it ourselves
+	// TODO: this could use launchd APIs? for now, i’m lazy. ok that’s a lie, i’m always lazy
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+		HBOutputForShellCommand(@"/bin/launchctl stop ws.hbang.openerd");
+	});
+
+	if (IS_IOS_OR_NEWER(iOS_8_0)) {
+		%init(FrontBoard);
 	}
 	
 	if (IS_IOS_OR_NEWER(iOS_11_0)) {
 		%init(AngelaAhrendts);
-	} else if (IS_IOS_OR_NEWER(iOS_9_0)) {
+	} else if (IS_IOS_OR_NEWER(iOS_10_0)) {
 		%init(PhilSchiller);
 	} else if (IS_IOS_OR_NEWER(iOS_8_0)) {
 		%init(CraigFederighi);
