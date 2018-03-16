@@ -167,21 +167,32 @@
 		// too easy
 		return [self _getReplacementsForOpenOperation:openOperation];
 	} else {
-		// send the message, and hopefully have it placed in the response buffer
-		NSData *input = [NSKeyedArchiver archivedDataWithRootObject:openOperation];
-		LMResponseBuffer buffer;
-		kern_return_t result = LMConnectionSendTwoWayData(&openerdService, 0, (__bridge CFDataRef)input, &buffer);
+		__block NSArray <HBLOOpenOperation *> *output = nil;
 
-		// if it failed, log and return nil
-		if (result != KERN_SUCCESS) {
-			HBLogError(@"could not contact openerd! error %i", result);
-			return nil;
-		}
+		// wrap in a semaphore to ignore the operation if it takes longer than 1 sec. (kind of a hack…)
+		dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+		dispatch_queue_t queue = dispatch_queue_create([NSString stringWithFormat:@"ws.hbang.libopener.queue%f", [NSDate date].timeIntervalSince1970].UTF8String, DISPATCH_QUEUE_SERIAL);
+		dispatch_async(queue, ^{
+			// send the message, and hopefully have it placed in the response buffer
+			NSData *input = [NSKeyedArchiver archivedDataWithRootObject:openOperation];
+			LMResponseBuffer buffer;
+			kern_return_t result = LMConnectionSendTwoWayData(&openerdService, 0, (__bridge CFDataRef)input, &buffer);
 
-		// translate the message to NSData, then NSDictionary
-		CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (const UInt8 *)LMMessageGetData(&buffer.message), LMMessageGetDataLength(&buffer.message), kCFAllocatorNull);
-		NSArray <HBLOOpenOperation *> *output = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)data];
-		LMResponseBufferFree(&buffer);
+			// if it failed, log and return nil
+			if (result != KERN_SUCCESS) {
+				HBLogError(@"could not contact openerd! error %i", result);
+				return;
+			}
+
+			// translate the message to NSData, then NSDictionary
+			CFDataRef data = CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, (const UInt8 *)LMMessageGetData(&buffer.message), LMMessageGetDataLength(&buffer.message), kCFAllocatorNull);
+			output = [NSKeyedUnarchiver unarchiveObjectWithData:(__bridge NSData *)data];
+			LMResponseBufferFree(&buffer);
+
+			dispatch_semaphore_signal(semaphore);
+		});
+
+		dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
 
 		// return what we got, or nothing if we got nothing
 		return output && output.count > 0 ? output : nil;
