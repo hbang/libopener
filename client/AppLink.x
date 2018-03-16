@@ -69,7 +69,7 @@ typedef void (^LSAppLinkPluginGetAppLinksCompletion)(NSArray <LSAppLink *> *appL
 	NSError *error = nil;
 	LSAppLink *appLink;
 
-	if ([%c(LSAppLink) respondsToSelector:@selector(_appLinkWithURL:applicationProxy:plugIn:)]) {
+	if (@available(iOS 11.0, *)) {
 		appLink = [%c(LSAppLink) _appLinkWithURL:appLinkURL applicationProxy:result[0].application plugIn:self];
 	} else {
 		appLink = [%c(LSAppLink) _appLinkWithURL:appLinkURL applicationProxy:result[0].application plugIn:self error:&error];
