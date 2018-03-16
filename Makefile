@@ -51,16 +51,9 @@ else
 	install.exec "uiopen 'prefs:root=Opener'"
 endif
 
-docs::
-	[[ -d "$(DOCS_STAGING_DIR)" ]] && rm -r "$(DOCS_STAGING_DIR)" || true
+docs:: stage
+	jazzy
 
-	-appledoc --project-name Opener --project-company "HASHBANG Productions" --company-id ws.hbang --project-version 3.0 --no-install-docset \
-		--keep-intermediate-files --create-html --publish-docset --docset-feed-url "https://hbang.github.io/libopener/xcode-docset.atom" \
-		--docset-atom-filename xcode-docset.atom --docset-package-url "https://hbang.github.io/libopener/docset.xar" \
-		--docset-package-filename docset --docset-fallback-url "https://hbang.github.io/libopener/" --docset-feed-name Opener \
-		--index-desc README.md --no-repeat-first-par \
-		--output "$(DOCS_STAGING_DIR)" $(Opener_PUBLIC_HEADERS)
-
-	[[ -d "$(DOCS_OUTPUT_PATH)" ]] || git clone -b gh-pages git@github.com:hbang/libopener.git "$(DOCS_OUTPUT_PATH)"
-	rsync -ra "$(DOCS_STAGING_DIR)"/{html,publish}/ "$(DOCS_OUTPUT_PATH)"
-	rm -r "$(DOCS_STAGING_DIR)"
+ifeq ($(FINALPACKAGE),1)
+before-package:: docs
+endif
