@@ -1,0 +1,12 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/kirb/Documents/Projects/ios/lib/libopener/HBLibOpener.h",
+      "line": 6,
+      "symbol": "HBLOErrorDomain",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/kirb/Documents/Projects/ios/lib/libopener"
+}
