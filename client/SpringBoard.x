@@ -1,8 +1,11 @@
 #import "../HBLOHandlerController.h"
 #import "../HBLOOpenOperation.h"
-#import <Cephei/HBOutputForShellCommand.h>
+#import <BaseBoard/BSAuditToken.h>
+#import <BaseBoard/BSProcessHandle.h>
 #import <Cephei/NSString+HBAdditions.h>
+#import <FrontBoardServices/FBSProcessHandle.h>
 #import <FrontBoard/FBSystemService.h>
+#import <FrontBoardServices/FBSOpenApplicationOptions.h>
 #import <MobileCoreServices/LSApplicationProxy.h>
 #import <MobileCoreServices/LSApplicationWorkspace.h>
 #import <MobileCoreServices/LSAppLink.h>
@@ -12,6 +15,8 @@
 #import <SpringBoard/SBApplicationController.h>
 #import <version.h>
 
+#pragma mark - Types
+
 typedef void (^HBLOSpringBoardOpenURLCompletion)(NSURL *url, SBApplication *application);
 typedef void (^HBLOFrontBoardLaunchApplicationCompletion)(NSURL *url, NSString *appBundleIdentifier);
 
@@ -20,47 +25,6 @@ typedef void (^HBLOFrontBoardLaunchApplicationCompletion)(NSURL *url, NSString *
 - (void)_opener_applicationOpenURL:(NSURL *)url withApplication:(SBApplication *)application sender:(NSString *)sender completion:(HBLOSpringBoardOpenURLCompletion)completion;
 
 @end
-
-//////////////////////////////////////////////////////////////////////
-@interface FBSOpenApplicationOptions : NSObject <NSCopying>
-
-@property (nonatomic, copy) NSDictionary *dictionary;
-@property (nonatomic, retain, readonly) NSURL *url;
-
-+ (instancetype)optionsWithDictionary:(NSDictionary *)dictionary;
-
-@end
-
-typedef NS_ENUM(NSInteger, BSHandleType) {
-	BSHandleTypeIdk // TODO
-};
-
-@class BSMachPortTaskNameRight;
-
-@interface BSProcessHandle : NSObject
-
-@property (nonatomic, copy, readonly) NSString *name;
-@property (nonatomic, copy, readonly) NSString *bundleIdentifier;
-@property (nonatomic, copy) NSString *bundlePath;
-@property (nonatomic, copy) NSString *jobLabel;
-@property (nonatomic, readonly) pid_t pid;
-@property (nonatomic, retain, readonly) BSMachPortTaskNameRight *taskNameRight;
-@property (nonatomic, readonly) BSHandleType type;
-@property (nonatomic, readonly, getter=isValid) BOOL valid;
-
-@end
-
-@interface FBSProcessHandle : BSProcessHandle
-
-@end
-
-@interface BSAuditToken : NSObject <NSCopying>
-
-@property (nonatomic, copy, readonly) NSString *bundleID;
-@property (nonatomic, readonly) pid_t pid;
-
-@end
-//////////////////////////////////////////////////////////////////////
 
 @interface FBSystemService ()
 
@@ -241,13 +205,6 @@ typedef NS_ENUM(NSInteger, BSHandleType) {
 	}
 
 	%init;
-
-	// ensure we have a fresh start on respring by stopping openerd. handlers *probably* don’t restart
-	// openerd themselves, so we kinda need to do it ourselves
-	// TODO: this could use launchd APIs? for now, i’m lazy. ok that’s a lie, i’m always lazy
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-		HBOutputForShellCommand(@"/bin/launchctl stop ws.hbang.openerd");
-	});
 
 	if (IS_IOS_OR_NEWER(iOS_8_0)) {
 		%init(FrontBoard);
