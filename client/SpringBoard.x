@@ -119,21 +119,23 @@ typedef void (^HBLOFrontBoardLaunchApplicationCompletion)(NSURL *url, NSString *
 %new - (void)_opener_activateURL:(NSURL *)url application:(NSString *)bundleIdentifier options:(FBSOpenApplicationOptions *)options source:(id)source completion:(HBLOFrontBoardLaunchApplicationCompletion)completion {
 	// on iOS 9, the second arg is a dictionary. on iOS 10+, it’s an object with a dictionary property
 	NSMutableDictionary <NSString *, id> *realOptions = (NSMutableDictionary *)([options isKindOfClass:NSDictionary.class] ? options : options.dictionary);
-	HBLogDebug(@"options? %@ %@ %@", url, bundleIdentifier, options);
 
 	NSString *sourceBundleIdentifier = [source respondsToSelector:@selector(bundleIdentifier)] ? ((FBSProcessHandle *)source).bundleIdentifier : ((BSAuditToken *)source).bundleID;
 	LSAppLink *appLink = realOptions[@"__AppLink4LS"] ?: realOptions[@"__AppLink"];
-	NSURL *originalURL = url;
 
-	// if we don’t already have the url (iOS 9+), get the app link url, or the payload url for a
-	// traditional url open
-	if (!url) {
-		originalURL = appLink.URL ?: realOptions[@"__PayloadURL"];
-	}
+	// if the app link doesn’t exist, it should be in the url argument (on iOS 9), or the __PayloadURL
+	// key of the dictionary (iOS 10+)
+	NSURL *originalURL = appLink.URL ?: url ?: realOptions[@"__PayloadURL"];
 
 	// if there’s no link, or it’s been forced to browser mode (removed in iOS 11), we have nothing
 	// to do here
-	if (!originalURL || (!IS_IOS_OR_NEWER(iOS_11_0) && appLink.openStrategy == LSAppLinkOpenStrategyBrowser)) {
+	LSAppLinkOpenStrategy openStrategy = LSAppLinkOpenStrategyUnknown;
+	
+	if (appLink && !IS_IOS_OR_NEWER(iOS_11_0) && ![originalURL.scheme isEqualToString:@"http"] && ![originalURL.scheme isEqualToString:@"https"]) {
+		openStrategy = appLink.openStrategy;
+	}
+
+	if (!originalURL || openStrategy == LSAppLinkOpenStrategyBrowser) {
 		completion(nil, nil);
 		return;
 	}
