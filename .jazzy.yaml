@@ -10,7 +10,7 @@ author: HASHBANG Productions
 author_url: https://hbang.github.io/
 github_url: https://github.com/hbang/libopener
 root_url: https://hbang.github.io/libopener/
-dash_url: https://hbang.github.io/libopener/xcode-docset.atom
+dash_url: https://hbang.github.io/libopener/docsets/Cephei.xml
 readme: README.md
 # documentation: info/*.md
 exclude: "*/include/*"
